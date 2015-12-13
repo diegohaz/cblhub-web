@@ -1,0 +1,24 @@
+{
+  "name": "opencbl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "postinstall": "bower install -p"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/diegohaz/opencbl.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/diegohaz/opencbl/issues"
+  },
+  "homepage": "https://github.com/diegohaz/opencbl",
+  "dependencies": {
+    "bower": "^1.7.1",
+    "express": "^4.13.3"
+  }
+}

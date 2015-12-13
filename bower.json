@@ -1,0 +1,21 @@
+{
+  "name": "opencbl",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Diego Haz <hazdiego@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/diegohaz/opencbl",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~1.2.3"
+  }
+}
