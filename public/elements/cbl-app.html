@@ -1,0 +1,30 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+
+<link rel="import" href="cbl-app-theme.html">
+
+<dom-module id="cbl-app">
+  <template>
+    <style include="cbl-app-theme">
+      :host {
+        display: block;
+        @apply(--layout-fit);
+      }
+    </style>
+    <paper-card heading="Card title" image="" elevation="1" animated-shadow="false">
+      <div class="card-content">Test</div>
+      <div class="card-actions">
+
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    class CBLApp {
+      beforeRegister() {
+        this.is = 'cbl-app';
+      }
+    }
+
+    Polymer(CBLApp);
+  </script>
+</dom-module>
