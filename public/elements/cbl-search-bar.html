@@ -1,0 +1,190 @@
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+
+<dom-module id="cbl-search-bar">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: relative;
+      }
+
+      paper-input {
+        --paper-transition-easing: {
+          -webkit-transition: none;
+          transition: none;
+        };
+      }
+
+      paper-menu {
+        position: absolute;
+        left: 0;
+        top: calc(100% - 6px);
+        width: 100%;
+        padding: 0;
+        overflow-y: auto;
+        @apply(--shadow-elevation-2dp);
+      }
+
+      paper-item {
+        min-height: 32px;
+      }
+
+      .iron-selected{
+        background: #E0E0E0;
+      }
+    </style>
+
+    <paper-input
+      id="searchInput"
+      label="Search for challenges, questions, activities and resources"
+      value="{{query}}"
+      on-keyup="_keyup"
+      on-keydown="_keydown"
+      on-blur="_blur"
+      on-focus="_focus"
+      no-label-float>
+      <paper-icon-button suffix icon="search" on-tap="search"></paper-icon-button>
+    </paper-input>
+
+    <paper-menu id="keywordsMenu">
+      <template is="dom-repeat" items="{{keywords}}">
+        <paper-item on-mouseover="_selection" on-tap="_select">[[item]]</paper-item>
+      </template>
+    </paper-menu>
+
+  </template>
+
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'cbl-search-bar',
+
+    properties: {
+      query: {
+        type: String,
+        notify: true
+      }
+    },
+
+    ready: function() {
+      this.allKeywords = [];
+      this._fetchKeywords();
+      this.focused = false;
+      this.$.keywordsMenu.hidden = true;
+    },
+
+    _fetchKeywords: function() {
+      Parse.Cloud.run('listKeywords').then(keywords => {
+        this.allKeywords = keywords.map(k => k.keyword);
+        this._searchKeywords('');
+      });
+    },
+
+    _focus: function() {
+      this.$.keywordsMenu.hidden = false;
+      this.focused = true;
+    },
+
+    _blur: function() {
+      this.$.keywordsMenu.select(-1);
+      this.focused = false;
+
+      this.async(() => {
+        if (!this.focused) {
+          this.$.keywordsMenu.hidden = true;
+        }
+      }, 10);
+    },
+
+    _keydown: function(e) {
+      if (e.which == 40 || e.which == 38) {
+        e.preventDefault();
+      }
+    },
+
+    _selection:function(e) {
+      let searchInput = this.$.searchInput;
+      let keywordsMenu = this.$.keywordsMenu;
+      let selectedItem = e.currentTarget;
+      let index = Number(keywordsMenu.indexOf(selectedItem));
+
+      keywordsMenu.select(index);
+      searchInput.$.input.focus();
+    },
+
+    _select: function(e) {
+      let keywordsMenu = this.$.keywordsMenu;
+      let selectedItem = e.currentTarget;
+      let index = Number(keywordsMenu.indexOf(selectedItem));
+
+      this.query = this.keywords[index];
+
+      this.keywords = [];
+      e.stopPropagation();
+    },
+
+    _keyup: function(e) {
+      let searchInput = this.$.searchInput;
+      let keywordsMenu = this.$.keywordsMenu;
+      let selectedItem = keywordsMenu.focusedItem || keywordsMenu.selectedItem;
+      let index = 0;
+
+      if (e.which == 40) {
+        //down
+        if (typeof selectedItem != 'undefined') {
+          index = Number(keywordsMenu.indexOf(selectedItem));
+          index = Math.min(index + 1, this.keywords.length - 1);
+        }
+
+        keywordsMenu.select(index);
+        searchInput.$.input.focus();
+      } else if (e.which == 38) {
+        //up
+        if (typeof selectedItem != 'undefined') {
+          index = Number(keywordsMenu.indexOf(selectedItem));
+          index = Math.max(index - 1, -1);
+          keywordsMenu.select(index);
+        }
+
+        searchInput.$.input.focus();
+      } else if (e.which == 13) {
+        // enter
+        if (typeof selectedItem != 'undefined') {
+          index = Number(keywordsMenu.indexOf(selectedItem));
+          this.query = this.keywords[index];
+          this.keywords = [];
+          keywordsMenu.select(-1);
+        }
+      } else {
+        // search
+        this._searchKeywords(this.query.trim());
+      }
+    },
+
+    _searchKeywords: function(term) {
+      this.keywords = [];
+
+      if (term == '') {
+        this.keywords = this.allKeywords.slice(0, 10);
+        return;
+      }
+
+      let pattern = new RegExp(term.toLowerCase());
+
+      for (var i = 0; i < this.allKeywords.length; i++) {
+        if (this.keywords.length == 10) break;
+
+        let keyword = this.allKeywords[i];
+
+        if (pattern.test(keyword.toLowerCase())) {
+          this.push('keywords', keyword);
+        }
+      }
+    }
+
+  });
+
+</script>

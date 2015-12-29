@@ -1,0 +1,11 @@
+<script>
+Polymer.CblAppBehavior = {
+  properties: {
+    user: {
+      type: Object,
+      notify: true,
+      value: () => Parse.User.current()
+    }
+  }
+};
+</script>

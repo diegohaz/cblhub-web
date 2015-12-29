@@ -4,25 +4,21 @@ var gulp = require('gulp');
 var del = require('del');
 var $ = require('gulp-load-plugins')();
 
-var DIST = 'dist';
-
-var dist = function(subpath) {
-  return !subpath ? DIST : path.join(DIST, subpath);
-};
-
-gulp.task('default', ['minify'], function() {
-  return del([dist() + '/elements/cbl-app.js']);
+// watch
+gulp.task('watch', function() {
+  gulp.watch('public/elements/**/*.html', ['babel']);
 });
 
+// clean
 gulp.task('clean', function() {
-  return del([dist()]);
+  return del(['dist']);
 });
 
+// babel
 gulp.task('babel', ['clean'], function() {
-  return gulp.src('public/elements/cbl-app.html')
-    .pipe($.plumber())
+  return gulp.src('public/elements/**/*.html')
     .pipe($.sourcemaps.init())
-    .pipe($.vulcanize())
+    .pipe($.plumber())
     .pipe($.crisper({
       scriptInHead: false,
       onlySplit: false
@@ -31,22 +27,60 @@ gulp.task('babel', ['clean'], function() {
       presets: ['es2015'],
       compact: false
     })))
+    .pipe($.plumber.stop())
     .pipe($.sourcemaps.write('.'))
-    .pipe(gulp.dest(dist() + '/elements'));
+    .pipe(gulp.dest('dist/elements'));
 });
 
-gulp.task('minify', ['babel'], function() {
+// minify
+gulp.task('minify', ['babel'], function () {
+  var DEST_DIR = 'dist/elements';
+
   return gulp.src('dist/elements/cbl-app.html')
-    .pipe($.plumber())
     .pipe($.vulcanize({
-      stripComments: true,
+      dest: DEST_DIR,
+      strip: true,
       inlineCss: true,
       inlineScripts: true
     }))
-    .pipe($.minifyInline())
-    .pipe(gulp.dest(dist() + '/elements'));
+    .pipe($.minifyHtml({
+      quotes: true,
+      empty: true,
+      spare: true
+    }))
+    .pipe($.minifyInline({
+      js: {
+        compress: {
+          drop_console: true,
+          dead_code: true,
+          drop_debugger: true,
+          join_vars: true,
+        },
+      },
+      jsSelector: 'script',
+      css: false
+    }))
+    .pipe($.cheerio(function ($, file) {
+      $('style').each(function () {
+        var style = $(this);
+        style.text(style.text()
+          .replace(/^[ \t]+/mg, '')
+          .replace(/[ \t]*\/\*(.|[\n\r])*?\*\//g, '')
+          .replace(/[\n\r]+/g, '\n')
+          .replace(/;[\n\r\t ]+/g, ';')
+          .replace(/,[\n\r\t ]+/g, ',')
+          .replace(/[ \t\n\r]+{/g, '{')
+          .replace(/{[ \t\n\r]+/g, '{')
+          .replace(/[ \t\n\r;]+}/g, '}')
+          .replace(/}[ \t\n\r]+/g, '}')
+          .replace(/:[ \t\n\r]+/g, ':')
+        );
+      });
+    }))
+    .pipe($.if('*.html', $.replace(/;<\/script><script>/ig, ';')))
+    .pipe(gulp.dest(DEST_DIR))
+    .pipe($.size({title: 'vulcanize'}));
 });
 
-gulp.task('watch', function() {
-  gulp.watch('public/elements/**/*.html', ['default']);
-});
+// default
+gulp.task('default', ['minify']);

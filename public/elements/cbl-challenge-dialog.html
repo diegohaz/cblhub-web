@@ -1,0 +1,177 @@
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+
+<link rel="import" href="cbl-shared-styles.html">
+<link rel="import" href="cbl-dialog.html">
+
+<dom-module id="cbl-challenge-dialog">
+  <template>
+    <style include="cbl-shared-styles">
+      :host {
+        display: block;
+      }
+
+      cbl-dialog {
+        min-width: 500px;
+        max-width: 500px;
+      }
+
+      iron-icon {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        color: #999;
+      }
+
+      iron-icon:hover {
+        color: #666;
+      }
+
+      iron-collapse {
+        color: #666;
+      }
+
+      form {
+        padding-bottom: 16px;
+      }
+
+      @media screen and (max-width: 420px) {
+        cbl-dialog {
+          min-width: auto;
+          max-width: auto;
+        }
+      }
+    </style>
+
+    <cbl-dialog id="dialog" heading="New Challenge" confirm-label="Create" loading="{{loading}}" with-backdrop>
+      <form is="iron-form" id="form">
+        <paper-input
+          id="bigIdeaInput"
+          label="Big Idea"
+          error-message="Please enter the Big Idea"
+          value="{{bigIdea}}"
+          autofocus
+          required>
+          <iron-icon id="bigIdeaHelp" icon="help" suffix></iron-icon>
+        </paper-input>
+
+        <iron-collapse id="bigIdeaTip">
+          <p class="tip">The big idea is a broad concept that can be explored in multiple ways, e.g. <strong>Resilience</strong>, <strong>Separation</strong>, <strong>Creativity</strong>, <strong>Health</strong>, <strong>Sustainability</strong>, <strong>Democracy</strong> etc. <a href="https://www.challengebasedlearning.org/pages/about-cbl" target="_blank">Learn more. <iron-icon icon="open-in-new"></iron-icon></a></p>
+        </iron-collapse>
+
+        <paper-input
+          id="essentialQuestionInput"
+          label="Essential Question"
+          error-message="Please enter the Essential Question"
+          value="{{essentialQuestion}}"
+          required>
+          <iron-icon id="essentialQuestionHelp" icon="help" suffix></iron-icon>
+        </paper-input>
+
+        <iron-collapse id="essentialQuestionTip">
+          <p class="tip">By design, the big idea allows for the generation of a wide variety of essential questions. Eventually the process narrows to one essential question that reflects the interests of the learners and the needs of their community. <a href="https://www.challengebasedlearning.org/pages/about-cbl" target="_blank">Learn more. <iron-icon icon="open-in-new"></iron-icon></a></p>
+        </iron-collapse>
+
+        <paper-input
+          id="challengeInput"
+          label="The Challenge"
+          error-message="Please enter the Challenge"
+          value="{{challenge}}"
+          required>
+          <iron-icon id="challengeHelp" icon="help" suffix></iron-icon>
+        </paper-input>
+
+        <iron-collapse id="challengeTip">
+          <p class="tip">From the essential question a concise challenge is articulated that asks the learners to create a specific solution that will result in concrete, meaningful action. <a href="https://www.challengebasedlearning.org/pages/about-cbl" target="_blank">Learn more. <iron-icon icon="open-in-new"></iron-icon></a></p>
+        </iron-collapse>
+
+        <paper-textarea
+          label="Description"
+          placeholder="Summarize the challenge, so people can understand the feelings behind it. (Optional)"
+          value="{{description}}"
+          rows="2"
+          maxlength="512"
+          char-counter>
+        </paper-textarea>
+
+        <button hidden></button>
+      </form>
+    </cbl-dialog>
+
+    <paper-toast id="toast" duration="5000" text="An error occurred. Try again later."></paper-toast>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'cbl-challenge-dialog',
+
+      behaviors: [Polymer.CblAppBehavior],
+
+      listeners: {
+        'iron-form-presubmit': 'submit',
+        'cbl-dialog-confirm': 'submit'
+      },
+
+      ready: function() {
+        let helps = ['bigIdeaHelp', 'essentialQuestionHelp', 'challengeHelp'];
+
+        helps.forEach(help => {
+          this.$[help].addEventListener('click', () => {
+            this.toggleTip(help.replace('Help', 'Tip'));
+          });
+        });
+      },
+
+      toggleTip: function(id) {
+        let tips = ['bigIdeaTip', 'essentialQuestionTip', 'challengeTip'];
+
+        tips.forEach(tip => {
+          if (tip == id) {
+            this.$[tip].toggle();
+          } else {
+            this.$[tip].hide();
+          }
+        });
+      },
+
+      submit: function(event) {
+        event && event.preventDefault();
+
+        if (!this.$.form.validate()) return;
+
+        if (!this.user) {
+          page('/login?overlay=/challenges/create');
+          return;
+        }
+
+        this.loading = true;
+        let challenge = new Parse.Object('Challenge');
+
+        challenge.set('title', this.challenge);
+        challenge.set('description', this.description);
+        challenge.set('bigIdea', this.bigIdea);
+        challenge.set('essentialQuestion', this.essentialQuestion);
+
+        challenge.save().then(challenge => {
+          page('/challenges/' + challenge.id);
+        }, error => {
+          this.$.toast.open();
+        }).always(() => {
+          this.loading = false;
+        });
+      },
+
+      open: function() {
+        this.$.dialog.open();
+      },
+
+      close: function() {
+        this.$.dialog.close();
+      }
+    });
+  </script>
+</dom-module>

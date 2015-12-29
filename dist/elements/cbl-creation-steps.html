@@ -1,0 +1,60 @@
+<html><head><link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="cbl-shared-styles.html">
+
+</head><body><dom-module id="cbl-creation-steps">
+  <template>
+    <style include="cbl-shared-styles">
+      :host {
+        display: block;
+        height: calc(100vh - 64px);
+        min-height: 480px;
+        @apply(--layout-flex);
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+        @apply(--layout-center-justified);
+
+        --paper-input-container-label: {
+          text-align: center;
+          font-size: 130px;
+          line-height: 120%;
+          color: #ccc;
+        };
+
+        --paper-input-container-input: {
+          text-align: center;
+          font-size: 130px;
+          line-height: 120%;
+          max-width: 1000px;
+        };
+      }
+
+      #question {
+        max-width: 800px;
+        margin: 0 16px;
+        font-size: 40px;
+        text-align: center;
+        font-weight: 300;
+      }
+
+      #desc {
+        margin: 48px 0;
+        max-width: 640px;
+        text-align: center;
+      }
+
+      #desc iron-icon {
+        width: 16px;
+        height: 16px;
+      }
+    </style>
+
+    <p id="question">If you could do something for a better world, from which <strong>big idea</strong> would you start?</p>
+
+    <paper-input type="search" label="Big Idea" maxlength="48" no-label-float="" autocapitalize="" autofocus=""></paper-input>
+
+    <p id="desc">The big idea is a broad concept that can be explored in multiple ways, e.g. <strong>Resilience</strong>, <strong>Separation</strong>, <strong>Creativity</strong>, <strong>Health</strong>, <strong>Sustainability</strong>, <strong>Democracy</strong> etc. <a href="https://www.challengebasedlearning.org/pages/about-cbl" target="_blank">Learn more. <iron-icon icon="open-in-new"></iron-icon></a></p>
+
+  </template>
+  </dom-module><script src="cbl-creation-steps.js"></script></body></html>

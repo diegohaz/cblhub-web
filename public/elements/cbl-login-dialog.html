@@ -1,0 +1,128 @@
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+
+<link rel="import" href="cbl-shared-styles.html">
+<link rel="import" href="cbl-dialog.html">
+
+<dom-module id="cbl-login-dialog">
+  <template>
+    <style include="cbl-shared-styles">
+      :host {
+        display: block;
+      }
+
+      .facebook {
+        @apply(--layout-flex);
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+        padding-top: 8px;
+      }
+
+      .facebook paper-button {
+        background-color: #3B5998;
+      }
+
+      form {
+        padding-bottom: 16px;
+      }
+    </style>
+
+    <iron-media-query query="max-width: 420px" query-matches="{{mobile}}"></iron-media-query>
+
+    <cbl-dialog id="dialog" heading="Log in" confirm-label="Log in" loading="{{loading}}" with-backdrop>
+      <div class="facebook" hidden="[[mobile]]">
+        <paper-button>Log in with Facebook</paper-button>
+        or use your e-mail:
+      </div>
+      <form is="iron-form" id="form">
+        <paper-input
+          id="emailInput"
+          name="email"
+          type="email"
+          label="E-mail"
+          error-message="Please enter a valid email"
+          pattern="^[a-zA-Z0-9-_\.]+@[a-zA-Z0-9-_\.]+$"
+          value="{{email}}"
+          autofocus
+          required
+          auto-validate>
+        </paper-input>
+
+        <paper-input
+          id="passwordInput"
+          type="password"
+          label="Password"
+          error-message="Please enter a password"
+          value="{{password}}"
+          required
+          auto-validate>
+        </paper-input>
+
+        <button hidden></button>
+      </form>
+      <div class="signup">
+        <p>Don't you have an account? <a href="/signup">Sign up</a>.</p>
+      </div>
+      <div class="facebook" hidden="[[!mobile]]">
+        or use your Facebook account:
+        <paper-button>Log in with Facebook</paper-button>
+      </div>
+    </cbl-dialog>
+
+    <paper-toast id="toast" duration="5000" text="An error occurred. Try again later."></paper-toast>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'cbl-login-dialog',
+
+      behaviors: [Polymer.CblAppBehavior],
+
+      properties: {
+        email: {
+          type: String,
+          notify: true
+        }
+      },
+
+      listeners: {
+        'iron-form-presubmit': 'submit',
+        'cbl-dialog-confirm': 'submit'
+      },
+
+      submit: function(event) {
+        if (!this.$.form.validate()) return;
+
+        event && event.preventDefault();
+
+        this.loading = true;
+
+        Parse.User.logIn(this.email, this.password).then(() => {
+          this.user = Parse.User.current();
+          this.$.dialog.cancel();
+        }, error => {
+          if (error.code == 101) {
+            this.$.emailInput.focus();
+            this.$.emailInput.invalid = true;
+            this.$.passwordInput.invalid = true;
+            this.$.toast.text = 'E-mail or password wrong';
+          }
+
+          this.$.toast.open();
+        }).always(() => {
+          this.loading = false;
+        });
+      },
+
+      open: function() {
+        this.$.dialog.open();
+      },
+
+      close: function() {
+        this.$.dialog.close();
+      }
+    });
+  </script>
+</dom-module>

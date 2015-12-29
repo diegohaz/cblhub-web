@@ -1,0 +1,114 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/app-layout/app-layout.html">
+<link rel="import" href="../../bower_components/pushstate-anchor/pushstate-anchor.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+
+<link rel="import" href="cbl-shared-styles.html">
+<link rel="import" href="cbl-search-bar.html">
+<link rel="import" href="cbl-app-behavior.html">
+
+<dom-module id="cbl-layout">
+  <template>
+    <style include="cbl-shared-styles">
+      :host {
+        display: block;
+        @apply(--layout-fit);
+      }
+
+      app-header {
+        background-color: #fff;
+      }
+
+      app-toolbar > [title] {
+        pointer-events: auto;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+
+      app-toolbar > [title] paper-button {
+      }
+
+      app-toolbar > [title] a {
+        display: inline-block;
+        color: var(--primary-text-color);
+        text-decoration: none;
+        line-height: 150%;
+        margin-right: 8px;
+      }
+
+      cbl-search-bar {
+        max-width: 480px;
+        margin: 0 8px;
+        @apply(--layout-flex);
+      }
+
+      paper-fab {
+        position: fixed;
+        right: 8px;
+        bottom: 8px;
+      }
+
+      @media screen and (max-width: 639px) {
+        app-toolbar > [title] {
+          @apply(--layout-flex);
+        }
+      }
+    </style>
+    <iron-media-query query="min-width: 640px" query-matches="{{largeScreen}}"></iron-media-query>
+
+    <app-header-layout>
+      <app-header reveals>
+        <app-toolbar>
+
+          <div title>
+            <a href="/">Open CBL</a>
+            <cbl-search-bar hidden="[[!largeScreen]]"></cbl-search-bar>
+          </div>
+
+          <template is="dom-if" if="[[largeScreen]]">
+            <paper-button onclick="page('/challenges/create?overlay='+page.current)"><iron-icon icon="add"></iron-icon><span>New challenge</span></paper-button>
+            <paper-button hidden="[[user]]" class="bordered" onclick="page('/login?overlay='+page.current)"><iron-icon icon="face"></iron-icon><span>Log in</span></paper-button>
+            <paper-button hidden="[[!user]]" class="bordered" on-tap="logout"><iron-icon icon="face"></iron-icon><span>Log out</span></paper-button>
+          </template>
+
+          <template is="dom-if" if="[[!largeScreen]]">
+            <paper-icon-button icon="search"></paper-icon-button>
+            <paper-icon-button icon="more-vert"></paper-icon-button>
+          </template>
+
+        </app-toolbar>
+      </app-header>
+      <div class="content">
+        <content></content>
+      </div>
+    </app-header-layout>
+
+    <paper-fab icon="add" hidden="[[largeScreen]]"></paper-fab>
+
+  </template>
+  <script>
+    class Layout {
+      beforeRegister() {
+        this.is = 'cbl-layout';
+        this.behaviors = [Polymer.CblAppBehavior];
+      }
+
+      ready() {
+        console.log(this.user);
+      }
+
+      logout() {
+        Parse.User.logOut().then(() => {
+          this.user = null;
+        })
+      }
+    }
+
+    Polymer(Layout);
+  </script>
+</dom-module>
