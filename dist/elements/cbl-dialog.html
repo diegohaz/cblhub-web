@@ -22,6 +22,7 @@
         background-color: var(--primary-background-color);
         color: var(--primary-text-color);
         @apply(--shadow-elevation-16dp);
+        overflow: hidden;
       }
 
       :host > * {
@@ -37,6 +38,7 @@
 
       .toolbar {
         height: 64px;
+        background-color: #eee;
         @apply(--layout-flex);
         @apply(--layout-horizontal);
         @apply(--layout-center);
@@ -53,12 +55,13 @@
       }
 
       .content {
-        max-height: calc(100vh - 160px);
+        max-height: calc(100vh - 200px);
         overflow: auto;
       }
 
       .footer {
         height: 64px;
+        padding: 0 8px;
         @apply(--layout-flex);
         @apply(--layout-horizontal);
         @apply(--layout-end-justified);
@@ -82,7 +85,7 @@
         }
 
         .toolbar h2 {
-          margin-left: 16px;
+          margin-left: 8px;
         }
 
         .content {
@@ -93,13 +96,13 @@
 
     <iron-media-query query="max-width: 420px" query-matches="{{mobile}}"></iron-media-query>
 
-    <div class="toolbar">
-      <paper-icon-button on-tap="back" icon="close" hidden="[[!mobile]]"></paper-icon-button>
-      <h2>[[heading]]</h2>
-      <paper-button on-tap="confirm" class="bordered" hidden="[[!mobile]]">[[confirmLabel]]</paper-button>
-    </div>
-
     <paper-progress indeterminate="" hidden="[[!loading]]"></paper-progress>
+
+    <div class="toolbar">
+      <paper-icon-button on-tap="back" icon="cancel" hidden="[[!mobile]]"></paper-icon-button>
+      <h2>[[heading]]</h2>
+      <paper-button on-tap="confirm" class="bordered" hidden="[[!mobile]]" disabled="[[loading]]">[[confirmLabel]]</paper-button>
+    </div>
 
     <div class="content">
       <content></content>
@@ -108,7 +111,7 @@
     <template is="dom-if" if="[[!mobile]]">
       <div class="footer">
         <paper-button class="bordered" on-tap="back">[[dismissLabel]]</paper-button>
-        <paper-button on-tap="confirm">[[confirmLabel]]</paper-button>
+        <paper-button on-tap="confirm" disabled="[[loading]]">[[confirmLabel]]</paper-button>
       </div>
     </template>
 

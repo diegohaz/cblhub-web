@@ -1,32 +1,42 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-styles/shadow.html">
 
 <dom-module id="cbl-shared-styles">
   <template>
     <style>
       :root {
-        --dark-primary-color:       var(--paper-blue-700);
-        --default-primary-color:    var(--paper-blue-500);
-        --light-primary-color:      var(--paper-blue-100);
-        --text-primary-color:       #FFFFFF;
-        --accent-color:             var(--paper-pink-500);
-        --primary-text-color:       #212121;
-        --secondary-text-color:     #727272;
-        --disabled-text-color:      #BDBDBD;
-        --divider-color:            #B6B6B6;
+        --primary-color: var(--paper-blue-500);
+        --default-primary-color: var(--primary-color);
+        --light-primary-color: var(--paper-blue-100);
+        --dark-primary-color: var(--paper-blue-700);
+        --text-primary-color: #FFFFFF;
 
-        --paper-progress-active-color: var(--default-primary-color);
+        --accent-color: var(--paper-pink-500);
+        --light-accent-color: var(--paper-pink-100);
+        --dark-accent-color: var(--paper-pink-700);
+        --text-accent-color: #FFFFFF;
+
+        --primary-text-color: #212121;
+        --secondary-text-color: #727272;
+        --disabled-text-color: #BDBDBD;
+        --divider-color: #B6B6B6;
+
+        --paper-progress-active-color: var(--primary-color);
+        --paper-tabs-selection-bar-color: var(--accent-color);
 
         --paper-icon-button: {
           color: var(--accent-color);
         };
 
         --paper-button: {
-          @apply(--paper-font-body2);
+          @apply(--layout-horizontal);
+          @apply(--layout-center-justified);
+          @apply(--paper-font-button);
           background-color: var(--accent-color);
-          font-size: 14px;
-          color: #fff;
-          line-height: 100%;
-          padding: .7em;
+          color: var(--text-accent-color);
+          padding: .572em .7em;
         };
 
         --paper-button-disabled: {
@@ -54,12 +64,11 @@
         height: 16px;
       }
 
-      paper-button > * {
-        vertical-align: middle;
+      p {
+        margin: 10px 0;
       }
 
       paper-button > iron-icon {
-        margin: -0.2em;
         margin-right: .3em;
       }
 

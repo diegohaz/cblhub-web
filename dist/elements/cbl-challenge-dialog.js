@@ -3,41 +3,15 @@
 Polymer({
   is: 'cbl-challenge-dialog',
 
-  behaviors: [Polymer.CblAppBehavior],
+  behaviors: [CBLAppBehavior],
 
   listeners: {
     'iron-form-presubmit': 'submit',
     'cbl-dialog-confirm': 'submit'
   },
 
-  ready: function ready() {
-    var _this = this;
-
-    var helps = ['bigIdeaHelp', 'essentialQuestionHelp', 'challengeHelp'];
-
-    helps.forEach(function (help) {
-      _this.$[help].addEventListener('click', function () {
-        _this.toggleTip(help.replace('Help', 'Tip'));
-      });
-    });
-  },
-
-  toggleTip: function toggleTip(id) {
-    var _this2 = this;
-
-    var tips = ['bigIdeaTip', 'essentialQuestionTip', 'challengeTip'];
-
-    tips.forEach(function (tip) {
-      if (tip == id) {
-        _this2.$[tip].toggle();
-      } else {
-        _this2.$[tip].hide();
-      }
-    });
-  },
-
   submit: function submit(event) {
-    var _this3 = this;
+    var _this = this;
 
     event && event.preventDefault();
 
@@ -59,9 +33,9 @@ Polymer({
     challenge.save().then(function (challenge) {
       page('/challenges/' + challenge.id);
     }, function (error) {
-      _this3.$.toast.open();
+      _this.$.toast.open();
     }).always(function () {
-      _this3.loading = false;
+      _this.loading = false;
     });
   },
 
@@ -71,5 +45,19 @@ Polymer({
 
   close: function close() {
     this.$.dialog.close();
+  },
+
+  _focus: function _focus(e) {
+    var input = e.target;
+    var tip = this.$[input.id.replace('Input', 'Tip')];
+
+    tip.show();
+  },
+
+  _blur: function _blur(e) {
+    var input = e.target;
+    var tip = this.$[input.id.replace('Input', 'Tip')];
+
+    tip.hide();
   }
 });

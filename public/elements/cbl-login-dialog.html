@@ -63,7 +63,8 @@
         <button hidden></button>
       </form>
       <div class="signup">
-        <p>Don't you have an account? <a href="/signup">Sign up</a>.</p>
+        <p>Forgot your password? <a href="/passwordreset">Reset password</a></p>
+        <p>Don't you have an account? <a href="/signup">Sign up</a></p>
       </div>
       <div class="facebook" hidden="[[!mobile]]">
         or use your Facebook account:
@@ -78,7 +79,7 @@
     Polymer({
       is: 'cbl-login-dialog',
 
-      behaviors: [Polymer.CblAppBehavior],
+      behaviors: [CBLAppBehavior],
 
       properties: {
         email: {

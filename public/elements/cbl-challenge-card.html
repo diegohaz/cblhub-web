@@ -1,0 +1,72 @@
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation-runner-behavior.html">
+
+<link rel="import" href="cbl-shared-styles.html">
+
+<dom-module id="cbl-challenge-card">
+  <template>
+    <style include="cbl-shared-styles">
+      :host {
+        display: block;
+        width: calc((100% - 8px) / 7 - 8px);
+        margin: 8px;
+      }
+
+      paper-card {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      @media screen and (max-width: 2100px) {
+        :host { width: calc(100% / 6 - 16px); }
+      }
+
+      @media screen and (max-width: 1800px) {
+        :host { width: calc(100% / 5 - 16px); }
+      }
+
+      @media screen and (max-width: 1500px) {
+        :host { width: calc(100% / 4 - 16px); }
+      }
+
+      @media screen and (max-width: 1200px) {
+        :host { width: calc(100% / 3 - 16px); }
+      }
+
+      @media screen and (max-width: 900px) {
+        :host { width: calc(100% / 2 - 16px); }
+      }
+
+      @media screen and (max-width: 600px) {
+        :host {
+          width: calc(100% - 8px);
+          margin: 4px;
+        }
+      }
+    </style>
+
+    <paper-card heading="[[challenge]]" image="" elevation="0">
+      <div class="card-content">[[challenge]]</div>
+      <div class="card-actions">
+        <div>16 questions</div>
+        <div>16 activities</div>
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    Polymer({
+      is: 'cbl-challenge-card',
+
+      behaviors: [
+        Polymer.NeonAnimationRunnerBehavior,
+        CBLAppBehavior
+      ],
+
+      properties: {
+        challenge: {
+          type: String
+        }
+      }
+    });
+  </script>
+</dom-module>

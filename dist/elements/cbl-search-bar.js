@@ -15,6 +15,11 @@ Polymer({
     this._fetchKeywords();
     this.focused = false;
     this.$.keywordsMenu.hidden = true;
+
+    this.$.searchInput.addEventListener('keyup', this._keyup.bind(this));
+    this.$.searchInput.addEventListener('keydown', this._keydown.bind(this));
+    this.$.searchInput.addEventListener('blur', this._blur.bind(this));
+    this.$.searchInput.addEventListener('focus', this._focus.bind(this));
   },
 
   _fetchKeywords: function _fetchKeywords() {
@@ -43,7 +48,7 @@ Polymer({
       if (!_this2.focused) {
         _this2.$.keywordsMenu.hidden = true;
       }
-    }, 10);
+    }, 100);
   },
 
   _keydown: function _keydown(e) {
@@ -59,7 +64,7 @@ Polymer({
     var index = Number(keywordsMenu.indexOf(selectedItem));
 
     keywordsMenu.select(index);
-    searchInput.$.input.focus();
+    searchInput.focus();
   },
 
   _select: function _select(e) {
@@ -87,7 +92,7 @@ Polymer({
       }
 
       keywordsMenu.select(index);
-      searchInput.$.input.focus();
+      searchInput.focus();
     } else if (e.which == 38) {
       //up
       if (typeof selectedItem != 'undefined') {
@@ -96,7 +101,7 @@ Polymer({
         keywordsMenu.select(index);
       }
 
-      searchInput.$.input.focus();
+      searchInput.focus();
     } else if (e.which == 13) {
       // enter
       if (typeof selectedItem != 'undefined') {

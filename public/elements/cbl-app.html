@@ -1,18 +1,20 @@
 
-<script src="../../bower_components/parse/parse.min.js"></script>
 <script src="../../bower_components/page/page.js"></script>
-<script src="../../bower_components/underscore/underscore-min.js"></script>
+<script src="../../bower_components/parse/parse.min.js"></script>
 <script>
   Parse.initialize("u4Sb7tV4jOqPNqD9nouqVQMgwQwEIemuOl2GPesc", "JWQuSPOojxH8vPHyAi9yNAWtNmgVibcjwoI2EtKu");
 </script>
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../bower_components/font-roboto/roboto.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 
 <link rel="import" href="cbl-shared-styles.html">
+<link rel="import" href="cbl-app-behavior.html">
 <link rel="import" href="cbl-layout.html">
+<link rel="import" href="cbl-panel.html">
 <link rel="import" href="cbl-login-dialog.html">
 <link rel="import" href="cbl-signup-dialog.html">
 <link rel="import" href="cbl-challenge-dialog.html">
@@ -24,11 +26,22 @@
         display: block;
         @apply(--layout-fit);
       }
+
+      paper-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 999;
+      }
     </style>
     <iron-media-query query="min-width: 640px" query-matches="{{largeScreen}}"></iron-media-query>
+    <paper-progress indeterminate hidden="[[!loading]]"></paper-progress>
 
-    <cbl-layout user="{{user}}">
-      paper-indsa
+    <cbl-layout user="{{user}}" loading="{{loading}}">
+      <iron-pages selected="[[page]]" attr-for-selected="page">
+        <cbl-panel page="/" loading="{{loading}}"></cbl-panel>
+      </iron-pages>
     </cbl-layout>
 
     <cbl-login-dialog id="loginDialog" user="{{user}}" email="{{email}}"></cbl-login-dialog>
@@ -36,78 +49,78 @@
     <cbl-challenge-dialog id="challengeDialog" user="{{user}}"></cbl-challenge-dialog>
   </template>
   <script>
-    class App {
-      beforeRegister() {
-        this.is = 'cbl-app';
-      }
+    Polymer({
+      is: 'cbl-app',
 
-      ready() {
+      behaviors: [CBLAppBehavior],
+
+      properties: {
+        page: {
+          type: String,
+          notify: true,
+          value: '/'
+        }
+      },
+
+      ready: function() {
         // routing
+        // default
         page('*', (ctx, next) => {
           let params = ctx.querystring.split('&').map(q => q.split('='));
           page.params = page.params || {};
 
-          params.forEach(p => {
-            page.params[p[0]] = p[1];
-          });
+          params.forEach(p => { page.params[p[0]] = p[1]; });
 
           next();
         });
 
+        // home
         page('/', () => {
 
         });
 
+        // login
         page('/login', () => {
-          if (this.user) return page.back();
-
-          this.async(() => {
-            this.$.loginDialog.open();
-          }, 1);
+          if (this.user) return page.back('/');
+          this.async(() => { this.$.loginDialog.open(); });
         });
 
+        // exit login
         page.exit('/login', (ctx, next) => {
           next();
-
-          this.async(() => {
-            this.$.loginDialog.close();
-          }, 1);
+          this.async(() => { this.$.loginDialog.close(); });
         });
 
+        // signup
         page('/signup', () => {
           if (this.user) return page.back();
-
-          this.async(() => {
-            this.$.signUpDialog.open();
-          }, 1);
+          this.async(() => { this.$.signUpDialog.open(); });
         });
 
+        // exit signup
         page.exit('/signup', (ctx, next) => {
           next();
-
-          this.async(() => {
-            this.$.signUpDialog.close();
-          }, 1);
+          this.async(() => { this.$.signUpDialog.close(); });
         });
 
+        // challenges/create
         page('/challenges/create', () => {
-          this.async(() => {
-            this.$.challengeDialog.open();
-          }, 1);
+          this.async(() => { this.$.challengeDialog.open(); });
         });
 
+        // exit callenges/create
         page.exit('/challenges/create', (ctx, next) => {
           next();
-
-          this.async(() => {
-            this.$.challengeDialog.close();
-          }, 1);
+          this.async(() => { this.$.challengeDialog.close(); });
         });
+
+        page('/questions', () => {});
+        page('/activities', () => {});
+        page('/resources', () => {});
+        page('/contributors', () => {});
 
         page();
       }
-    }
-
-    Polymer(App);
+    });
   </script>
 </dom-module>

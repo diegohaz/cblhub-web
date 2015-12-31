@@ -55,12 +55,13 @@
           error-message="Please enter the Big Idea"
           value="{{bigIdea}}"
           autofocus
+          on-focus="_focus"
+          on-blur="_blur"
           required>
-          <iron-icon id="bigIdeaHelp" icon="help" suffix></iron-icon>
         </paper-input>
 
-        <iron-collapse id="bigIdeaTip">
-          <p class="tip">The big idea is a broad concept that can be explored in multiple ways, e.g. <strong>Resilience</strong>, <strong>Separation</strong>, <strong>Creativity</strong>, <strong>Health</strong>, <strong>Sustainability</strong>, <strong>Democracy</strong> etc. <a href="https://www.challengebasedlearning.org/pages/about-cbl" target="_blank">Learn more. <iron-icon icon="open-in-new"></iron-icon></a></p>
+        <iron-collapse id="bigIdeaTip" opened>
+          <p class="tip">The big idea is a broad concept that can be explored in multiple ways, e.g. <strong>Resilience</strong>, <strong>Separation</strong>, <strong>Creativity</strong>, <strong>Health</strong>, <strong>Sustainability</strong>, <strong>Democracy</strong> etc. <a href="https://www.challengebasedlearning.org/pages/about-cbl" tabindex="4" target="_blank">Learn more <iron-icon icon="open-in-new"></iron-icon></a></p>
         </iron-collapse>
 
         <paper-input
@@ -68,12 +69,13 @@
           label="Essential Question"
           error-message="Please enter the Essential Question"
           value="{{essentialQuestion}}"
+          on-focus="_focus"
+          on-blur="_blur"
           required>
-          <iron-icon id="essentialQuestionHelp" icon="help" suffix></iron-icon>
         </paper-input>
 
         <iron-collapse id="essentialQuestionTip">
-          <p class="tip">By design, the big idea allows for the generation of a wide variety of essential questions. Eventually the process narrows to one essential question that reflects the interests of the learners and the needs of their community. <a href="https://www.challengebasedlearning.org/pages/about-cbl" target="_blank">Learn more. <iron-icon icon="open-in-new"></iron-icon></a></p>
+          <p class="tip">By design, the big idea allows for the generation of a wide variety of essential questions. Eventually the process narrows to one essential question that reflects the interests of the learners and the needs of their community. <a href="https://www.challengebasedlearning.org/pages/about-cbl" tabindex="4" target="_blank">Learn more <iron-icon icon="open-in-new"></iron-icon></a></p>
         </iron-collapse>
 
         <paper-input
@@ -81,22 +83,28 @@
           label="The Challenge"
           error-message="Please enter the Challenge"
           value="{{challenge}}"
+          on-focus="_focus"
+          on-blur="_blur"
           required>
-          <iron-icon id="challengeHelp" icon="help" suffix></iron-icon>
         </paper-input>
 
         <iron-collapse id="challengeTip">
-          <p class="tip">From the essential question a concise challenge is articulated that asks the learners to create a specific solution that will result in concrete, meaningful action. <a href="https://www.challengebasedlearning.org/pages/about-cbl" target="_blank">Learn more. <iron-icon icon="open-in-new"></iron-icon></a></p>
+          <p class="tip">From the essential question a concise challenge is articulated that asks the learners to create a specific solution that will result in concrete, meaningful action. <a href="https://www.challengebasedlearning.org/pages/about-cbl" tabindex="4" target="_blank">Learn more <iron-icon icon="open-in-new"></iron-icon></a></p>
         </iron-collapse>
 
         <paper-textarea
+          id="descriptionInput"
           label="Description"
-          placeholder="Summarize the challenge, so people can understand the feelings behind it. (Optional)"
           value="{{description}}"
-          rows="2"
           maxlength="512"
+          on-focus="_focus"
+          on-blur="_blur"
           char-counter>
         </paper-textarea>
+
+        <iron-collapse id="descriptionTip">
+          <p class="tip">Summarize the challenge, so people can understand the feelings behind it. Links are allowed. (Optional)</p>
+        </iron-collapse>
 
         <button hidden></button>
       </form>
@@ -109,33 +117,11 @@
     Polymer({
       is: 'cbl-challenge-dialog',
 
-      behaviors: [Polymer.CblAppBehavior],
+      behaviors: [CBLAppBehavior],
 
       listeners: {
         'iron-form-presubmit': 'submit',
         'cbl-dialog-confirm': 'submit'
-      },
-
-      ready: function() {
-        let helps = ['bigIdeaHelp', 'essentialQuestionHelp', 'challengeHelp'];
-
-        helps.forEach(help => {
-          this.$[help].addEventListener('click', () => {
-            this.toggleTip(help.replace('Help', 'Tip'));
-          });
-        });
-      },
-
-      toggleTip: function(id) {
-        let tips = ['bigIdeaTip', 'essentialQuestionTip', 'challengeTip'];
-
-        tips.forEach(tip => {
-          if (tip == id) {
-            this.$[tip].toggle();
-          } else {
-            this.$[tip].hide();
-          }
-        });
       },
 
       submit: function(event) {
@@ -171,7 +157,21 @@
 
       close: function() {
         this.$.dialog.close();
-      }
+      },
+
+      _focus: function(e) {
+        let input = e.target;
+        let tip = this.$[input.id.replace('Input', 'Tip')];
+
+        tip.show();
+      },
+
+      _blur: function(e) {
+        let input = e.target;
+        let tip = this.$[input.id.replace('Input', 'Tip')];
+
+        tip.hide();
+      },
     });
   </script>
 </dom-module>

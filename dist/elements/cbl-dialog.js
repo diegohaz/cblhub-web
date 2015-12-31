@@ -6,7 +6,7 @@
 
     is: 'cbl-dialog',
 
-    behaviors: [Polymer.CblAppBehavior, Polymer.PaperDialogBehavior, Polymer.NeonAnimationRunnerBehavior],
+    behaviors: [CBLAppBehavior, Polymer.PaperDialogBehavior, Polymer.NeonAnimationRunnerBehavior],
 
     properties: {
       heading: {
@@ -19,11 +19,6 @@
       dismissLabel: {
         type: String,
         value: 'Cancel'
-      },
-      loading: {
-        type: Boolean,
-        value: false,
-        notify: true
       }
     },
 

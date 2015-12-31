@@ -1,6 +1,6 @@
 "use strict";
 
-Polymer.CblAppBehavior = {
+var CBLAppBehavior = {
   properties: {
     user: {
       type: Object,
@@ -8,6 +8,12 @@ Polymer.CblAppBehavior = {
       value: function value() {
         return Parse.User.current();
       }
+    },
+
+    loading: {
+      type: Boolean,
+      notify: true,
+      value: false
     }
   }
 };

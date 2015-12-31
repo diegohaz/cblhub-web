@@ -3,7 +3,7 @@
 Polymer({
   is: 'cbl-signup-dialog',
 
-  behaviors: [Polymer.CblAppBehavior],
+  behaviors: [CBLAppBehavior],
 
   properties: {
     email: {
