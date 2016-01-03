@@ -1,40 +1,111 @@
-<link rel="import" href="../../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../../bower_components/neon-animation/neon-animation-runner-behavior.html">
-
-<link rel="import" href="cbl-shared-styles.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="cbl-app-styles.html">
 
 <dom-module id="cbl-challenge-card">
   <template>
-    <style include="cbl-shared-styles">
+    <style include="cbl-app-styles">
       :host {
-        display: block;
+        display: inline-block;
         width: calc((100% - 8px) / 7 - 8px);
-        margin: 8px;
-      }
-
-      paper-card {
-        width: 100%;
+        margin: 12px;
+        background: #fff;
         box-sizing: border-box;
       }
 
+      :host > * {
+        padding: 8px;
+      }
+
+      .header {
+        position: relative;
+        overflow: hidden;
+        height: 250px;
+        color: #fff;
+        padding: 0;
+      }
+
+      .header iron-image {
+        width: 100%;
+        height: 100%;
+      }
+
+      .header iron-image:before {
+        content: '';
+        background-image: linear-gradient(to top, rgba(0,0,0,.9), rgba(0,0,0,0) 50%, rgba(0,0,0,0) 80%, rgba(0,0,0,.6));
+        @apply(--layout-fit);
+      }
+
+      .header .big-idea {
+        position: absolute;
+        top: 0;
+        padding: 16px;
+        font-size: 18px;
+        font-weight: 400;
+      }
+
+      .header .big-idea a {
+        color: #fff;
+      }
+
+      .header .title {
+        position: absolute;
+        bottom: 0px;
+        padding: 16px;
+        font-size: 24px;
+        font-weight: 400;
+      }
+
+      .date {
+        font-size: 12px;
+        color: var(--secondary-text-color);
+        padding-bottom: 0;
+      }
+
+      .keywords {
+        padding: 4px;
+        overflow: hidden;
+      }
+
+      a.keyword {
+        display: block;
+        float: left;
+        text-decoration: none;
+        color: var(--paper-grey-900) !important;
+        line-height: 28px;
+        margin: 2px;
+        padding: 0 8px;
+        background-color: var(--paper-grey-300);
+        box-shadow: inset 0 0 1px 0 var(--paper-grey-400);
+        border-radius: 2px;
+        max-width: calc(50% - 4px);
+        box-sizing: border-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      a.keyword:hover {
+        background-color: var(--paper-grey-400);
+      }
+
       @media screen and (max-width: 2100px) {
-        :host { width: calc(100% / 6 - 16px); }
+        :host { width: calc(100% / 6 - 24px); }
       }
 
       @media screen and (max-width: 1800px) {
-        :host { width: calc(100% / 5 - 16px); }
+        :host { width: calc(100% / 5 - 24px); }
       }
 
       @media screen and (max-width: 1500px) {
-        :host { width: calc(100% / 4 - 16px); }
+        :host { width: calc(100% / 4 - 24px); }
       }
 
       @media screen and (max-width: 1200px) {
-        :host { width: calc(100% / 3 - 16px); }
+        :host { width: calc(100% / 3 - 24px); }
       }
 
       @media screen and (max-width: 900px) {
-        :host { width: calc(100% / 2 - 16px); }
+        :host { width: calc(100% / 2 - 24px); }
       }
 
       @media screen and (max-width: 600px) {
@@ -45,26 +116,52 @@
       }
     </style>
 
-    <paper-card heading="[[challenge]]" image="" elevation="0">
-      <div class="card-content">[[challenge]]</div>
-      <div class="card-actions">
-        <div>16 questions</div>
-        <div>16 activities</div>
-      </div>
-    </paper-card>
+    <div class="header">
+      <iron-image src="[[challenge.photo.medium.src]]" sizing="cover" fade></iron-image>
+      <div class="big-idea"><a href="/?q=[[challenge.bigIdea]]">[[challenge.bigIdea]]</a></div>
+      <div class="title">[[challenge.title]]</div>
+    </div>
+
+    <div class="date">[[date]]</div>
+    <div class="essential-question">[[challenge.essentialQuestion]]</div>
+
+    <div class="keywords">
+      <template is="dom-repeat" items="[[keywords]]" as="keyword">
+        <a class="keyword" href="/?q=[[keyword]]">[[keyword]]</a>
+      </template>
+    </div>
+  </template>
   </template>
   <script>
     Polymer({
       is: 'cbl-challenge-card',
 
       behaviors: [
-        Polymer.NeonAnimationRunnerBehavior,
         CBLAppBehavior
       ],
 
       properties: {
         challenge: {
-          type: String
+          type: Object,
+          observer: '_computeChallenge'
+        },
+        date: {
+          type: String,
+          value: ''
+        },
+        keywords: {
+          type: Array,
+          value: []
+        }
+      },
+
+      _computeChallenge: function(challenge) {
+        this.keywords = challenge.keywords.slice(0, 6);
+
+        if (challenge.updatedAt.getTime() == challenge.createdAt.getTime()) {
+          this.date = 'created ' + moment(challenge.createdAt).fromNow();
+        } else {
+          this.date = 'updated ' + moment(challenge.updatedAt).fromNow();
         }
       }
     });

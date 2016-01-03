@@ -1,9 +1,9 @@
-<html><head><link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-styles/color.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/paper-styles/shadow.html">
 
-</head><body><dom-module id="cbl-shared-styles">
+<dom-module id="cbl-app-styles">
   <template>
     <style>
       :root {
@@ -24,7 +24,9 @@
         --divider-color: #B6B6B6;
 
         --paper-progress-active-color: var(--primary-color);
-        --paper-tabs-selection-bar-color: var(--accent-color);
+        --paper-tabs-selection-bar-color: var(--primary-color);
+        --paper-toolbar-background: #fff;
+        --paper-toolbar-color: var(--primary-text-color);
 
         --paper-icon-button: {
           color: var(--accent-color);
@@ -83,4 +85,4 @@
       }
     </style>
   </template>
-</dom-module></body></html>
+</dom-module>

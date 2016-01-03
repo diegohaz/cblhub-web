@@ -1,16 +1,23 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 
-<link rel="import" href="cbl-shared-styles.html">
-<link rel="import" href="cbl-dialog.html">
+<link rel="import" href="cbl-app-styles.html">
+<link rel="import" href="cbl-page.html">
 
-<dom-module id="cbl-login-dialog">
+<dom-module id="cbl-user-login">
   <template>
-    <style include="cbl-shared-styles">
+    <style include="cbl-app-styles">
       :host {
         display: block;
+        position: relative;
+        min-height: calc(100vh - 64px);
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+      }
+
+      cbl-page {
+        max-width: 400px;
       }
 
       .facebook {
@@ -23,18 +30,11 @@
       .facebook paper-button {
         background-color: #3B5998;
       }
-
-      form {
-        padding-bottom: 16px;
-      }
     </style>
 
-    <iron-media-query query="max-width: 420px" query-matches="{{mobile}}"></iron-media-query>
-
-    <cbl-dialog id="dialog" heading="Log in" confirm-label="Log in" loading="{{loading}}" with-backdrop>
-      <div class="facebook" hidden="[[mobile]]">
-        <paper-button>Log in with Facebook</paper-button>
-        or use your e-mail:
+    <cbl-page title="Log In">
+      <div class="options">
+        <paper-button on-tap="submit" disabled="[[_isEmpty(email, password)]]">Log In</paper-button>
       </div>
       <form is="iron-form" id="form">
         <paper-input
@@ -60,24 +60,32 @@
           auto-validate>
         </paper-input>
 
+        <div class="signup">
+          <p>Forgot your password? <a href="/passwordreset">Reset password</a></p>
+          <p>Don't you have an account? <a href="/signup">Sign up</a></p>
+        </div>
+
         <button hidden></button>
       </form>
-      <div class="signup">
-        <p>Forgot your password? <a href="/passwordreset">Reset password</a></p>
-        <p>Don't you have an account? <a href="/signup">Sign up</a></p>
+    </cbl-page>
+
+<!--     <cbl-dialog id="dialog" heading="Log in" confirm-label="Log in" loading="{{loading}}" with-backdrop>
+      <div class="facebook" hidden="[[mobile]]">
+        <paper-button>Log in with Facebook</paper-button>
+        or use your e-mail:
       </div>
       <div class="facebook" hidden="[[!mobile]]">
         or use your Facebook account:
         <paper-button>Log in with Facebook</paper-button>
       </div>
-    </cbl-dialog>
+    </cbl-dialog> -->
 
-    <paper-toast id="toast" duration="5000" text="An error occurred. Try again later."></paper-toast>
+    <paper-toast id="toast" duration="5000" text="An error occurred. Please try again later."></paper-toast>
 
   </template>
   <script>
     Polymer({
-      is: 'cbl-login-dialog',
+      is: 'cbl-user-login',
 
       behaviors: [CBLAppBehavior],
 
@@ -85,44 +93,40 @@
         email: {
           type: String,
           notify: true
+        },
+        back: {
+          type: String,
+          value: '/'
         }
       },
 
       listeners: {
         'iron-form-presubmit': 'submit',
-        'cbl-dialog-confirm': 'submit'
       },
 
-      submit: function(event) {
+      submit: function(e) {
         if (!this.$.form.validate()) return;
 
-        event && event.preventDefault();
+        e && e.preventDefault();
 
         this.loading = true;
+        var self = this;
 
-        Parse.User.logIn(this.email, this.password).then(() => {
-          this.user = Parse.User.current();
-          this.$.dialog.cancel();
-        }, error => {
+        Parse.User.logIn(this.email, this.password).then(function() {
+          self.user = Parse.User.current();
+          self.go((self.back || '/') + '?done=/login');
+        }, function(error) {
           if (error.code == 101) {
-            this.$.emailInput.focus();
-            this.$.emailInput.invalid = true;
-            this.$.passwordInput.invalid = true;
-            this.$.toast.text = 'E-mail or password wrong';
+            self.$.emailInput.focus();
+            self.$.emailInput.invalid = true;
+            self.$.passwordInput.invalid = true;
+            self.$.toast.text = 'Wrong e-mail or password';
           }
 
-          this.$.toast.open();
-        }).always(() => {
-          this.loading = false;
+          self.$.toast.open();
+        }).always(function() {
+          self.loading = false;
         });
-      },
-
-      open: function() {
-        this.$.dialog.open();
-      },
-
-      close: function() {
-        this.$.dialog.close();
       }
     });
   </script>

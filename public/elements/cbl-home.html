@@ -1,0 +1,128 @@
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+
+<link rel="import" href="cbl-app-styles.html">
+<link rel="import" href="cbl-app-behavior.html">
+<link rel="import" href="cbl-icons.html">
+<link rel="import" href="cbl-grid.html">
+<link rel="import" href="cbl-challenge-card.html">
+
+<dom-module id="cbl-home">
+  <template>
+    <style include="cbl-app-styles">
+      :host {
+        display: block;
+
+        --paper-tab-content: {
+          font-weight: inherit !important;
+        };
+      }
+
+      paper-tabs {
+        margin-top: 16px;
+        text-align: center;
+      }
+
+      paper-tabs ::content #tabsContent {
+        position: static !important;
+      }
+
+      paper-tab iron-icon {
+        margin-right: 8px;
+        color: var(--accent-color);
+      }
+
+      cbl-grid {
+        margin: 12px;
+      }
+
+      paper-tab span {
+        text-transform: uppercase;
+      }
+
+      @media screen and (max-width: 500px) {
+        cbl-grid {
+          margin: 4px;
+        }
+
+        paper-tab span {
+          display: none;
+        }
+      }
+    </style>
+
+    <iron-media-query query="max-width: 500px" query-matches="{{mobile}}"></iron-media-query>
+
+    <paper-tabs selected="{{tab}}" hide-scroll-buttons noink scrollable>
+      <paper-tab><iron-icon icon="cbl:challenge"></iron-icon> <span>Challenges</span></paper-tab>
+      <paper-tab><iron-icon icon="cbl:question"></iron-icon> <span>Questions</span></paper-tab>
+      <paper-tab><iron-icon icon="cbl:activity"></iron-icon> <span>Activities</span></paper-tab>
+      <paper-tab><iron-icon icon="cbl:resource"></iron-icon> <span>Resources</span></paper-tab>
+    </paper-tabs>
+
+    <cbl-grid id="grid">
+      <template is="dom-repeat" items="[[items]]">
+        <cbl-challenge-card challenge="[[item]]"></cbl-challenge-card>
+      </template>
+    </cbl-grid>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'cbl-home',
+
+      behaviors: [CBLAppBehavior],
+
+      properties: {
+        tab: {
+          type: Number,
+          notify: true,
+          observer: 'load'
+        },
+        items: Array,
+        query: {
+          type: String,
+          observer: 'load'
+        }
+      },
+
+      attached: function() {
+        if (this.tab === undefined) {
+          this.tab = 0;
+        }
+      },
+
+      load: function() {
+        if (this.tab === undefined) return;
+
+        this.cancelAsync(this.loadTask);
+        this.loadTask = this.async(this._load, 100);
+      },
+
+      _load: function() {
+        var tabs = ['Challenges', 'Questions', 'Activities', 'Resources'];
+
+        this.loading = true;
+        var params = {};
+
+        if (this.query) {
+          params.keywords = [this.query];
+        }
+
+        var self = this;
+
+        Parse.Cloud.run('list' + tabs[this.tab], params).then(function(items) {
+          self.items = items;
+          self.$.grid.arrange();
+        }, function(error) {
+          console.log(error);
+        }).always(function() {
+          self.loading = false;
+        });
+      }
+    });
+
+
+  </script>
+</dom-module>

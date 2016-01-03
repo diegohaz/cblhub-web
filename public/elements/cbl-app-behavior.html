@@ -1,10 +1,16 @@
 <script>
 var CBLAppBehavior = {
   properties: {
+    path: {
+      type: String
+    },
+
     user: {
       type: Object,
       notify: true,
-      value: () => Parse.User.current()
+      value: function() {
+        return Parse.User.current();
+      }
     },
 
     loading: {
@@ -12,6 +18,44 @@ var CBLAppBehavior = {
       notify: true,
       value: false
     }
+  },
+
+  go: function(e) {
+    var path = '/';
+
+    if (typeof e == 'string') {
+      path = e;
+    } else {
+      var elements = Polymer.dom(e).path;
+      console.log(elements);
+
+      for (var i = 0; i < elements.length; i++) {
+        if (!elements[i].dataset) continue;
+
+        var value = elements[i].dataset.path;
+
+        if (value) {
+          path = value
+          break;
+        }
+      }
+    }
+
+    page(path);
+  },
+
+  back: function() {
+    page.back('/');
+  },
+
+  _isEmpty: function() {
+    var values = arguments;
+
+    for (var i = 0; i < values.length; i++) {
+      if (values[i] == '') return true;
+    }
+
+    return false;
   }
 };
 </script>

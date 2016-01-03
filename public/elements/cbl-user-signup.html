@@ -1,16 +1,19 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 
-<link rel="import" href="cbl-shared-styles.html">
-<link rel="import" href="cbl-dialog.html">
+<link rel="import" href="cbl-app-styles.html">
+<link rel="import" href="cbl-page.html">
 
-<dom-module id="cbl-signup-dialog">
+<dom-module id="cbl-user-signup">
   <template>
-    <style include="cbl-shared-styles">
+    <style include="cbl-app-styles">
       :host {
         display: block;
+        position: relative;
+        min-height: calc(100vh - 64px);
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
       }
 
       .facebook {
@@ -23,18 +26,11 @@
       .facebook paper-button {
         background-color: #3B5998;
       }
-
-      form {
-        padding-bottom: 16px;
-      }
     </style>
 
-    <iron-media-query query="max-width: 420px" query-matches="{{mobile}}"></iron-media-query>
-
-    <cbl-dialog id="dialog" heading="Create Account" confirm-label="Sign up" loading="{{loading}}" with-backdrop>
-      <div class="facebook" hidden="[[mobile]]">
-        <paper-button>Log in with Facebook</paper-button>
-        or use your e-mail:
+    <cbl-page title="New Account">
+      <div class="options">
+        <paper-button on-tap="submit" disabled="[[_isEmpty(displayName, email, reEmail, password, rePassword)]]">Sign Up</paper-button>
       </div>
       <form is="iron-form" id="form">
         <paper-input
@@ -64,6 +60,7 @@
           label="Confirm e-mail"
           error-message="E-mails don't match"
           pattern="^[[email]]$"
+          value="{{reEmail}}"
           required
           auto-validate>
         </paper-input>
@@ -82,25 +79,25 @@
           label="Confirm password"
           error-message="Passwords don't match"
           pattern="^[[password]]$"
+          value="{{rePassword}}"
           required
           auto-validate>
         </paper-input>
 
         <button hidden></button>
       </form>
-      <p>Already have an account? <a href="/login">Log in</a>.</p>
-      <div class="facebook" hidden="[[!mobile]]">
-        or use your Facebook account:
-        <paper-button>Log in with Facebook</paper-button>
-      </div>
-    </cbl-dialog>
 
-    <paper-toast id="toast" duration="5000" text="An error occurred. Try again later."></paper-toast>
+      <div class="login">
+        <p>Already have an account? <a href="/login">Log in</a></p>
+      </div>
+    </cbl-page>
+
+    <paper-toast id="toast" duration="5000" text="An error occurred. Please try again later."></paper-toast>
 
   </template>
   <script>
     Polymer({
-      is: 'cbl-signup-dialog',
+      is: 'cbl-user-signup',
 
       behaviors: [CBLAppBehavior],
 
@@ -108,49 +105,46 @@
         email: {
           type: String,
           notify: true
+        },
+        back: {
+          type: String,
+          value: '/'
         }
       },
 
       listeners: {
         'iron-form-presubmit': 'submit',
-        'cbl-dialog-confirm': 'submit'
       },
 
-      submit: function(event) {
+      submit: function(e) {
         if (!this.$.form.validate()) return;
 
-        event && event.preventDefault();
+        e && e.preventDefault();
 
         this.loading = true;
-        let user = new Parse.User;
+        var user = new Parse.User;
 
         user.set('name', this.displayName);
         user.set('email', this.email);
         user.set('username', this.email);
         user.set('password', this.password);
 
-        user.signUp().then(() => {
-          this.user = Parse.User.current();
-          this.$.dialog.cancel();
-        }, error => {
+        var self = this;
+
+        user.signUp().then(function() {
+          self.user = Parse.User.current();
+          self.go((self.back || '/') + '?done=/signup');
+        }, function(error) {
           if (error.code == 202) {
-            this.$.emailInput.focus();
-            this.$.emailInput.invalid = true;
-            this.$.toast.text = 'E-mail already registered';
+            self.$.emailInput.focus();
+            self.$.emailInput.invalid = true;
+            self.$.toast.text = 'E-mail already registered';
           }
 
-          this.$.toast.open();
-        }).always(() => {
-          this.loading = false;
+          self.$.toast.open();
+        }).always(function() {
+          self.loading = false;
         });
-      },
-
-      open: function() {
-        this.$.dialog.open();
-      },
-
-      close: function() {
-        this.$.dialog.close();
       }
     });
   </script>

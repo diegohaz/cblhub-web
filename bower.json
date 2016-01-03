@@ -22,6 +22,8 @@
     "iron-elements": "PolymerElements/iron-elements#~1.0.7",
     "neon-elements": "PolymerElements/neon-elements#~1.0.0",
     "parse": "~1.6.12",
-    "page": "visionmedia/page.js#~1.6.4"
+    "page": "visionmedia/page.js#~1.6.4",
+    "lazy-pages": "~0.8.5",
+    "moment": "~2.10.6"
   }
 }

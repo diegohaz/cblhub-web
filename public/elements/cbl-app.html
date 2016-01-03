@@ -1,5 +1,5 @@
-
 <script src="../../bower_components/page/page.js"></script>
+<script src="../../bower_components/moment/min/moment.min.js"></script>
 <script src="../../bower_components/parse/parse.min.js"></script>
 <script>
   Parse.initialize("u4Sb7tV4jOqPNqD9nouqVQMgwQwEIemuOl2GPesc", "JWQuSPOojxH8vPHyAi9yNAWtNmgVibcjwoI2EtKu");
@@ -7,24 +7,37 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../../bower_components/lazy-pages/lazy-pages.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 
-<link rel="import" href="cbl-shared-styles.html">
+<link rel="import" href="cbl-app-styles.html">
 <link rel="import" href="cbl-app-behavior.html">
 <link rel="import" href="cbl-layout.html">
-<link rel="import" href="cbl-panel.html">
-<link rel="import" href="cbl-login-dialog.html">
-<link rel="import" href="cbl-signup-dialog.html">
-<link rel="import" href="cbl-challenge-dialog.html">
+<link rel="import" href="cbl-home.html">
+<link rel="import" href="cbl-challenge-create.html">
+<link rel="import" href="cbl-user-login.html">
+<link rel="import" href="cbl-user-signup.html">
 
 <dom-module id="cbl-app">
   <template>
-    <style include="cbl-shared-styles">
+    <style include="cbl-app-styles">
       :host {
         display: block;
         @apply(--layout-fit);
+      }
+
+      lazy-pages {
+        position: static;
+        overflow: auto;
+      }
+
+      cbl-layout ::content #contentContainer {
+        overflow-y: visible;
+      }
+
+      cbl-layout ::content #contentContainer .content {
+        position: relative;
       }
 
       paper-progress {
@@ -35,18 +48,32 @@
         z-index: 999;
       }
     </style>
-    <iron-media-query query="min-width: 640px" query-matches="{{largeScreen}}"></iron-media-query>
     <paper-progress indeterminate hidden="[[!loading]]"></paper-progress>
 
-    <cbl-layout user="{{user}}" loading="{{loading}}">
-      <iron-pages selected="[[page]]" attr-for-selected="page">
-        <cbl-panel page="/" loading="{{loading}}"></cbl-panel>
-      </iron-pages>
+    <cbl-layout id="layout" path="[[path]]" query="[[params.q]]" user="{{user}}" loading="{{loading}}">
+      <lazy-pages selected="[[path]]" attr-for-selected="data-path">
+
+        <template is="dom-if" data-path="/" restamp>
+          <cbl-home path="[[path]]" query="[[params.q]]" loading="{{loading}}"></cbl-home>
+        </template>
+
+        <template is="dom-if" data-path="/challenges/create">
+          <cbl-challenge-create path="[[path]]" user="[[user]]" loading="{{loading}}"></cbl-challenge-create>
+        </template>
+
+        <template is="dom-if" data-path="/login" restamp>
+          <cbl-user-login path="[[path]]" user="{{user}}" email="{{email}}" back="[[params.back]]" loading="{{loading}}"></cbl-user-login>
+        </template>
+
+        <template is="dom-if" data-path="/signup" restamp>
+          <cbl-user-signup path="[[path]]" user="{{user}}" email="{{email}}" back="[[params.back]]" loading="{{loading}}"></cbl-user-signup>
+        </template>
+
+      </lazy-pages>
     </cbl-layout>
 
-    <cbl-login-dialog id="loginDialog" user="{{user}}" email="{{email}}"></cbl-login-dialog>
-    <cbl-signup-dialog id="signUpDialog" user="{{user}}" email="{{email}}"></cbl-signup-dialog>
-    <cbl-challenge-dialog id="challengeDialog" user="{{user}}"></cbl-challenge-dialog>
+    <paper-toast id="toast"></paper-toast>
+
   </template>
   <script>
     Polymer({
@@ -55,71 +82,85 @@
       behaviors: [CBLAppBehavior],
 
       properties: {
-        page: {
+        path: {
           type: String,
           notify: true,
-          value: '/'
+          value: ''
+        },
+        params: {
+          type: Object,
+          value: {}
         }
       },
 
       ready: function() {
+        var self = this;
+
         // routing
-        // default
-        page('*', (ctx, next) => {
-          let params = ctx.querystring.split('&').map(q => q.split('='));
-          page.params = page.params || {};
+        page('*', function(ctx, next) {
+          var params = ctx.querystring.split('&').map(function(q) {
+            return q.split('=');
+          });
 
-          params.forEach(p => { page.params[p[0]] = p[1]; });
+          self.set('params', {});
+
+          params.forEach(function(p) {
+            self.set('params.' + p[0], p[1]);
+          });
+
+          page.params = self.params;
+
+          // remove querystring, hash
+          self.path = page.current.replace(/(\?|#).*$/, '');
+
+          if (self.params.done) {
+            self.done(self.params.done);
+            self.params.done = undefined;
+            page(self.path || '/');
+          }
 
           next();
         });
 
-        // home
-        page('/', () => {
+        page('/', function() {});
 
+        page('/login', function() {
+          if (self.user) page('/');
         });
 
-        // login
-        page('/login', () => {
-          if (this.user) return page.back('/');
-          this.async(() => { this.$.loginDialog.open(); });
+        page('/signup', function() {
+          if (self.user) page('/');
         });
 
-        // exit login
-        page.exit('/login', (ctx, next) => {
-          next();
-          this.async(() => { this.$.loginDialog.close(); });
+        page('/passwordreset', function() {
+          if (self.user) page('/');
         });
 
-        // signup
-        page('/signup', () => {
-          if (this.user) return page.back();
-          this.async(() => { this.$.signUpDialog.open(); });
-        });
-
-        // exit signup
-        page.exit('/signup', (ctx, next) => {
-          next();
-          this.async(() => { this.$.signUpDialog.close(); });
-        });
-
-        // challenges/create
-        page('/challenges/create', () => {
-          this.async(() => { this.$.challengeDialog.open(); });
-        });
-
-        // exit callenges/create
-        page.exit('/challenges/create', (ctx, next) => {
-          next();
-          this.async(() => { this.$.challengeDialog.close(); });
-        });
-
-        page('/questions', () => {});
-        page('/activities', () => {});
-        page('/resources', () => {});
-        page('/contributors', () => {});
+        page('/challenges/create', function() {});
 
         page();
+      },
+
+      attached: function() {
+        document.querySelector('body').classList.add('cbl-app-attached');
+      },
+
+      done: function(action) {
+        if (action == 'logout') {
+          this.$.toast.text = 'You have successfully logged out';
+        } else if (action == '/login') {
+          this.$.toast.text = 'You have successfully logged in';
+        } else if (action == '/signup') {
+          this.$.toast.text = 'You have successfully signed up';
+        } else if (action == '/challenges/create') {
+          this.$.toast.text = 'You have successfully created a challenge';
+        }
+
+        this.$.toast.show();
+      },
+
+      _computeQuery: function(query) {
+        return query || '';
       }
     });
   </script>

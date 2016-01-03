@@ -1,3 +1,4 @@
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../bower_components/iron-form/iron-form.html">
@@ -5,62 +6,45 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 
-<link rel="import" href="cbl-shared-styles.html">
-<link rel="import" href="cbl-dialog.html">
+<link rel="import" href="cbl-app-styles.html">
+<link rel="import" href="cbl-app-behavior.html">
+<link rel="import" href="cbl-page.html">
 
-<dom-module id="cbl-challenge-dialog">
+<dom-module id="cbl-challenge-create">
   <template>
-    <style include="cbl-shared-styles">
+    <style include="cbl-app-styles">
       :host {
         display: block;
+        position: relative;
+        min-height: calc(100vh - 64px);
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
       }
 
-      cbl-dialog {
-        min-width: 500px;
-        max-width: 500px;
-      }
-
-      iron-icon {
-        width: 16px;
-        height: 16px;
-        cursor: pointer;
-        color: #999;
-      }
-
-      iron-icon:hover {
-        color: #666;
-      }
-
-      iron-collapse {
-        color: #666;
-      }
-
-      form {
-        padding-bottom: 16px;
-      }
-
-      @media screen and (max-width: 420px) {
-        cbl-dialog {
-          min-width: auto;
-          max-width: auto;
-        }
+      .notice {
+        margin-top: 48px;
+        margin-bottom: -16px;
       }
     </style>
 
-    <cbl-dialog id="dialog" heading="New Challenge" confirm-label="Create" loading="{{loading}}" with-backdrop>
+    <cbl-page title="New Challenge">
+      <div class="options">
+        <paper-button on-tap="submit" disabled="[[_isEmpty(bigIdea, essentialQuestion, challenge)]]">Create</paper-button>
+      </div>
       <form is="iron-form" id="form">
         <paper-input
           id="bigIdeaInput"
           label="Big Idea"
           error-message="Please enter the Big Idea"
           value="{{bigIdea}}"
-          autofocus
           on-focus="_focus"
           on-blur="_blur"
+          maxlength="48"
+          autofocus
           required>
         </paper-input>
 
-        <iron-collapse id="bigIdeaTip" opened>
+        <iron-collapse id="bigIdeaTip">
           <p class="tip">The big idea is a broad concept that can be explored in multiple ways, e.g. <strong>Resilience</strong>, <strong>Separation</strong>, <strong>Creativity</strong>, <strong>Health</strong>, <strong>Sustainability</strong>, <strong>Democracy</strong> etc. <a href="https://www.challengebasedlearning.org/pages/about-cbl" tabindex="4" target="_blank">Learn more <iron-icon icon="open-in-new"></iron-icon></a></p>
         </iron-collapse>
 
@@ -71,6 +55,7 @@
           value="{{essentialQuestion}}"
           on-focus="_focus"
           on-blur="_blur"
+          maxlength="96"
           required>
         </paper-input>
 
@@ -85,6 +70,7 @@
           value="{{challenge}}"
           on-focus="_focus"
           on-blur="_blur"
+          maxlength="96"
           required>
         </paper-input>
 
@@ -98,8 +84,7 @@
           value="{{description}}"
           maxlength="512"
           on-focus="_focus"
-          on-blur="_blur"
-          char-counter>
+          on-blur="_blur">
         </paper-textarea>
 
         <iron-collapse id="descriptionTip">
@@ -108,68 +93,65 @@
 
         <button hidden></button>
       </form>
-    </cbl-dialog>
 
-    <paper-toast id="toast" duration="5000" text="An error occurred. Try again later."></paper-toast>
+      <div class="notice"><iron-icon icon="language"></iron-icon> For a better experience, please write in English.</div>
+    </cbl-page>
+
+    <paper-toast id="toast" duration="5000" text="An error occurred. Please try again later."></paper-toast>
 
   </template>
   <script>
     Polymer({
-      is: 'cbl-challenge-dialog',
+      is: 'cbl-challenge-create',
 
       behaviors: [CBLAppBehavior],
 
       listeners: {
         'iron-form-presubmit': 'submit',
-        'cbl-dialog-confirm': 'submit'
       },
 
-      submit: function(event) {
-        event && event.preventDefault();
+      submit: function(e) {
+        e && e.preventDefault();
 
-        if (!this.$.form.validate()) return;
+        if (!this.$.form.validate() || this.loading) return;
 
         if (!this.user) {
-          page('/login?overlay=/challenges/create');
+          this.go('/login?back=/challenges/create');
           return;
         }
 
         this.loading = true;
-        let challenge = new Parse.Object('Challenge');
+        var challenge = new Parse.Object('Challenge');
 
         challenge.set('title', this.challenge);
         challenge.set('description', this.description);
         challenge.set('bigIdea', this.bigIdea);
         challenge.set('essentialQuestion', this.essentialQuestion);
 
-        challenge.save().then(challenge => {
-          page('/challenges/' + challenge.id);
-        }, error => {
-          this.$.toast.open();
-        }).always(() => {
-          this.loading = false;
+        var self = this;
+
+        challenge.save().then(function(challenge) {
+          self.go('/challenges/' + challenge.id);
+        }, function(error) {
+          self.$.toast.open();
+        }).always(function() {
+          self.loading = false;
         });
       },
 
-      open: function() {
-        this.$.dialog.open();
-      },
-
-      close: function() {
-        this.$.dialog.close();
-      },
-
       _focus: function(e) {
-        let input = e.target;
-        let tip = this.$[input.id.replace('Input', 'Tip')];
+        var input = e.target;
+        var tip = this.$[input.id.replace('Input', 'Tip')];
 
+        input.charCounter = true;
         tip.show();
       },
 
       _blur: function(e) {
-        let input = e.target;
-        let tip = this.$[input.id.replace('Input', 'Tip')];
+        var input = e.target;
+        var tip = this.$[input.id.replace('Input', 'Tip')];
 
+        input.charCounter = false;
         tip.hide();
       },
     });

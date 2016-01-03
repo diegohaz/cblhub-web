@@ -9,14 +9,9 @@
       :host {
         display: block;
         position: relative;
+        border: 1px solid #bbb;
+        border-radius: 4px;
       }
-/*
-      paper-input {
-        --paper-transition-easing: {
-          -webkit-transition: none;
-          transition: none;
-        };
-      }*/
 
       #searchInput {
         @apply(--paper-font-common-base);
@@ -27,26 +22,32 @@
         padding: 0 8px;
         width: calc(100% - 60px);
         background: transparent;
-        border: 1px solid #bbb;
+        border: none;
         border-right: 0;
-        border-radius: 4px 0 0 4px;
         color: var(--paper-input-container-input-color, --primary-text-color);
         -webkit-appearance: none;
-        height: 40px;
+        height: 39px;
+        box-sizing: border-box;
+      }
+
+      #searchInput:focus + paper-icon-button {
+        background-color: var(--accent-color);
+        color: var(--text-accent-color);
       }
 
       paper-icon-button {
-        background-color: var(--accent-color);
-        color: var(--text-accent-color);
+        background-color: #e8e8e8;
+        color: var(--primary-text-color);
         margin-left: -5px;
         width: 60px;
+        height: 39px;
         border-radius: 0 4px 4px 0;
       }
 
       paper-menu {
         position: absolute;
         left: 0;
-        top: 100%;
+        top: calc(100% + 1px);
         width: calc(100% - 60px);
         padding: 0;
         overflow-y: auto;
@@ -62,32 +63,25 @@
       }
     </style>
 
-<!--     <paper-input
-      id="searchInput"
-      label="Search for challenges, questions, activities and resources"
-      value="{{query}}"
-      on-keyup="_keyup"
-      on-keydown="_keydown"
-      on-blur="_blur"
-      on-focus="_focus"
-      no-label-float>
-      <paper-icon-button suffix icon="search" on-tap="search"></paper-icon-button>
-    </paper-input> -->
-
     <input
       is="iron-input"
       id="searchInput"
       type="search"
-      name="search"
       placeholder="Search for challenges, questions, activities and resources"
       autocomplete="off"
-      bind-value="{{query}}">
+      bind-value="{{query}}"
+      role="combobox"
+      aria-label="Search"
+      aria-expanded="true"
+      aria-autocomplete="list"
+      aria-owns="keywordsMenu"
+      aria-activedescendant$="{{selected}}">
 
-    <paper-icon-button icon="search" on-tap="search"></paper-icon-button>
+    <paper-icon-button icon="search" aria-label="Search" on-tap="submit"></paper-icon-button>
 
-    <paper-menu id="keywordsMenu">
-      <template is="dom-repeat" items="{{keywords}}">
-        <paper-item on-mouseover="_selection" on-tap="_select">[[item]]</paper-item>
+    <paper-menu id="keywordsMenu" role="listbox" attr-for-selected="id" selected="{{selected}}">
+      <template is="dom-repeat" items="{{keywords}}" index-as="i">
+        <paper-item id="keyword[[i]]" on-mouseover="_mouseover" on-tap="_tap">[[item]]</paper-item>
       </template>
     </paper-menu>
 
@@ -98,6 +92,8 @@
 <script>
   Polymer({
     is: 'cbl-search-bar',
+
+    behaviors: [CBLAppBehavior],
 
     properties: {
       query: {
@@ -118,11 +114,22 @@
       this.$.searchInput.addEventListener('focus', this._focus.bind(this));
     },
 
+    submit: function() {
+      if (this.query) {
+        this.go('/?q=' + this.query);
+      } else {
+        this.go('/');
+      }
+    },
+
     _fetchKeywords: function() {
-      Parse.Cloud.run('listKeywords').then(keywords => {
-        this.allKeywords = keywords.map(k => k.keyword);
+      Parse.Cloud.run('listKeywords').then(function(keywords) {
+        this.allKeywords = keywords.map(function(k) {
+          return k.keyword;
+        });
+
         this._searchKeywords('');
-      });
+      }.bind(this));
     },
 
     _focus: function() {
@@ -134,7 +141,7 @@
       this.$.keywordsMenu.select(-1);
       this.focused = false;
 
-      this.async(() => {
+      this.async(function() {
         if (!this.focused) {
           this.$.keywordsMenu.hidden = true;
         }
@@ -147,32 +154,33 @@
       }
     },
 
-    _selection:function(e) {
-      let searchInput = this.$.searchInput;
-      let keywordsMenu = this.$.keywordsMenu;
-      let selectedItem = e.currentTarget;
-      let index = Number(keywordsMenu.indexOf(selectedItem));
+    _mouseover:function(e) {
+      var searchInput = this.$.searchInput;
+      var keywordsMenu = this.$.keywordsMenu;
+      var selectedItem = e.currentTarget;
+      var index = Number(keywordsMenu.indexOf(selectedItem));
 
-      keywordsMenu.select(index);
+      keywordsMenu.select('keyword' + index);
       searchInput.focus();
     },
 
-    _select: function(e) {
-      let keywordsMenu = this.$.keywordsMenu;
-      let selectedItem = e.currentTarget;
-      let index = Number(keywordsMenu.indexOf(selectedItem));
+    _tap: function(e) {
+      var keywordsMenu = this.$.keywordsMenu;
+      var selectedItem = e.currentTarget;
+      var index = Number(keywordsMenu.indexOf(selectedItem));
 
       this.query = this.keywords[index];
 
       this.keywords = [];
+      this.submit();
       e.stopPropagation();
     },
 
     _keyup: function(e) {
-      let searchInput = this.$.searchInput;
-      let keywordsMenu = this.$.keywordsMenu;
-      let selectedItem = keywordsMenu.focusedItem || keywordsMenu.selectedItem;
-      let index = 0;
+      var searchInput = this.$.searchInput;
+      var keywordsMenu = this.$.keywordsMenu;
+      var selectedItem = keywordsMenu.focusedItem || keywordsMenu.selectedItem;
+      var index = 0;
 
       if (e.which == 40) {
         //down
@@ -181,14 +189,14 @@
           index = Math.min(index + 1, this.keywords.length - 1);
         }
 
-        keywordsMenu.select(index);
+        keywordsMenu.select('keyword' + index);
         searchInput.focus();
       } else if (e.which == 38) {
         //up
         if (typeof selectedItem != 'undefined') {
           index = Number(keywordsMenu.indexOf(selectedItem));
           index = Math.max(index - 1, -1);
-          keywordsMenu.select(index);
+          keywordsMenu.select('keyword' + index);
         }
 
         searchInput.focus();
@@ -200,6 +208,13 @@
           this.keywords = [];
           keywordsMenu.select(-1);
         }
+        this.submit();
+      } else if (e.which == 27) {
+        // esc
+        if (typeof selectedItem != 'undefined') {
+          keywordsMenu.select(-1);
+        }
+        this.keywords = [];
       } else {
         // search
         this._searchKeywords(this.query.trim());
@@ -214,12 +229,12 @@
         return;
       }
 
-      let pattern = new RegExp(term.toLowerCase());
+      var pattern = new RegExp(term.toLowerCase());
 
       for (var i = 0; i < this.allKeywords.length; i++) {
         if (this.keywords.length == 10) break;
 
-        let keyword = this.allKeywords[i];
+        var keyword = this.allKeywords[i];
 
         if (pattern.test(keyword.toLowerCase())) {
           this.push('keywords', keyword);

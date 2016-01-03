@@ -1,17 +1,19 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/app-layout/app-layout.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 
-<link rel="import" href="cbl-shared-styles.html">
-<link rel="import" href="cbl-search-bar.html">
+<link rel="import" href="cbl-app-styles.html">
 <link rel="import" href="cbl-app-behavior.html">
+<link rel="import" href="cbl-search-bar.html">
 
 <dom-module id="cbl-layout">
   <template>
-    <style include="cbl-shared-styles">
+    <style include="cbl-app-styles">
       :host {
         display: block;
         @apply(--layout-fit);
@@ -27,6 +29,7 @@
 
       app-toolbar > [title] {
         pointer-events: auto;
+        @apply(--layout-flex-none);
         @apply(--layout-horizontal);
         @apply(--layout-center);
       }
@@ -44,13 +47,25 @@
         @apply(--layout-flex);
       }
 
+      paper-menu-button {
+        padding: 0;
+      }
+
+      paper-menu {
+        min-width: 120px;
+      }
+
+      paper-item {
+        cursor: pointer;
+      }
+
       paper-fab {
         position: fixed;
         right: 8px;
         bottom: 8px;
       }
 
-      @media screen and (max-width: 639px) {
+      @media screen and (max-width: 600px) {
         app-toolbar {
           height: 56px;
         }
@@ -60,27 +75,36 @@
         }
       }
     </style>
-    <iron-media-query query="min-width: 640px" query-matches="{{largeScreen}}"></iron-media-query>
+    <iron-media-query query="max-width: 600px" query-matches="{{mobile}}"></iron-media-query>
 
     <app-header-layout>
       <app-header reveals>
-        <app-toolbar>
+        <app-toolbar role="toolbar">
 
           <div title>
             <a href="/">Open CBL</a>
-            <cbl-search-bar hidden="[[!largeScreen]]"></cbl-search-bar>
           </div>
 
-          <template is="dom-if" if="[[largeScreen]]">
-            <paper-button onclick="page('/challenges/create?overlay='+page.current)" raised><iron-icon icon="create"></iron-icon><span>New challenge</span></paper-button>
-            <paper-button hidden="[[user]]" class="bordered" onclick="page('/login?overlay='+page.current)">Log in</paper-button>
-            <paper-button hidden="[[!user]]" class="bordered" on-tap="logout">Log out</paper-button>
+          <template is="dom-if" if="[[!mobile]]">
+            <cbl-search-bar query="{{query}}"></cbl-search-bar>
+
+            <paper-button on-tap="go" data-path="/challenges/create" raised>
+              <iron-icon icon="add"></iron-icon><span>New challenge</span>
+            </paper-button>
           </template>
 
-          <template is="dom-if" if="[[!largeScreen]]">
+          <template is="dom-if" if="[[mobile]]">
             <paper-icon-button icon="search"></paper-icon-button>
-            <paper-icon-button icon="more-vert"></paper-icon-button>
           </template>
+
+          <paper-menu-button horizontal-align="right">
+            <paper-icon-button icon="more-vert" aria-label="More options" class="dropdown-trigger"></paper-icon-button>
+            <paper-menu class="dropdown-content">
+              <paper-item on-tap="_goLogIn" hidden="[[user]]">Log In</paper-item>
+              <paper-item on-tap="_goSignUp" hidden="[[user]]">Sign Up</paper-item>
+              <paper-item on-tap="_logOut" hidden="[[!user]]">Log Out</paper-item>
+            </paper-menu>
+          </paper-menu-button>
 
         </app-toolbar>
       </app-header>
@@ -89,7 +113,7 @@
       </div>
     </app-header-layout>
 
-    <paper-fab icon="create" onclick="page('/challenges/create?overlay='+page.current)" hidden="[[largeScreen]]"></paper-fab>
+    <paper-fab icon="add" on-tap="go" data-path="/challenges/create" hidden="[[!mobile]]"></paper-fab>
 
   </template>
   <script>
@@ -98,10 +122,26 @@
 
       behaviors: [CBLAppBehavior],
 
-      logout: function() {
-        Parse.User.logOut().then(() => {
+      properties: {
+        query: {
+          type: String,
+          notify: true
+        }
+      },
+
+      _logOut: function() {
+        Parse.User.logOut().then(function() {
           this.user = null;
-        });
+          this.go('/login?done=logout');
+        }.bind(this));
+      },
+
+      _goLogIn: function() {
+        this.go('/login?back=' + this.path);
+      },
+
+      _goSignUp: function() {
+        this.go('/signup?back=' + this.path);
       }
     });
   </script>

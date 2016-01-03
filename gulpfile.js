@@ -4,39 +4,16 @@ var gulp = require('gulp');
 var del = require('del');
 var $ = require('gulp-load-plugins')();
 
-// watch
-gulp.task('watch', function() {
-  gulp.watch('public/elements/**/*.html', ['babel']);
-});
-
 // clean
 gulp.task('clean', function() {
   return del(['dist']);
 });
 
-// babel
-gulp.task('babel', ['clean'], function() {
-  return gulp.src('public/elements/**/*.html')
-    .pipe($.sourcemaps.init())
-    .pipe($.plumber())
-    .pipe($.crisper({
-      scriptInHead: false,
-      onlySplit: false
-    }))
-    .pipe($.if('*.js', $.babel({
-      presets: ['es2015'],
-      compact: false
-    })))
-    .pipe($.plumber.stop())
-    .pipe($.sourcemaps.write('.'))
-    .pipe(gulp.dest('dist/elements'));
-});
-
 // minify
-gulp.task('minify', ['babel'], function () {
+gulp.task('minify', ['clean'], function () {
   var DEST_DIR = 'dist/elements';
 
-  return gulp.src('dist/elements/cbl-app.html')
+  return gulp.src('public/elements/cbl-app.html')
     .pipe($.vulcanize({
       dest: DEST_DIR,
       strip: true,
