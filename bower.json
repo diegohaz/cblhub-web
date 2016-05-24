@@ -25,5 +25,8 @@
     "lazy-pages": "~0.8.5",
     "moment": "~2.10.6",
     "mark-down": "~1.0.0"
+  },
+  "resolutions": {
+    "polymer": "~1.2.3"
   }
 }
