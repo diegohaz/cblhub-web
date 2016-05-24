@@ -1,0 +1,261 @@
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/mark-down/mark-down.html">
+
+<link rel="import" href="cbl-app-behavior.html">
+<link rel="import" href="cbl-app-styles.html">
+<link rel="import" href="cbl-icons.html">
+<link rel="import" href="cbl-challenge-header.html">
+<link rel="import" href="cbl-challenge-photos.html">
+<link rel="import" href="cbl-connections.html">
+
+<dom-module id="cbl-challenge">
+  <template>
+    <style include="cbl-app-styles">
+      :host {
+        display: block;
+        position: relative;
+        min-height: calc(100vh - 64px);
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+      }
+
+      .page {
+        width: calc(100% - 32px);
+        max-width: 860px;
+        margin: 16px;
+      }
+
+      .content {
+        background-color: #fff;
+        padding: 16px;
+      }
+
+      .content .options {
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+        margin: -8px;
+      }
+
+      .content .options paper-button,
+      .content .options paper-icon-button {
+        color: var(--primary-text-color);
+        background-color: transparent;
+      }
+
+      .content .options .save {
+        color: var(--accent-color);
+      }
+
+      .content .static .field {
+        margin: 10px 0 16px;
+      }
+
+      .content .static label {
+        @apply(--paper-font-caption);
+        color: var(--secondary-text-color);
+      }
+
+      .content .static p,
+      .content .static mark-down ::content p {
+        @apply(--paper-font-subhead);
+        margin: 0;
+      }
+
+      #editForm [readonly] ::content .underline {
+        display: none;
+      }
+
+      cbl-keyword-list {
+        margin-top: 24px;
+      }
+
+      @media screen and (max-width: 600px) {
+        :host {
+          position: absolute;
+          top: -56px;
+          @apply(--layout-start-justified);
+        }
+
+        .page {
+          width: 100%;
+          max-width: 100%;
+          margin: 0;
+        }
+      }
+    </style>
+
+    <iron-media-query query="max-width: 600px" query-matches="{{mobile}}"></iron-media-query>
+
+    <div class="page">
+
+      <cbl-challenge-header challenge="[[challenge]]" mobile="[[mobile]]" is-author="[[_isAuthor(challenge, user)]]"></cbl-challenge-header>
+
+      <div class="content">
+
+        <div class="static" hidden="[[editing]]">
+          <div class="options">
+            <template is="dom-if" if="[[!mobile]]">
+              <paper-button on-tap="_toggleEdit" hidden="[[!_isAuthor(challenge, user)]]">
+                <iron-icon icon="create"></iron-icon>
+                <span>Edit</span>
+              </paper-button>
+            </template>
+            <template is="dom-if" if="[[mobile]]">
+              <paper-icon-button
+                icon="create"
+                on-tap="_toggleEdit"
+                aria-label$="Edit"
+                hidden="[[!_isAuthor(challenge, user)]]">
+              </paper-icon-button>
+            </template>
+          </div>
+
+          <div class="field">
+            <label for="description">Description</label>
+            <mark-down id="description" text="[[challenge.description]]"></mark-down>
+          </div>
+
+          <div class="field">
+            <label for="bigIdea">Big Idea</label>
+            <p id="bigIdea">[[challenge.bigIdea]]</p>
+          </div>
+
+          <div class="field">
+            <label for="essentialQuestion">Essential Question</label>
+            <p id="essentialQuestion">[[challenge.essentialQuestion]]</p>
+          </div>
+
+          <div class="field">
+            <label for="challenge">The Challenge</label>
+            <p id="challenge">[[challenge.title]]</p>
+          </div>
+        </div>
+
+        <template is="dom-if" if="[[editing]]">
+          <div class="options">
+            <template is="dom-if" if="[[!mobile]]">
+              <paper-button on-tap="_toggleEdit"><iron-icon icon="close"></iron-icon><span>Cancel</span></paper-button>
+              <paper-button class="save" on-tap="_submitEdit"><iron-icon icon="check"></iron-icon><span>Save</span></paper-button>
+            </template>
+            <template is="dom-if" if="[[mobile]]">
+              <paper-icon-button icon="close" on-tap="_toggleEdit" aria-label="Cancel"></paper-icon-button>
+              <paper-icon-button class="save" icon="check" on-tap="_submitEdit" aria-label="Save"></paper-icon-button>
+            </template>
+          </div>
+
+          <form is="iron-form" id="editForm" on-iron-form-presubmit="_submitEdit">
+            <paper-textarea id="descriptionInput" label="Description" value="{{challenge.description}}" maxlength="512"></paper-textarea>
+
+            <paper-input label="Big Idea" error-message="Please enter the Big Idea" value="{{challenge.bigIdea}}" maxlength="48" required></paper-input>
+
+            <paper-input label="Essential Question" error-message="Please enter the Essential Question" value="{{challenge.essentialQuestion}}" maxlength="96" required></paper-input>
+
+            <paper-input label="The Challenge" error-message="Please enter the Challenge" value="{{challenge.title}}" maxlength="96" required></paper-input>
+
+            <button hidden></button>
+          </form>
+        </template>
+
+        <cbl-keyword-list keywords="[[_computeKeywords(challenge.keywords)]]"></cbl-keyword-list>
+      </div>
+
+      <cbl-connections id="contributions" challenge="[[challenge]]"></cbl-connections>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'cbl-challenge',
+
+      behaviors: [CBLAppBehavior],
+
+      properties: {
+        challengeId: {
+          type: String,
+          observer: 'load'
+        },
+        challenge: {
+          type: Object
+        },
+        photo: {
+          type: String
+        },
+        editing: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      detached: function() {
+        this.challenge = {};
+      },
+
+      load: function() {
+        if (!this.challengeId || (this.challenge && this.challenge.questions.length)) return;
+
+        this.async(function() {
+          this.loading = true;
+        });
+
+        this.challenge = {};
+        var self = this;
+
+        Parse.Cloud.run('getChallenge', {id: this.challengeId}).then(function(challenge) {
+          self.challenge = challenge;
+        }).always(function() {
+          self.loading = false;
+        });
+      },
+
+      _submitEdit: function(e) {
+        e && e.preventDefault();
+
+        if (!this.$$('#editForm').validate() || this.loading) return;
+
+        var self = this;
+        var challenge = new Parse.Object('Challenge');
+
+        this.loading = true;
+        challenge.id = this.challenge.id;
+
+        challenge.fetch().then(function() {
+          challenge.set('title', self.challenge.title);
+          challenge.set('description', self.challenge.description);
+          challenge.set('bigIdea', self.challenge.bigIdea);
+          challenge.set('essentialQuestion', self.challenge.essentialQuestion);
+
+          return challenge.save();
+        }).always(function() {
+          homeCache = {};
+          searchCache = {};
+          self.loading = false;
+          self.editing = false;
+        });
+      },
+
+      _toggleEdit: function() {
+        if (this.editing) {
+          this.editing = false;
+        } else {
+          this.editing = true;
+        }
+      },
+
+      _computeKeywords: function(keywords) {
+        if (!keywords) return;
+
+        return keywords.slice(0, 10);
+      },
+
+      _isAuthor: function(challenge, user) {
+        if (!challenge || !challenge.id || !user) return false;
+
+        return user.id == challenge.user.id;
+      }
+    });
+  </script>
+</dom-module>

@@ -13,7 +13,7 @@
     <style include="cbl-app-styles">
       :host {
         display: block;
-
+        position: relative;
         --paper-tab-content: {
           font-weight: inherit !important;
         };
@@ -34,6 +34,14 @@
       }
 
       cbl-grid {
+        margin-top: 12px !important;
+        margin-bottom: 12px !important;
+        margin-left: 7%;
+        margin-right: 7%;
+      }
+
+      cbl-grid > * {
+        width: calc((100% - 8px) / 7 - 8px);
         margin: 12px;
       }
 
@@ -41,85 +49,151 @@
         text-transform: uppercase;
       }
 
-      @media screen and (max-width: 500px) {
-        cbl-grid {
-          margin: 4px;
-        }
+      @media screen and (max-width: 2200px) {
+        cbl-grid > * { width: calc(100% / 5 - 24px); }
+      }
 
-        paper-tab span {
-          display: none;
+      @media screen and (max-width: 1800px) {
+        cbl-grid > * { width: calc(100% / 4 - 24px); }
+      }
+
+      @media screen and (max-width: 1400px) {
+        cbl-grid > * { width: calc(100% / 3 - 24px); }
+      }
+
+      @media screen and (max-width: 1200px) {
+        cbl-grid { margin: 0 12px; }
+      }
+
+      @media screen and (max-width: 1000px) {
+        cbl-grid > * { width: calc(100% / 2 - 24px); }
+      }
+
+      @media screen and (max-width: 600px) {
+        cbl-grid { margin: 4px !important; }
+
+        paper-tab span { display: none; }
+
+        cbl-grid > * {
+          width: calc(100% - 8px);
+          margin: 4px;
         }
       }
     </style>
 
-    <iron-media-query query="max-width: 500px" query-matches="{{mobile}}"></iron-media-query>
+    <iron-media-query query="max-width: 600px" query-matches="{{mobile}}"></iron-media-query>
 
     <paper-tabs selected="{{tab}}" hide-scroll-buttons noink scrollable>
-      <paper-tab><iron-icon icon="cbl:challenge"></iron-icon> <span>Challenges</span></paper-tab>
-      <paper-tab><iron-icon icon="cbl:question"></iron-icon> <span>Questions</span></paper-tab>
-      <paper-tab><iron-icon icon="cbl:activity"></iron-icon> <span>Activities</span></paper-tab>
-      <paper-tab><iron-icon icon="cbl:resource"></iron-icon> <span>Resources</span></paper-tab>
+      <template is="dom-repeat" items="[[tabs]]" as="label">
+        <paper-tab><iron-icon icon="cbl:[[label.id]]"></iron-icon> <span>[[label.title]]</span></paper-tab>
+      </template>
     </paper-tabs>
 
     <cbl-grid id="grid">
-      <template is="dom-repeat" items="[[items]]">
-        <cbl-challenge-card challenge="[[item]]"></cbl-challenge-card>
+      <template is="dom-if" if="[[_isTab(tab, 'challenge')]]">
+        <template is="dom-repeat" items="[[items]]">
+          <cbl-challenge-card challenge="[[item]]"></cbl-challenge-card>
+        </template>
       </template>
     </cbl-grid>
 
   </template>
   <script>
+    var homeCache = {};
+    var searchCache = {};
+
     Polymer({
       is: 'cbl-home',
 
       behaviors: [CBLAppBehavior],
 
       properties: {
+        tabs: {
+          type: Array,
+          value: [
+            {id: 'challenge', title: 'Challenges'},
+            {id: 'question', title: 'Questions'},
+            {id: 'activity', title: 'Activities'},
+            {id: 'resource', title: 'Resources'}
+          ]
+        },
         tab: {
           type: Number,
           notify: true,
-          observer: 'load'
+          value: 0
         },
-        items: Array,
+        page: {
+          type: String,
+          value: 0
+        },
         query: {
           type: String,
           observer: 'load'
-        }
+        },
+        items: Array,
       },
 
-      attached: function() {
-        if (this.tab === undefined) {
-          this.tab = 0;
-        }
+      observers: [
+        'load(tab, page)'
+      ],
+
+      arrange: function() {
+        this.$.grid.arrange();
       },
 
       load: function() {
         if (this.tab === undefined) return;
 
-        this.cancelAsync(this.loadTask);
-        this.loadTask = this.async(this._load, 100);
+        var tab = this.tabs[this.tab].id;
+        var queryCache = searchCache[this.query];
+        var tabCache = homeCache[this.tab];
+
+        if (this.query && queryCache && queryCache[tab] && queryCache[tab][this.page]) {
+          this.items = queryCache[tab][this.page];
+          this.arrange();
+        } else if (!this.query && homeCache && homeCache[tab] && homeCache[tab][this.page]) {
+          this.items = homeCache[tab][this.page];
+          this.arrange();
+        } else {
+          this.cancelAsync(this.loadTask);
+          this.loadTask = this.async(this._load, 100);
+        }
       },
 
       _load: function() {
-        var tabs = ['Challenges', 'Questions', 'Activities', 'Resources'];
-
-        this.loading = true;
+        var self = this;
+        var tab = this.tabs[this.tab];
         var params = {};
 
-        if (this.query) {
-          params.keywords = [this.query];
-        }
+        this.items = [];
+        this.loading = true;
 
-        var self = this;
+        params.keywords = this.query? [this.query] : undefined;
+        params.page = this.page;
 
-        Parse.Cloud.run('list' + tabs[this.tab], params).then(function(items) {
-          self.items = items;
-          self.$.grid.arrange();
+        Parse.Cloud.run('list' + tab.title, params).then(function(items) {
+          if (self.query) {
+            if (!searchCache[self.query]) searchCache[self.query] = {};
+            if (!searchCache[self.query][tab.id]) searchCache[self.query][tab.id] = [];
+
+            searchCache[self.query][tab.id][self.page] = items;
+          } else {
+            if (!homeCache[tab.id]) homeCache[tab.id] = [];
+
+            homeCache[tab.id][self.page] = items;
+          }
+
+          self.items = self.page > 1 ? self.items.concat(items) : items;
+          self.arrange();
         }, function(error) {
           console.log(error);
         }).always(function() {
           self.loading = false;
         });
+      },
+
+      _isTab: function(tab, id) {
+        return this.tabs[tab].id == id;
       }
     });
 

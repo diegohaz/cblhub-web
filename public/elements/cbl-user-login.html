@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="cbl-app-styles.html">
@@ -20,6 +21,10 @@
         max-width: 400px;
       }
 
+      paper-button.submit {
+        margin: 32px 0 0;
+      }
+
       .facebook {
         @apply(--layout-flex);
         @apply(--layout-vertical);
@@ -30,12 +35,16 @@
       .facebook paper-button {
         background-color: #3B5998;
       }
+
+      @media screen and (max-width: 600px) {
+        :host {
+          @apply(--layout-start-justified);
+        }
+      }
     </style>
 
-    <cbl-page title="Log In">
-      <div class="options">
-        <paper-button on-tap="submit" disabled="[[_isEmpty(email, password)]]">Log In</paper-button>
-      </div>
+    <cbl-page>
+      <div class="title">Log In</div>
       <form is="iron-form" id="form">
         <paper-input
           id="emailInput"
@@ -60,25 +69,16 @@
           auto-validate>
         </paper-input>
 
-        <div class="signup">
-          <p>Forgot your password? <a href="/passwordreset">Reset password</a></p>
-          <p>Don't you have an account? <a href="/signup">Sign up</a></p>
-        </div>
+        <paper-button class="submit" on-tap="submit" disabled="[[_isEmpty(email, password)]]">Log In</paper-button>
 
         <button hidden></button>
       </form>
     </cbl-page>
 
-<!--     <cbl-dialog id="dialog" heading="Log in" confirm-label="Log in" loading="{{loading}}" with-backdrop>
-      <div class="facebook" hidden="[[mobile]]">
-        <paper-button>Log in with Facebook</paper-button>
-        or use your e-mail:
-      </div>
-      <div class="facebook" hidden="[[!mobile]]">
-        or use your Facebook account:
-        <paper-button>Log in with Facebook</paper-button>
-      </div>
-    </cbl-dialog> -->
+    <div class="signup">
+      <p>Forgot your password? <a href="/login/reset">Reset password</a></p>
+      <p>Don't you have an account? <a href="/signup">Sign up</a></p>
+    </div>
 
     <paper-toast id="toast" duration="5000" text="An error occurred. Please try again later."></paper-toast>
 
@@ -114,7 +114,8 @@
 
         Parse.User.logIn(this.email, this.password).then(function() {
           self.user = Parse.User.current();
-          self.go((self.back || '/') + '?done=/login');
+          self.message = 'You have successfully logged in';
+          self.go(self.back || '/');
         }, function(error) {
           if (error.code == 101) {
             self.$.emailInput.focus();

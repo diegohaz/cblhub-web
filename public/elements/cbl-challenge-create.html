@@ -21,16 +21,19 @@
         @apply(--layout-center-center);
       }
 
-      .notice {
-        margin-top: 48px;
-        margin-bottom: -16px;
+      paper-button.submit {
+        margin: 32px 0 0;
+      }
+
+      @media screen and (max-width: 600px) {
+        :host {
+          @apply(--layout-start-justified);
+        }
       }
     </style>
 
-    <cbl-page title="New Challenge">
-      <div class="options">
-        <paper-button on-tap="submit" disabled="[[_isEmpty(bigIdea, essentialQuestion, challenge)]]">Create</paper-button>
-      </div>
+    <cbl-page>
+      <div class="title">New Challenge</div>
       <form is="iron-form" id="form">
         <paper-input
           id="bigIdeaInput"
@@ -88,14 +91,15 @@
         </paper-textarea>
 
         <iron-collapse id="descriptionTip">
-          <p class="tip">Summarize the challenge, so people can understand the feelings behind it. Links are allowed. (Optional)</p>
+          <p class="tip">Summarize the challenge, so people can understand the feelings behind it. Markdown supported. <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">Learn more <iron-icon icon="open-in-new"></iron-icon></a></p>
         </iron-collapse>
 
         <button hidden></button>
+        <paper-button class="submit" on-tap="submit" disabled="[[_isEmpty(bigIdea, essentialQuestion, challenge)]]">Create</paper-button>
       </form>
-
-      <div class="notice"><iron-icon icon="language"></iron-icon> For a better experience, please write in English.</div>
     </cbl-page>
+
+    <p class="notice"><iron-icon icon="language"></iron-icon> For a better experience, please write in English.</p>
 
     <paper-toast id="toast" duration="5000" text="An error occurred. Please try again later."></paper-toast>
 
@@ -131,6 +135,8 @@
         var self = this;
 
         challenge.save().then(function(challenge) {
+          homeCache = {};
+          searchCache = {};
           self.go('/challenges/' + challenge.id);
         }, function(error) {
           self.$.toast.open();
@@ -153,7 +159,7 @@
 
         input.charCounter = false;
         tip.hide();
-      },
+      }
     });
   </script>
 </dom-module>

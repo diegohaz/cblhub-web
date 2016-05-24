@@ -3,7 +3,6 @@
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 
 <link rel="import" href="cbl-app-styles.html">
 <link rel="import" href="cbl-app-behavior.html">
@@ -13,7 +12,6 @@
     <style include="cbl-app-styles">
       :host {
         display: block;
-        background-color: #fff;
         width: calc(100% - 32px);
         max-width: 500px;
         margin: 16px;
@@ -21,7 +19,8 @@
       }
 
       .content {
-        padding: 16px 16px 48px;
+        background-color: #fff;
+        padding: 16px;
         box-sizing: border-box;
       }
 
@@ -29,49 +28,40 @@
         --paper-toolbar-content: {
           padding-left: 0;
           padding-right: 8px;
+        };
+        --paper-toolbar-title: {
+          margin-left: 16px;
+          line-height: 130%;
+          pointer-events: all;
         }
-      }
-
-      paper-toolbar .title {
-        margin-left: 16px;
-        line-height: 130%;
       }
 
       paper-toolbar paper-icon-button:first-child {
         margin-left: 8px;
       }
 
-      @media screen and (max-width: 440px) {
+      @media screen and (max-width: 600px) {
         :host {
           margin: 0;
-          min-width: auto;
-          width: 100%;
+          margin-top: -56px !important;
+          min-width: 0 !important;
+          max-width: 100% !important;
+          width: 100% !important;
         }
 
         .content {
-          background-color: #fff;
-          min-height: calc(100vh - 56px);
-          padding: 8px 8px 40px;
-          z-index: 998;
-        }
-
-        paper-toolbar {
-          position: fixed;
-          width: 100%;
-          top: 0;
-          z-index: 999;
+          padding: 8px;
         }
       }
     </style>
 
     <paper-toolbar>
       <paper-icon-button on-tap="back" icon="arrow-back" aria-label="Back"></paper-icon-button>
-      <div class="title">[[title]]</div>
-      <content select=".options"></content>
+      <content select=".title"></content>
     </paper-toolbar>
 
     <div class="content">
-      <content select=":not(.options)"></content>
+      <content select=":not(.title)"></content>
     </div>
 
   </template>
@@ -79,14 +69,7 @@
     Polymer({
       is: 'cbl-page',
 
-      behaviors: [CBLAppBehavior],
-
-      properties: {
-        title: {
-          type: String,
-          value: ''
-        }
-      }
+      behaviors: [CBLAppBehavior]
     });
   </script>
 </dom-module>

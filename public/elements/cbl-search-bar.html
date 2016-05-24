@@ -11,22 +11,22 @@
         position: relative;
         border: 1px solid #bbb;
         border-radius: 4px;
+        @apply(--layout-horizontal);
       }
 
       #searchInput {
         @apply(--paper-font-common-base);
+        @apply(--layout-flex);
         position: relative;
         font-size: 16px;
+        height: 39px;
         outline: none;
         box-shadow: none;
         padding: 0 8px;
-        width: calc(100% - 60px);
         background: transparent;
         border: none;
-        border-right: 0;
         color: var(--paper-input-container-input-color, --primary-text-color);
         -webkit-appearance: none;
-        height: 39px;
         box-sizing: border-box;
       }
 
@@ -38,7 +38,6 @@
       paper-icon-button {
         background-color: #e8e8e8;
         color: var(--primary-text-color);
-        margin-left: -5px;
         width: 60px;
         height: 39px;
         border-radius: 0 4px 4px 0;
@@ -116,7 +115,7 @@
 
     submit: function() {
       if (this.query) {
-        this.go('/?q=' + this.query);
+        this.go('/search/' + this.query);
       } else {
         this.go('/');
       }
