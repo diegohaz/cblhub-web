@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux'
 import merge from 'lodash/merge'
 import challenge from './challenge/challenge.reducer'
+import session from './session/session.reducer'
+import user from './user/user.reducer'
 
 const initialState = {
   activities: {},
@@ -20,7 +22,9 @@ function entities (state = initialState, action) {
 
 const reducers = combineReducers({
   entities,
-  challenge
+  challenge,
+  session,
+  user
 })
 
 export default reducers

@@ -1,13 +1,13 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-// import persistState from 'redux-localstorage'
+import persistState from 'redux-localstorage'
 import api from '../services/api'
 import reducers from './reducers'
 
 const configureStore = (initialState) => {
   const finalCreateStore = compose(
     applyMiddleware(thunk.withExtraArgument(api)),
-    // persistState(['session']),
+    persistState(['session']),
     typeof window !== 'undefined' && window.devToolsExtension ? window.devToolsExtension() : (f) => f
   )(createStore)
 
