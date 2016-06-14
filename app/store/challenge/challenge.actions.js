@@ -28,7 +28,7 @@ export const getChallenges = ({
     dispatch({ type: REQUEST_CHALLENGES_SUCCESS, result, append, entities })
     return data
   }).catch((error) => {
-    dispatch({ type: REQUEST_CHALLENGES_FAILURE, error })
+    dispatch({ type: REQUEST_CHALLENGES_FAILURE })
     throw error
   })
 }
@@ -49,7 +49,7 @@ export const getChallenge = (id) => (dispatch, getState, api) => {
     dispatch({ type: REQUEST_CHALLENGE_SUCCESS, result, entities })
     return data
   }).catch((error) => {
-    dispatch({ type: REQUEST_CHALLENGE_FAILURE, error })
+    dispatch({ type: REQUEST_CHALLENGE_FAILURE })
     throw error
   })
 }
@@ -61,17 +61,17 @@ export const createChallenge = (body) => (dispatch, getState, api) => {
     dispatch({ type: CREATE_CHALLENGE_SUCCESS, result, entities })
     return data
   }).catch((error) => {
-    dispatch({ type: CREATE_CHALLENGE_FAILURE, error })
+    dispatch({ type: CREATE_CHALLENGE_FAILURE })
     throw error
   })
 }
 
 export const removeChallenge = (id) => (dispatch, getState, api) => {
   dispatch({ type: REMOVE_CHALLENGE, id })
-  return api.remove(`/challenges/${id}`).then(() => {
+  return api.delete(`/challenges/${id}`).then(() => {
     dispatch({ type: REMOVE_CHALLENGE_SUCCESS, id })
   }).catch((error) => {
-    dispatch({ type: REMOVE_CHALLENGE_FAILURE, error, id })
+    dispatch({ type: REMOVE_CHALLENGE_FAILURE, id })
     throw error
   })
 }

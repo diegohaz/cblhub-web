@@ -27,7 +27,8 @@ const initialState = {
     item: false,
     create: false,
     remove: false
-  }
+  },
+  removing: -1
 }
 
 export default function challengeReducer (state = initialState, action) {
@@ -41,14 +42,14 @@ export default function challengeReducer (state = initialState, action) {
     case REQUEST_CHALLENGES_SUCCESS:
       return {
         ...state,
-        items: action.append ? [...state.items, ...action.result] : action.result,
+        items: action.append ? [ ...state.items, ...action.result ] : action.result,
         loading: { ...state.loading, items: false }
       }
     case REQUEST_CHALLENGES_FAILURE:
       return {
         ...state,
         loading: { ...state.loading, items: false },
-        erorrs: { items: true }
+        error: { items: true }
       }
 
     case CREATE_CHALLENGE:
@@ -66,7 +67,7 @@ export default function challengeReducer (state = initialState, action) {
       return {
         ...state,
         loading: { ...state.loading, create: false },
-        erorrs: { create: true }
+        error: { create: true }
       }
 
     case REQUEST_CHALLENGE:
@@ -74,13 +75,13 @@ export default function challengeReducer (state = initialState, action) {
         ...state,
         item: state.item && state.item === action.id ? state.item : null,
         loading: { ...state.loading, item: true },
-        erors: { item: false }
+        error: { item: false }
       }
     case REQUEST_CHALLENGE_SUCCESS:
       return {
         ...state,
         item: action.result,
-        loading: { ...state.loading, item: action.cached }
+        loading: { ...state.loading, item: !!action.cached }
       }
     case REQUEST_CHALLENGE_FAILURE:
       return {
@@ -106,26 +107,30 @@ function removeBroadcastReducer (state = initialState, action) {
     case REMOVE_CHALLENGE:
       return {
         ...state,
-        items: [...state.items.slice(0, idx), ...state.items.slice(idx + 1)],
+        items: [ ...state.items.slice(0, idx), ...state.items.slice(idx + 1) ],
         loading: { ...state.loading, remove: true },
-        error: { ...state.error, remove: false }
+        error: { ...state.error, remove: false },
+        removing: idx
       }
 
     case REMOVE_CHALLENGE_SUCCESS:
       return {
         ...state,
-        loading: { ...state.loading, remove: false }
+        loading: { ...state.loading, remove: false },
+        removing: -1
       }
 
     case REMOVE_CHALLENGE_FAILURE:
       return {
         ...state,
-        items: [...state.items.slice(0, idx), action.id, ...state.items.slice(idx + 1)],
+        items: [
+          ...state.items.slice(0, state.removing),
+          action.id,
+          ...state.items.slice(state.removing)
+        ],
         loading: { ...state.loading, remove: false },
-        error: { ...state.error, remove: true }
+        error: { ...state.error, remove: true },
+        removing: -1
       }
-
-    default:
-      return state
   }
 }
