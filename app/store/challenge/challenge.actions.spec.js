@@ -2,7 +2,8 @@ import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import nock from 'nock'
 import expect from 'expect'
-import api, { url } from '../../services/api'
+import api from '../../services/api'
+import { apiUrl } from '../../config'
 import * as actions from './challenge.actions'
 
 const middlewares = [ thunk.withExtraArgument(api) ]
@@ -21,7 +22,7 @@ describe('Challenge Actions', function () {
 
   describe('getChallenges', function () {
     it('should get challenges', function () {
-      nock(url).get('/challenges').reply(200, [{ id: 1 }])
+      nock(apiUrl).get('/challenges').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.getChallenges()).then(() => {
         expect(store.getActions()).toEqual([{
@@ -37,7 +38,7 @@ describe('Challenge Actions', function () {
     })
 
     it('should get challenges by q', function () {
-      nock(url).get('/challenges?q=test').reply(200, [{ id: 1 }])
+      nock(apiUrl).get('/challenges?q=test').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.getChallenges({ q: 'test' })).then(() => {
         expect(store.getActions()).toEqual([{
@@ -53,7 +54,7 @@ describe('Challenge Actions', function () {
     })
 
     it('should get challenges by user', function () {
-      nock(url).get('/challenges?user=1').reply(200, [{ id: 1 }])
+      nock(apiUrl).get('/challenges?user=1').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.getChallenges({ user: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
@@ -69,7 +70,7 @@ describe('Challenge Actions', function () {
     })
 
     it('should get challenges by page', function () {
-      nock(url).get('/challenges?page=2').reply(200, [{ id: 1 }])
+      nock(apiUrl).get('/challenges?page=2').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.getChallenges({ page: 2 })).then(() => {
         expect(store.getActions()).toEqual([{
@@ -85,7 +86,7 @@ describe('Challenge Actions', function () {
     })
 
     it('should get challenges by limit', function () {
-      nock(url).get('/challenges?limit=1').reply(200, [{ id: 1 }])
+      nock(apiUrl).get('/challenges?limit=1').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.getChallenges({ limit: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
@@ -101,7 +102,7 @@ describe('Challenge Actions', function () {
     })
 
     it('should get challenges by sort', function () {
-      nock(url).get('/challenges?sort=title').reply(200, [{ id: 1 }])
+      nock(apiUrl).get('/challenges?sort=title').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.getChallenges({ sort: 'title' })).then(() => {
         expect(store.getActions()).toEqual([{
@@ -117,7 +118,7 @@ describe('Challenge Actions', function () {
     })
 
     it('should get challenges with error', function () {
-      nock(url).get('/challenges').reply(500)
+      nock(apiUrl).get('/challenges').reply(500)
 
       return store.dispatch(actions.getChallenges()).then(() => {
         expect(true).toBe(false, 'Expected to fail')
@@ -134,7 +135,7 @@ describe('Challenge Actions', function () {
 
   describe('getChallenge', function () {
     it('should get challenge', function () {
-      nock(url).get('/challenges/1').reply(200, {id: 1})
+      nock(apiUrl).get('/challenges/1').reply(200, { id: 1 })
 
       return store.dispatch(actions.getChallenge(1)).then(() => {
         expect(store.getActions()).toEqual([{
@@ -149,7 +150,7 @@ describe('Challenge Actions', function () {
     })
 
     it('should get cached challenge', function () {
-      nock(url).get('/challenges/1').reply(200, {id: 1})
+      nock(apiUrl).get('/challenges/1').reply(200, { id: 1 })
 
       store = mockStore({ entities: { challenges: { 1: { id: 1 } } } })
 
@@ -167,7 +168,7 @@ describe('Challenge Actions', function () {
     })
 
     it('should get challenge with error', function () {
-      nock(url).get('/challenges/1').reply(500)
+      nock(apiUrl).get('/challenges/1').reply(500)
 
       return store.dispatch(actions.getChallenge(1)).then(() => {
         expect(true).toBe(false, 'Expected to fail')
@@ -184,7 +185,7 @@ describe('Challenge Actions', function () {
 
   describe('createChallenge', function () {
     it('should create challenge', function () {
-      nock(url).post('/challenges').reply(201, {id: 1})
+      nock(apiUrl).post('/challenges').reply(201, { id: 1 })
 
       return store.dispatch(actions.createChallenge()).then(() => {
         expect(store.getActions()).toEqual([{
@@ -198,7 +199,7 @@ describe('Challenge Actions', function () {
     })
 
     it('should create challenge with error', function () {
-      nock(url).post('/challenges').reply(500)
+      nock(apiUrl).post('/challenges').reply(500)
 
       return store.dispatch(actions.createChallenge()).then(() => {
         expect(true).toBe(false, 'Expected to fail')
@@ -213,7 +214,7 @@ describe('Challenge Actions', function () {
 
   describe('removeChallenge', function () {
     it('should remove challenge', function () {
-      nock(url).delete('/challenges/1').reply(204)
+      nock(apiUrl).delete('/challenges/1').reply(204)
 
       return store.dispatch(actions.removeChallenge(1)).then(() => {
         expect(store.getActions()).toEqual([
@@ -224,7 +225,7 @@ describe('Challenge Actions', function () {
     })
 
     it('should remove challenge with error', function () {
-      nock(url).delete('/challenges/1').reply(500)
+      nock(apiUrl).delete('/challenges/1').reply(500)
 
       return store.dispatch(actions.removeChallenge(1)).then(() => {
         expect(true).toBe(false, 'Expected to fail')

@@ -1,11 +1,11 @@
 import React from 'react'
 import { browserHistory, Router, Route, IndexRoute } from 'react-router'
-import PageLayout from './components/PageLayout'
+import Layout from './components/Layout'
 import Home from './components/Home'
 
 const routes = (
   <Router history={browserHistory}>
-    <Route path='/' component={PageLayout}>
+    <Route path='/' component={Layout}>
       <IndexRoute component={Home} />
     </Route>
   </Router>

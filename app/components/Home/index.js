@@ -1,12 +1,13 @@
 import React from 'react'
 import Helmet from 'react-helmet'
 
+import Tag from '../Tag'
+
 const Home = () => {
-  console.log('dsadsad')
   return (
     <div>
       <Helmet title='Oisa' />
-      <span style={{color: 'green'}}>cara</span>
+      <Tag tag={{ id: '1', name: 'IBM Watsom' }} />
     </div>
   )
 }

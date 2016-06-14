@@ -1,0 +1,16 @@
+@import '../../styles/main';
+
+.tag {
+  a {
+    display: inline-block;
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 2px;
+    background-color: $secondaryBackgroundColor;
+    border: 1px solid $separatorColor;
+
+    &:hover {
+      background-color: $focusedColor;
+    }
+  }
+}
