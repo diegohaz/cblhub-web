@@ -1,13 +1,16 @@
 import {
-  REQUEST_CHALLENGES,
-  REQUEST_CHALLENGES_SUCCESS,
-  REQUEST_CHALLENGES_FAILURE,
+  FETCH_CHALLENGES,
+  FETCH_CHALLENGES_SUCCESS,
+  FETCH_CHALLENGES_FAILURE,
+  FETCH_CHALLENGE,
+  FETCH_CHALLENGE_SUCCESS,
+  FETCH_CHALLENGE_FAILURE,
   CREATE_CHALLENGE,
   CREATE_CHALLENGE_SUCCESS,
   CREATE_CHALLENGE_FAILURE,
-  REQUEST_CHALLENGE,
-  REQUEST_CHALLENGE_SUCCESS,
-  REQUEST_CHALLENGE_FAILURE,
+  UPDATE_CHALLENGE,
+  UPDATE_CHALLENGE_SUCCESS,
+  UPDATE_CHALLENGE_FAILURE,
   REMOVE_CHALLENGE,
   REMOVE_CHALLENGE_SUCCESS,
   REMOVE_CHALLENGE_FAILURE
@@ -20,36 +23,58 @@ const initialState = {
     items: false,
     item: false,
     create: false,
-    remove: false
+    remove: false,
+    update: false
   },
   error: {
     items: false,
     item: false,
     create: false,
-    remove: false
+    remove: false,
+    update: false
   },
   removing: -1
 }
 
 export default function challengeReducer (state = initialState, action) {
   switch (action.type) {
-    case REQUEST_CHALLENGES:
+    case FETCH_CHALLENGES:
       return {
         ...state,
         loading: { ...state.loading, items: true },
         error: { ...state.error, items: false }
       }
-    case REQUEST_CHALLENGES_SUCCESS:
+    case FETCH_CHALLENGES_SUCCESS:
       return {
         ...state,
         items: action.append ? [ ...state.items, ...action.result ] : action.result,
         loading: { ...state.loading, items: false }
       }
-    case REQUEST_CHALLENGES_FAILURE:
+    case FETCH_CHALLENGES_FAILURE:
       return {
         ...state,
         loading: { ...state.loading, items: false },
         error: { items: true }
+      }
+
+    case FETCH_CHALLENGE:
+      return {
+        ...state,
+        item: state.item && state.item === action.id ? state.item : null,
+        loading: { ...state.loading, item: true },
+        error: { item: false }
+      }
+    case FETCH_CHALLENGE_SUCCESS:
+      return {
+        ...state,
+        item: action.result,
+        loading: { ...state.loading, item: !!action.cached }
+      }
+    case FETCH_CHALLENGE_FAILURE:
+      return {
+        ...state,
+        loading: { ...state.loading, item: false },
+        error: { ...state.error, item: true }
       }
 
     case CREATE_CHALLENGE:
@@ -70,24 +95,22 @@ export default function challengeReducer (state = initialState, action) {
         error: { create: true }
       }
 
-    case REQUEST_CHALLENGE:
+    case UPDATE_CHALLENGE:
       return {
         ...state,
-        item: state.item && state.item === action.id ? state.item : null,
-        loading: { ...state.loading, item: true },
-        error: { item: false }
+        loading: { ...state.loading, update: true },
+        error: { ...state.error, update: false }
       }
-    case REQUEST_CHALLENGE_SUCCESS:
+    case UPDATE_CHALLENGE_SUCCESS:
       return {
         ...state,
-        item: action.result,
-        loading: { ...state.loading, item: !!action.cached }
+        loading: { ...state.loading, update: false }
       }
-    case REQUEST_CHALLENGE_FAILURE:
+    case UPDATE_CHALLENGE_FAILURE:
       return {
         ...state,
-        loading: { ...state.loading, item: false },
-        error: { ...state.error, item: true }
+        loading: { ...state.loading, update: false },
+        error: { update: true }
       }
 
     case REMOVE_CHALLENGE:

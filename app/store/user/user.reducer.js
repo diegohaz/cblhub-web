@@ -1,10 +1,10 @@
 import {
-  REQUEST_USER,
-  REQUEST_USER_SUCCESS,
-  REQUEST_USER_FAILURE,
-  REQUEST_ME,
-  REQUEST_ME_SUCCESS,
-  REQUEST_ME_FAILURE,
+  FETCH_USER,
+  FETCH_USER_SUCCESS,
+  FETCH_USER_FAILURE,
+  FETCH_ME,
+  FETCH_ME_SUCCESS,
+  FETCH_ME_FAILURE,
   UPDATE_ME
 } from './user.actions'
 
@@ -23,39 +23,39 @@ const initialState = {
 
 export default function userReducer (state = initialState, action) {
   switch (action.type) {
-    case REQUEST_USER:
+    case FETCH_USER:
       return {
         ...state,
         item: state.item && state.item === action.id ? state.item : null,
         loading: { ...state.loading, item: true },
         error: { ...state.error, item: false }
       }
-    case REQUEST_USER_SUCCESS:
+    case FETCH_USER_SUCCESS:
       return {
         ...state,
         item: action.result,
         loading: { ...state.loading, item: !!action.cached }
       }
-    case REQUEST_USER_FAILURE:
+    case FETCH_USER_FAILURE:
       return {
         ...state,
         loading: { ...state.loading, item: false },
         error: { ...state.error, item: true }
       }
 
-    case REQUEST_ME:
+    case FETCH_ME:
       return {
         ...state,
         loading: { ...state.loading, me: true },
         error: { ...state.error, me: false }
       }
-    case REQUEST_ME_SUCCESS:
+    case FETCH_ME_SUCCESS:
       return {
         ...state,
         me: action.result,
         loading: { ...state.loading, me: false }
       }
-    case REQUEST_ME_FAILURE:
+    case FETCH_ME_FAILURE:
       return {
         ...state,
         loading: { ...state.loading, me: false },

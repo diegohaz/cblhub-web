@@ -11,13 +11,15 @@ describe('Challenge Reducer', function () {
         items: false,
         item: false,
         create: false,
-        remove: false
+        remove: false,
+        update: false
       },
       error: {
         items: false,
         item: false,
         create: false,
-        remove: false
+        remove: false,
+        update: false
       },
       removing: -1
     }
@@ -25,43 +27,43 @@ describe('Challenge Reducer', function () {
     expect(reducer(undefined, {})).toEqual(initialState)
   })
 
-  it('should handle REQUEST_CHALLENGES', function () {
+  it('should handle FETCH_CHALLENGES', function () {
     expect(
-      reducer({}, { type: types.REQUEST_CHALLENGES })
+      reducer({}, { type: types.FETCH_CHALLENGES })
     ).toEqual({
       error: { items: false },
       loading: { items: true }
     })
   })
 
-  it('should handle REQUEST_CHALLENGES_SUCCESS', function () {
+  it('should handle FETCH_CHALLENGES_SUCCESS', function () {
     expect(
-      reducer({}, { type: types.REQUEST_CHALLENGES_SUCCESS, result: [1] })
+      reducer({}, { type: types.FETCH_CHALLENGES_SUCCESS, result: [1] })
     ).toEqual({
       items: [1],
       loading: { items: false }
     })
 
     expect(
-      reducer({ items: [1] }, { type: types.REQUEST_CHALLENGES_SUCCESS, result: [2], append: true })
+      reducer({ items: [1] }, { type: types.FETCH_CHALLENGES_SUCCESS, result: [2], append: true })
     ).toEqual({
       items: [1, 2],
       loading: { items: false }
     })
   })
 
-  it('should handle REQUEST_CHALLENGES_FAILURE', function () {
+  it('should handle FETCH_CHALLENGES_FAILURE', function () {
     expect(
-      reducer({}, { type: types.REQUEST_CHALLENGES_FAILURE })
+      reducer({}, { type: types.FETCH_CHALLENGES_FAILURE })
     ).toEqual({
       loading: { items: false },
       error: { items: true }
     })
   })
 
-  it('should handle REQUEST_CHALLENGE', function () {
+  it('should handle FETCH_CHALLENGE', function () {
     expect(
-      reducer({}, { type: types.REQUEST_CHALLENGE, id: 1 })
+      reducer({}, { type: types.FETCH_CHALLENGE, id: 1 })
     ).toEqual({
       item: null,
       error: { item: false },
@@ -69,7 +71,7 @@ describe('Challenge Reducer', function () {
     })
 
     expect(
-      reducer({ item: 1 }, { type: types.REQUEST_CHALLENGE, id: 1 })
+      reducer({ item: 1 }, { type: types.FETCH_CHALLENGE, id: 1 })
     ).toEqual({
       item: 1,
       error: { item: false },
@@ -77,7 +79,7 @@ describe('Challenge Reducer', function () {
     })
 
     expect(
-      reducer({ item: 2 }, { type: types.REQUEST_CHALLENGE, id: 1 })
+      reducer({ item: 2 }, { type: types.FETCH_CHALLENGE, id: 1 })
     ).toEqual({
       item: null,
       error: { item: false },
@@ -85,25 +87,25 @@ describe('Challenge Reducer', function () {
     })
   })
 
-  it('should handle REQUEST_CHALLENGE_SUCCESS', function () {
+  it('should handle FETCH_CHALLENGE_SUCCESS', function () {
     expect(
-      reducer({}, { type: types.REQUEST_CHALLENGE_SUCCESS, result: 1 })
+      reducer({}, { type: types.FETCH_CHALLENGE_SUCCESS, result: 1 })
     ).toEqual({
       item: 1,
       loading: { item: false }
     })
 
     expect(
-      reducer({}, { type: types.REQUEST_CHALLENGE_SUCCESS, result: 1, cached: true })
+      reducer({}, { type: types.FETCH_CHALLENGE_SUCCESS, result: 1, cached: true })
     ).toEqual({
       item: 1,
       loading: { item: true }
     })
   })
 
-  it('should handle REQUEST_CHALLENGE_FAILURE', function () {
+  it('should handle FETCH_CHALLENGE_FAILURE', function () {
     expect(
-      reducer({}, { type: types.REQUEST_CHALLENGE_FAILURE })
+      reducer({}, { type: types.FETCH_CHALLENGE_FAILURE })
     ).toEqual({
       loading: { item: false },
       error: { item: true }
@@ -133,6 +135,32 @@ describe('Challenge Reducer', function () {
     ).toEqual({
       loading: { create: false },
       error: { create: true }
+    })
+  })
+
+  it('should handle UPDATE_CHALLENGE', function () {
+    expect(
+      reducer({}, { type: types.UPDATE_CHALLENGE })
+    ).toEqual({
+      error: { update: false },
+      loading: { update: true }
+    })
+  })
+
+  it('should handle UPDATE_CHALLENGE_SUCCESS', function () {
+    expect(
+      reducer({}, { type: types.UPDATE_CHALLENGE_SUCCESS })
+    ).toEqual({
+      loading: { update: false }
+    })
+  })
+
+  it('should handle UPDATE_CHALLENGE_FAILURE', function () {
+    expect(
+      reducer({}, { type: types.UPDATE_CHALLENGE_FAILURE })
+    ).toEqual({
+      loading: { update: false },
+      error: { update: true }
     })
   })
 

@@ -82,6 +82,7 @@
     "redux": "^3.5.2",
     "redux-localstorage": "^0.4.1",
     "redux-thunk": "^2.1.0",
+    "reselect": "^2.5.1",
     "webpack": "^1.13.1",
     "webpack-isomorphic-tools": "^2.3.0"
   }

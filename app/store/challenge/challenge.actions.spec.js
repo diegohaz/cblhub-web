@@ -20,16 +20,16 @@ describe('Challenge Actions', function () {
     nock.cleanAll()
   })
 
-  describe('getChallenges', function () {
+  describe('fetchChallenges', function () {
     it('should get challenges', function () {
       nock(apiUrl).get('/challenges').reply(200, [{ id: 1 }])
 
-      return store.dispatch(actions.getChallenges()).then(() => {
+      return store.dispatch(actions.fetchChallenges()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.REQUEST_CHALLENGES,
+          type: actions.FETCH_CHALLENGES,
           params: {}
         }, {
-          type: actions.REQUEST_CHALLENGES_SUCCESS,
+          type: actions.FETCH_CHALLENGES_SUCCESS,
           result: [1],
           append: false,
           entities: { challenges: { 1: { id: 1 } } }
@@ -40,12 +40,12 @@ describe('Challenge Actions', function () {
     it('should get challenges by q', function () {
       nock(apiUrl).get('/challenges?q=test').reply(200, [{ id: 1 }])
 
-      return store.dispatch(actions.getChallenges({ q: 'test' })).then(() => {
+      return store.dispatch(actions.fetchChallenges({ q: 'test' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.REQUEST_CHALLENGES,
+          type: actions.FETCH_CHALLENGES,
           params: { q: 'test' }
         }, {
-          type: actions.REQUEST_CHALLENGES_SUCCESS,
+          type: actions.FETCH_CHALLENGES_SUCCESS,
           result: [1],
           append: false,
           entities: { challenges: { 1: { id: 1 } } }
@@ -56,12 +56,12 @@ describe('Challenge Actions', function () {
     it('should get challenges by user', function () {
       nock(apiUrl).get('/challenges?user=1').reply(200, [{ id: 1 }])
 
-      return store.dispatch(actions.getChallenges({ user: 1 })).then(() => {
+      return store.dispatch(actions.fetchChallenges({ user: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.REQUEST_CHALLENGES,
+          type: actions.FETCH_CHALLENGES,
           params: { user: 1 }
         }, {
-          type: actions.REQUEST_CHALLENGES_SUCCESS,
+          type: actions.FETCH_CHALLENGES_SUCCESS,
           result: [1],
           append: false,
           entities: { challenges: { 1: { id: 1 } } }
@@ -72,12 +72,12 @@ describe('Challenge Actions', function () {
     it('should get challenges by page', function () {
       nock(apiUrl).get('/challenges?page=2').reply(200, [{ id: 1 }])
 
-      return store.dispatch(actions.getChallenges({ page: 2 })).then(() => {
+      return store.dispatch(actions.fetchChallenges({ page: 2 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.REQUEST_CHALLENGES,
+          type: actions.FETCH_CHALLENGES,
           params: { page: 2 }
         }, {
-          type: actions.REQUEST_CHALLENGES_SUCCESS,
+          type: actions.FETCH_CHALLENGES_SUCCESS,
           result: [1],
           append: true,
           entities: { challenges: { 1: { id: 1 } } }
@@ -88,12 +88,12 @@ describe('Challenge Actions', function () {
     it('should get challenges by limit', function () {
       nock(apiUrl).get('/challenges?limit=1').reply(200, [{ id: 1 }])
 
-      return store.dispatch(actions.getChallenges({ limit: 1 })).then(() => {
+      return store.dispatch(actions.fetchChallenges({ limit: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.REQUEST_CHALLENGES,
+          type: actions.FETCH_CHALLENGES,
           params: { limit: 1 }
         }, {
-          type: actions.REQUEST_CHALLENGES_SUCCESS,
+          type: actions.FETCH_CHALLENGES_SUCCESS,
           result: [1],
           append: false,
           entities: { challenges: { 1: { id: 1 } } }
@@ -104,12 +104,12 @@ describe('Challenge Actions', function () {
     it('should get challenges by sort', function () {
       nock(apiUrl).get('/challenges?sort=title').reply(200, [{ id: 1 }])
 
-      return store.dispatch(actions.getChallenges({ sort: 'title' })).then(() => {
+      return store.dispatch(actions.fetchChallenges({ sort: 'title' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.REQUEST_CHALLENGES,
+          type: actions.FETCH_CHALLENGES,
           params: { sort: 'title' }
         }, {
-          type: actions.REQUEST_CHALLENGES_SUCCESS,
+          type: actions.FETCH_CHALLENGES_SUCCESS,
           result: [1],
           append: false,
           entities: { challenges: { 1: { id: 1 } } }
@@ -120,29 +120,29 @@ describe('Challenge Actions', function () {
     it('should get challenges with error', function () {
       nock(apiUrl).get('/challenges').reply(500)
 
-      return store.dispatch(actions.getChallenges()).then(() => {
+      return store.dispatch(actions.fetchChallenges()).then(() => {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.REQUEST_CHALLENGES,
+          type: actions.FETCH_CHALLENGES,
           params: {}
         }, {
-          type: actions.REQUEST_CHALLENGES_FAILURE
+          type: actions.FETCH_CHALLENGES_FAILURE
         }])
       })
     })
   })
 
-  describe('getChallenge', function () {
+  describe('fetchChallenge', function () {
     it('should get challenge', function () {
       nock(apiUrl).get('/challenges/1').reply(200, { id: 1 })
 
-      return store.dispatch(actions.getChallenge(1)).then(() => {
+      return store.dispatch(actions.fetchChallenge(1)).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.REQUEST_CHALLENGE,
+          type: actions.FETCH_CHALLENGE,
           id: 1
         }, {
-          type: actions.REQUEST_CHALLENGE_SUCCESS,
+          type: actions.FETCH_CHALLENGE_SUCCESS,
           result: 1,
           entities: { challenges: { 1: { id: 1 } } }
         }])
@@ -154,13 +154,13 @@ describe('Challenge Actions', function () {
 
       store = mockStore({ entities: { challenges: { 1: { id: 1 } } } })
 
-      return store.dispatch(actions.getChallenge(1)).then(() => {
+      return store.dispatch(actions.fetchChallenge(1)).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.REQUEST_CHALLENGE_SUCCESS,
+          type: actions.FETCH_CHALLENGE_SUCCESS,
           result: 1,
           cached: true
         }, {
-          type: actions.REQUEST_CHALLENGE_SUCCESS,
+          type: actions.FETCH_CHALLENGE_SUCCESS,
           result: 1,
           entities: { challenges: { 1: { id: 1 } } }
         }])
@@ -170,14 +170,14 @@ describe('Challenge Actions', function () {
     it('should get challenge with error', function () {
       nock(apiUrl).get('/challenges/1').reply(500)
 
-      return store.dispatch(actions.getChallenge(1)).then(() => {
+      return store.dispatch(actions.fetchChallenge(1)).then(() => {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.REQUEST_CHALLENGE,
+          type: actions.FETCH_CHALLENGE,
           id: 1
         }, {
-          type: actions.REQUEST_CHALLENGE_FAILURE
+          type: actions.FETCH_CHALLENGE_FAILURE
         }])
       })
     })
@@ -208,6 +208,43 @@ describe('Challenge Actions', function () {
           { type: actions.CREATE_CHALLENGE },
           { type: actions.CREATE_CHALLENGE_FAILURE }
         ])
+      })
+    })
+  })
+
+  describe('updateChallenge', function () {
+    it('should update challenge', function () {
+      nock(apiUrl).put('/challenges/1').reply(200, { id: 1, title: 'Test' })
+
+      store = mockStore({ entities: { challenges: { 1: { id: 1 } } } })
+
+      return store.dispatch(actions.updateChallenge({ id: 1, title: 'Test' })).then(() => {
+        expect(store.getActions()).toEqual([{
+          type: actions.UPDATE_CHALLENGE,
+          entities: { challenges: { 1: { id: 1, title: 'Test' } } }
+        }, {
+          type: actions.UPDATE_CHALLENGE_SUCCESS,
+          entities: { challenges: { 1: { id: 1, title: 'Test' } } }
+        }])
+      })
+    })
+
+    it('should put challenge with error', function () {
+      nock(apiUrl).put('/challenges').reply(500)
+
+      store = mockStore({ entities: { challenges: { 1: { id: 1 } } } })
+      store = mockStore({ entities: { challenges: { 1: { id: 1 } } } })
+
+      return store.dispatch(actions.updateChallenge({ id: 1, title: 'Test' })).then(() => {
+        expect(true).toBe(false, 'Expected to fail')
+      }, () => {
+        expect(store.getActions()).toEqual([{
+          type: actions.UPDATE_CHALLENGE,
+          entities: { challenges: { 1: { id: 1, title: 'Test' } } }
+        }, {
+          type: actions.UPDATE_CHALLENGE_FAILURE,
+          entities: { challenges: { 1: { id: 1 } } }
+        }])
       })
     })
   })

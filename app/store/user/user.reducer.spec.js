@@ -18,9 +18,9 @@ describe('User Reducer', function () {
     })
   })
 
-  it('should handle REQUEST_USER', function () {
+  it('should handle FETCH_USER', function () {
     expect(
-      reducer({}, { type: types.REQUEST_USER, id: 1 })
+      reducer({}, { type: types.FETCH_USER, id: 1 })
     ).toEqual({
       item: null,
       error: { item: false },
@@ -28,7 +28,7 @@ describe('User Reducer', function () {
     })
 
     expect(
-      reducer({ item: 1 }, { type: types.REQUEST_USER, id: 1 })
+      reducer({ item: 1 }, { type: types.FETCH_USER, id: 1 })
     ).toEqual({
       item: 1,
       error: { item: false },
@@ -36,7 +36,7 @@ describe('User Reducer', function () {
     })
 
     expect(
-      reducer({ item: 2 }, { type: types.REQUEST_USER, id: 1 })
+      reducer({ item: 2 }, { type: types.FETCH_USER, id: 1 })
     ).toEqual({
       item: null,
       error: { item: false },
@@ -44,52 +44,52 @@ describe('User Reducer', function () {
     })
   })
 
-  it('should handle REQUEST_USER_SUCCESS', function () {
+  it('should handle FETCH_USER_SUCCESS', function () {
     expect(
-      reducer({}, { type: types.REQUEST_USER_SUCCESS, result: 1 })
+      reducer({}, { type: types.FETCH_USER_SUCCESS, result: 1 })
     ).toEqual({
       item: 1,
       loading: { item: false }
     })
 
     expect(
-      reducer({}, { type: types.REQUEST_USER_SUCCESS, result: 1, cached: true })
+      reducer({}, { type: types.FETCH_USER_SUCCESS, result: 1, cached: true })
     ).toEqual({
       item: 1,
       loading: { item: true }
     })
   })
 
-  it('should handle REQUEST_USER_FAILURE', function () {
+  it('should handle FETCH_USER_FAILURE', function () {
     expect(
-      reducer({}, { type: types.REQUEST_USER_FAILURE })
+      reducer({}, { type: types.FETCH_USER_FAILURE })
     ).toEqual({
       loading: { item: false },
       error: { item: true }
     })
   })
 
-  it('should handle REQUEST_ME', function () {
+  it('should handle FETCH_ME', function () {
     expect(
-      reducer({}, { type: types.REQUEST_ME })
+      reducer({}, { type: types.FETCH_ME })
     ).toEqual({
       error: { me: false },
       loading: { me: true }
     })
   })
 
-  it('should handle REQUEST_ME_SUCCESS', function () {
+  it('should handle FETCH_ME_SUCCESS', function () {
     expect(
-      reducer({}, { type: types.REQUEST_ME_SUCCESS, result: 1 })
+      reducer({}, { type: types.FETCH_ME_SUCCESS, result: 1 })
     ).toEqual({
       me: 1,
       loading: { me: false }
     })
   })
 
-  it('should handle REQUEST_ME_FAILURE', function () {
+  it('should handle FETCH_ME_FAILURE', function () {
     expect(
-      reducer({}, { type: types.REQUEST_ME_FAILURE })
+      reducer({}, { type: types.FETCH_ME_FAILURE })
     ).toEqual({
       loading: { me: false },
       error: { me: true }
