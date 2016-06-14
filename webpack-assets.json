@@ -1,0 +1,7 @@
+{
+  "javascript": {
+    "app": "http://0.0.0.0:3001/app.js"
+  },
+  "styles": {},
+  "assets": {}
+}

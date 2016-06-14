@@ -1,0 +1,22 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "standard",
+    "standard-react"
+  ],
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "__DEV__": true,
+    "__PROD__": true,
+    "__DEBUG__": true,
+    "__COVERAGE__": true,
+    "__BASENAME__": true,
+    "webpackIsomorphicTools": true
+  },
+  "rules": {
+    "semi" : [2, "never"],
+    "max-len": [2, 120, 2]
+  }
+}
