@@ -3,6 +3,7 @@ import merge from 'lodash/merge'
 import challenge from './challenge/challenge.reducer'
 import guide from './guide/guide.reducer'
 import photo from './photo/photo.reducer'
+import resource from './resource/resource.reducer'
 import session from './session/session.reducer'
 import tag from './tag/tag.reducer'
 import user from './user/user.reducer'
@@ -27,6 +28,7 @@ const reducers = combineReducers({
   challenge,
   guide,
   photo,
+  resource,
   session,
   tag,
   user
