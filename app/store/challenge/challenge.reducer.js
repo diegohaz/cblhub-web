@@ -116,14 +116,14 @@ export default function challengeReducer (state = initialState, action) {
     case REMOVE_CHALLENGE:
     case REMOVE_CHALLENGE_SUCCESS:
     case REMOVE_CHALLENGE_FAILURE:
-      return removeGuideReducer(state, action)
+      return removeChallengeReducer(state, action)
 
     default:
       return state
   }
 }
 
-function removeGuideReducer (state = initialState, action) {
+function removeChallengeReducer (state = initialState, action) {
   const idx = state.items.indexOf(action.id)
 
   switch (action.type) {
