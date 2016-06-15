@@ -13,3 +13,18 @@ export const getChallenge = createSelector(getEntities, getItem, (entities, chal
 export const getChallenges = createSelector(getEntities, getItems, (entities, challenges) => {
   return challenges.map((id) => denormalize(entities.challenges[id], entities, schema))
 })
+
+export const getChallengeQuestions = createSelector(
+  getEntities, getChallenge,
+  (entities, challenge) => challenge.guides.filter((guide) => guide.type === 'Question')
+)
+
+export const getChallengeActivities = createSelector(
+  getEntities, getChallenge,
+  (entities, challenge) => challenge.guides.filter((guide) => guide.type === 'Activity')
+)
+
+export const getChallengeResources = createSelector(
+  getEntities, getChallenge,
+  (entities, challenge) => challenge.guides.filter((guide) => guide.type === 'Resource')
+)

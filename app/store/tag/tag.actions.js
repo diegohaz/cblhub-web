@@ -8,13 +8,10 @@ export const FETCH_TAG = 'FETCH_TAG'
 export const FETCH_TAG_SUCCESS = 'FETCH_TAG_SUCCESS'
 export const FETCH_TAG_FAILURE = 'FETCH_TAG_FAILURE'
 
-export const fetchTags = ({
-  ...params,
-  q,
-  page,
-  limit,
-  sort
-} = {}, append = page > 1) => (dispatch, getState, api) => {
+export const fetchTags = (
+  { ...params, q, page, limit, sort } = {},
+  append = page > 1
+) => (dispatch, getState, api) => {
   dispatch({ type: FETCH_TAGS, params })
   return api.get('/tags', { params }).then(({ data }) => {
     const { result, entities } = normalize(data, arrayOf(tag))
@@ -26,8 +23,8 @@ export const fetchTags = ({
   })
 }
 
-export const fetchTagsByCount = ({ ...params, limit = 1000, sort = 'count' } = {}) =>
-  fetchTags({ ...params, limit, sort })
+export const fetchTagsByCount = (params = {}) =>
+  fetchTags({ limit: 1000, sort: 'count', ...params })
 
 export const fetchTag = (id) => (dispatch, getState, api) => {
   const { entities } = getState()

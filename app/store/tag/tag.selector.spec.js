@@ -14,6 +14,7 @@ describe('Tag Selector', function () {
   })
 
   it('should getTags', function () {
+    selectors.getTags.resetRecomputations()
     expect(selectors.getTags(state)).toEqual([{ id: 1 }, { id: 2 }])
     expect(selectors.getTags(state)).toEqual([{ id: 1 }, { id: 2 }])
     expect(selectors.getTags.recomputations()).toEqual(1)
@@ -27,6 +28,7 @@ describe('Tag Selector', function () {
       tag: { items: [1, 2, 3] }
     }
 
+    selectors.getSortedTags.resetRecomputations()
     expect(selectors.getSortedTags(state).map((tag) => tag.count)).toEqual([1, 2, 5])
     expect(selectors.getSortedTags(state).map((tag) => tag.count)).toEqual([1, 2, 5])
     expect(selectors.getSortedTags.recomputations()).toEqual(1)

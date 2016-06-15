@@ -117,6 +117,22 @@ describe('Challenge Actions', function () {
       })
     })
 
+    it('should get challenges appending', function () {
+      nock(apiUrl).get('/challenges').reply(200, [{ id: 1 }])
+
+      return store.dispatch(actions.fetchChallenges({}, true)).then(() => {
+        expect(store.getActions()).toEqual([{
+          type: actions.FETCH_CHALLENGES,
+          params: {}
+        }, {
+          type: actions.FETCH_CHALLENGES_SUCCESS,
+          result: [1],
+          append: true,
+          entities: { challenges: { 1: { id: 1 } } }
+        }])
+      })
+    })
+
     it('should get challenges with error', function () {
       nock(apiUrl).get('/challenges').reply(500)
 

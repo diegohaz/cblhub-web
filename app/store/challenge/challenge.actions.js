@@ -17,14 +17,10 @@ export const REMOVE_CHALLENGE = 'REMOVE_CHALLENGE'
 export const REMOVE_CHALLENGE_SUCCESS = 'REMOVE_CHALLENGE_SUCCESS'
 export const REMOVE_CHALLENGE_FAILURE = 'REMOVE_CHALLENGE_FAILURE'
 
-export const fetchChallenges = ({
-  ...params,
-  q,
-  user,
-  page,
-  limit,
-  sort
-} = {}, append = page > 1) => (dispatch, getState, api) => {
+export const fetchChallenges = (
+  { ...params, q, user, page, limit, sort } = {},
+  append = page > 1
+) => (dispatch, getState, api) => {
   dispatch({ type: FETCH_CHALLENGES, params })
   return api.get('/challenges', { params }).then(({ data }) => {
     const { result, entities } = normalize(data, arrayOf(challenge))

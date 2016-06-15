@@ -5,7 +5,7 @@
   "main": "./app",
   "scripts": {
     "start": "node ./",
-    "test": "istanbul cover -x *.spec.js _mocha -- --require babel-register --require ignore-styles app/**/*.spec.js",
+    "test": "istanbul cover -x *.spec.js _mocha -- --compilers js:babel-register -r ignore-styles app/**/*.spec.js",
     "dev": "concurrently --kill-others 'nodemon ./' 'node webpack/webpack-dev-server'",
     "coverage": "npm test --coverage && open ./coverage/lcov-report/index.html",
     "lint": "eslint app/** -c ./.eslintrc",

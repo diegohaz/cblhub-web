@@ -14,12 +14,14 @@ describe('User Selector', function () {
   })
 
   it('should getMe', function () {
+    selectors.getMe.resetRecomputations()
     expect(selectors.getMe(state)).toEqual({ id: 2 })
     expect(selectors.getMe(state)).toEqual({ id: 2 })
     expect(selectors.getMe.recomputations()).toEqual(1)
   })
 
   it('should getUser', function () {
+    selectors.getUser.resetRecomputations()
     expect(selectors.getUser(state)).toEqual({ id: 1 })
     expect(selectors.getUser(state)).toEqual({ id: 1 })
     expect(selectors.getUser.recomputations()).toEqual(1)

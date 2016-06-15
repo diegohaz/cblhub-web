@@ -101,6 +101,22 @@ describe('Tag Actions', function () {
       })
     })
 
+    it('should get tags appending', function () {
+      nock(apiUrl).get('/tags').reply(200, [{ id: 1 }])
+
+      return store.dispatch(actions.fetchTags({}, true)).then(() => {
+        expect(store.getActions()).toEqual([{
+          type: actions.FETCH_TAGS,
+          params: {}
+        }, {
+          type: actions.FETCH_TAGS_SUCCESS,
+          result: [1],
+          append: true,
+          entities: { tags: { 1: { id: 1 } } }
+        }])
+      })
+    })
+
     it('should get tags with error', function () {
       nock(apiUrl).get('/tags').reply(500)
 
@@ -135,12 +151,12 @@ describe('Tag Actions', function () {
     })
 
     it('shout get tags by count and q', function () {
-      nock(apiUrl).get('/tags?q=test&limit=2000&sort=count').reply(200, [{ id: 1 }])
+      nock(apiUrl).get('/tags?limit=1000&sort=count&q=test').reply(200, [{ id: 1 }])
 
-      return store.dispatch(actions.fetchTagsByCount({ q: 'test', limit: 2000 })).then(() => {
+      return store.dispatch(actions.fetchTagsByCount({ q: 'test' })).then(() => {
         expect(store.getActions()).toEqual([{
           type: actions.FETCH_TAGS,
-          params: { q: 'test', limit: 2000, sort: 'count' }
+          params: { q: 'test', limit: 1000, sort: 'count' }
         }, {
           type: actions.FETCH_TAGS_SUCCESS,
           result: [1],
