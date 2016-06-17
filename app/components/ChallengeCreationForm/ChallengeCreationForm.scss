@@ -1,0 +1,28 @@
+@import '../../styles/main';
+
+.form {
+  @include grid-column-position(center);
+
+  .form-error {
+    @include cblhub-dialog(alert);
+    display: none;
+  }
+
+  .form-control {
+    @include grid-row;
+  }
+
+  .field-error {
+    @include cblhub-field-error;
+  }
+
+  button {
+    @include cblhub-button;
+  }
+
+  &.error {
+    .form-error {
+      display: block;
+    }
+  }
+}

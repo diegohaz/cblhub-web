@@ -1,3 +1,5 @@
+import cookie from 'react-cookie'
+
 export const CREATE_SESSION = 'CREATE_SESSION'
 export const CREATE_SESSION_SUCCESS = 'CREATE_SESSION_SUCCESS'
 export const CREATE_SESSION_FAILURE = 'CREATE_SESSION_FAILURE'
@@ -11,6 +13,7 @@ export const createSession = (username, password) => (dispatch, getState, api) =
     if (api && api.defaults && api.defaults.headers && api.defaults.headers.common) {
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`
     }
+    cookie.save('token', token)
     dispatch({ type: CREATE_SESSION_SUCCESS, token })
     return Promise.resolve({ token })
   }

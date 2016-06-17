@@ -33,11 +33,12 @@ var config = {
     loaders: [
       {test: /\.js$/, loader: 'babel', exclude: /node_modules/},
       {test: /\.png$/, loader: 'url?prefix=images/&limit=8000&mimetype=image/png'},
-      {test: /\.jpg$/, loader: 'url?prefix=images/&limit=8000&mimetype=image/jpeg'},
-      {test: /\.svg$/, loader: 'url?prefix=images/&limit=8000&mimetype=image/svg+xml'},
+      {test: /\.jpe?g$/, loader: 'url?prefix=images/&limit=8000&mimetype=image/jpeg'},
       {test: /\.woff$/, loader: 'url?prefix=fonts/&limit=8000&mimetype=application/font-woff'},
       {test: /\.ttf$/, loader: 'file?prefix=fonts/'},
       {test: /\.eot$/, loader: 'file?prefix=fonts/'},
+      {test: /\.svg$/, loader: 'raw'},
+      {test: /\.json$/, loader: 'json'},
       {test: /\.s?css$/, loader: DEBUG ? 'style!' + style : ExtractTextPlugin.extract('style', style)}
     ]
   },

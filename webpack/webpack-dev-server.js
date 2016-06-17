@@ -2,7 +2,6 @@ var webpack = require('webpack')
 var WebpackDevServer = require('webpack-dev-server')
 var config = require('./webpack.config')
 
-var ip = process.env.IP || '0.0.0.0'
 var port = (+process.env.PORT + 1) || 3001
 
 new WebpackDevServer(webpack(config), {
@@ -19,9 +18,9 @@ new WebpackDevServer(webpack(config), {
     timings: true,
     chunks: false
   }
-}).listen(port, ip, function (err) {
+}).listen(port, function (err) {
   if (err) {
     console.log(err)
   }
-  console.log('Webpack dev server is listening at localhost:' + port)
+  console.log('Webpack dev server is listening at port ' + port)
 })

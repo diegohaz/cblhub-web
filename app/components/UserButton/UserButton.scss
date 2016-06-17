@@ -1,0 +1,10 @@
+@import '../../styles/main';
+
+.button {
+  display: block;
+
+  .login-button {
+    @include cblhub-button;
+  }
+
+}

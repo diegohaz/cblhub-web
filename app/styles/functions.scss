@@ -1,7 +1,5 @@
-@function contrast ($baseColor, $darkenAmount, $lightenAmount: $darkenAmount) {
-  @if (lightness($baseColor) < 50%) {
-    @return lighten($baseColor, $lightenAmount);
-  } @else {
-    @return darken($baseColor, $darkenAmount)
-  }
+@import 'settings';
+
+@function palette($selector) {
+  @return map-get($foundation-palette, $selector);
 }

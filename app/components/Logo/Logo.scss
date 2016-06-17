@@ -1,0 +1,14 @@
+@import '../../styles/main';
+
+.logo {
+  display: block;
+  width: 80px;
+
+  path {
+    fill: palette(secondary);
+  }
+
+  path:nth-child(4), path:nth-child(5), path:nth-child(6) {
+    fill: palette(primary);
+  }
+}

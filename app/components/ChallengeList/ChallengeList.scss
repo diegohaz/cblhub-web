@@ -1,0 +1,23 @@
+@import '../../styles/main';
+
+.list {
+  @include breakpoint(small only) {
+    @include cblhub-grid(1, $global-margin / 2);
+  }
+
+  @include breakpoint(medium only) {
+    @include cblhub-grid(2, $global-margin * 2);
+  }
+
+  @include breakpoint(large only) {
+    @include cblhub-grid(2, $global-margin * 2);
+  }
+
+  @include breakpoint(xlarge only) {
+    @include cblhub-grid(3, $global-margin * 2);
+  }
+
+  @include breakpoint(xxlarge only) {
+    @include cblhub-grid(4, $global-margin * 2);
+  }
+}

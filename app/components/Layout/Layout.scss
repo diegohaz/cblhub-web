@@ -1,19 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
 @import '../../styles/main';
 
-html, body {
-  margin: 0;
-  padding: 0;
-}
+@include cblhub-styles;
+@include cblhub-forms;
 
 .layout {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400;
-  background-color: $secondaryBackgroundColor;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   min-height: 100vh;
-
-  a {
-    text-decoration: none;
-    color: $primaryColor;
-  }
 }

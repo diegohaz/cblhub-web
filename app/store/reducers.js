@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux'
+import { routerReducer } from 'react-router-redux'
+import { reducer as formReducer } from 'redux-form'
 import merge from 'lodash/merge'
 import challenge from './challenge/challenge.reducer'
 import guide from './guide/guide.reducer'
@@ -24,6 +26,8 @@ function entities (state = initialState, action) {
 }
 
 const reducers = combineReducers({
+  form: formReducer,
+  routing: routerReducer,
   entities,
   challenge,
   guide,
