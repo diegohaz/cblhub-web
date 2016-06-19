@@ -1,15 +1,16 @@
 import { connect } from 'react-redux'
-import { fetchMe } from '../store/user/user.actions'
-import { getMe } from '../store/user/user.selector'
+import { withRouter } from 'react-router'
+import { removeSession } from '../store/session/session.actions'
+import { fromEntities, fromUser } from '../store'
 
 import UserButton from '../components/UserButton'
 
 const mapStateToProps = (state) => ({
-  user: getMe(state)
+  user: fromEntities.getUser(state, fromUser.getMyId(state))
 })
 
 const mapDispatchToProps = {
-  fetchMe
+  onUserLogout: removeSession
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserButton)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserButton))

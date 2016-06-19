@@ -36,6 +36,21 @@ const initialState = {
   removing: -1
 }
 
+export const getCurrentId = (state = {}) => state.item
+export const getCurrentIds = (state = {}) => state.items || []
+export const getLoading = (state = {}) => state.loading || {}
+export const getIsFetchingCurrentId = (state) => getLoading(state).item
+export const getIsFetchingCurrentIds = (state) => getLoading(state).items
+export const getIsCreating = (state) => getLoading(state).create
+export const getIsRemoving = (state) => getLoading(state).remove
+export const getIsUpdating = (state) => getLoading(state).update
+export const getError = (state = {}) => state.error || {}
+export const getCurrentIdFailed = (state) => getError(state).item
+export const getCurrentIdsFailed = (state) => getError(state).items
+export const getCreateFailed = (state) => getError(state).create
+export const getRemoveFailed = (state) => getError(state).remove
+export const getUpdateFailed = (state) => getError(state).update
+
 export default function guideReducer (state = initialState, action) {
   switch (action.type) {
     case FETCH_GUIDES:

@@ -1,5 +1,5 @@
 import expect from 'expect'
-import reducer from './user.reducer'
+import reducer, * as fromUser from './user.reducer'
 import * as types from './user.actions'
 
 describe('User Reducer', function () {
@@ -16,6 +16,50 @@ describe('User Reducer', function () {
         item: false
       }
     })
+  })
+
+  it('should getCurrentId', function () {
+    expect(fromUser.getCurrentId()).toNotExist()
+    expect(fromUser.getCurrentId({ item: 1 })).toEqual(1)
+  })
+
+  it('should getMyId', function () {
+    expect(fromUser.getMyId()).toNotExist()
+    expect(fromUser.getMyId({ me: 1 })).toEqual(1)
+  })
+
+  it('should getLoading', function () {
+    expect(fromUser.getLoading()).toEqual({})
+    expect(fromUser.getLoading({ loading: { me: true } })).toEqual({ me: true })
+  })
+
+  it('should getIsFetchingCurrentId', function () {
+    expect(fromUser.getIsFetchingCurrentId()).toNotExist()
+    expect(fromUser.getIsFetchingCurrentId({ loading: { item: false } })).toEqual(false)
+    expect(fromUser.getIsFetchingCurrentId({ loading: { item: true } })).toEqual(true)
+  })
+
+  it('should getIsFetchingMe', function () {
+    expect(fromUser.getIsFetchingMe()).toNotExist()
+    expect(fromUser.getIsFetchingMe({ loading: { me: false } })).toEqual(false)
+    expect(fromUser.getIsFetchingMe({ loading: { me: true } })).toEqual(true)
+  })
+
+  it('should getError', function () {
+    expect(fromUser.getError()).toEqual({})
+    expect(fromUser.getError({ error: { me: true } })).toEqual({ me: true })
+  })
+
+  it('should getCurrentIdFailed', function () {
+    expect(fromUser.getCurrentIdFailed()).toNotExist()
+    expect(fromUser.getCurrentIdFailed({ error: { item: false } })).toEqual(false)
+    expect(fromUser.getCurrentIdFailed({ error: { item: true } })).toEqual(true)
+  })
+
+  it('should getMeFailed', function () {
+    expect(fromUser.getMeFailed()).toNotExist()
+    expect(fromUser.getMeFailed({ error: { me: false } })).toEqual(false)
+    expect(fromUser.getMeFailed({ error: { me: true } })).toEqual(true)
   })
 
   it('should handle FETCH_USER', function () {
@@ -103,6 +147,14 @@ describe('User Reducer', function () {
       me: 1,
       error: { me: false },
       loading: { me: true }
+    })
+  })
+
+  it('should handle REMOVE_ME', function () {
+    expect(
+      reducer({ me: 1 }, { type: types.REMOVE_ME })
+    ).toEqual({
+      me: null
     })
   })
 })

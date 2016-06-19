@@ -1,19 +1,23 @@
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import nock from 'nock'
-import expect from 'expect'
+import expect, { spyOn } from 'expect'
+import cookie from 'react-cookie'
 import api from '../../services/api'
 import { apiUrl } from '../../config'
 import * as actions from './session.actions'
+import { REMOVE_ME } from '../user/user.actions'
 
 const middlewares = [ thunk.withExtraArgument(api) ]
 const mockStore = configureMockStore(middlewares)
 
 describe('Session Actions', function () {
-  let store
+  let store, saveCookie, removeCookie
 
   beforeEach(function () {
     store = mockStore({ session: {} })
+    saveCookie = spyOn(cookie, 'save')
+    removeCookie = spyOn(cookie, 'remove')
   })
 
   afterEach(function () {
@@ -30,6 +34,7 @@ describe('Session Actions', function () {
           { type: actions.CREATE_SESSION_SUCCESS, token: 1 }
         ])
         expect(api.defaults.headers.common['Authorization']).toEqual('Bearer 1')
+        expect(saveCookie).toHaveBeenCalledWith('token', 1)
       })
     })
 
@@ -51,6 +56,7 @@ describe('Session Actions', function () {
           { type: actions.CREATE_SESSION_SUCCESS, token: 1 }
         ])
         expect(api.defaults.headers.common['Authorization']).toEqual('Bearer 1')
+        expect(saveCookie).toHaveBeenCalledWith('token', 1)
       })
     })
 
@@ -75,8 +81,11 @@ describe('Session Actions', function () {
       return store.dispatch(actions.removeSession(1)).then(() => {
         expect(store.getActions()).toEqual([
           { type: actions.REMOVE_SESSION },
+          { type: REMOVE_ME },
           { type: actions.REMOVE_SESSION_SUCCESS }
         ])
+        expect(api.defaults.headers.common['Authorization']).toNotExist()
+        expect(removeCookie).toHaveBeenCalledWith('token')
       })
     })
 
@@ -88,8 +97,11 @@ describe('Session Actions', function () {
       return store.dispatch(actions.removeSession()).then(() => {
         expect(store.getActions()).toEqual([
           { type: actions.REMOVE_SESSION },
+          { type: REMOVE_ME },
           { type: actions.REMOVE_SESSION_SUCCESS }
         ])
+        expect(api.defaults.headers.common['Authorization']).toNotExist()
+        expect(removeCookie).toHaveBeenCalledWith('token')
       })
     })
 
@@ -110,8 +122,11 @@ describe('Session Actions', function () {
       }, () => {
         expect(store.getActions()).toEqual([
           { type: actions.REMOVE_SESSION },
+          { type: REMOVE_ME },
           { type: actions.REMOVE_SESSION_FAILURE }
         ])
+        expect(api.defaults.headers.common['Authorization']).toNotExist()
+        expect(removeCookie).toHaveBeenCalledWith('token')
       })
     })
   })

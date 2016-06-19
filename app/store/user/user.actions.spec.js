@@ -130,4 +130,11 @@ describe('User Actions', function () {
       })
     })
   })
+
+  describe('removeMe', function () {
+    it('should remove me', function () {
+      store.dispatch(actions.removeMe())
+      expect(store.getActions()).toEqual([{ type: actions.REMOVE_ME }])
+    })
+  })
 })

@@ -1,5 +1,5 @@
 import expect from 'expect'
-import reducer from './guide.reducer'
+import reducer, * as fromGuide from './guide.reducer'
 import * as types from './guide.actions'
 
 describe('Guide Reducer', function () {
@@ -25,6 +25,96 @@ describe('Guide Reducer', function () {
     }
 
     expect(reducer(undefined, {})).toEqual(initialState)
+  })
+
+  it('should getCurrentId', function () {
+    expect(fromGuide.getCurrentId()).toNotExist()
+    expect(fromGuide.getCurrentId({ item: 1 })).toEqual(1)
+  })
+
+  it('should getCurrentIds', function () {
+    expect(fromGuide.getCurrentIds()).toEqual([])
+    expect(fromGuide.getCurrentIds({ items: [1, 2] })).toEqual([1, 2])
+  })
+
+  it('should getLoading', function () {
+    expect(fromGuide.getLoading()).toEqual({})
+    expect(fromGuide.getLoading({ loading: { items: true } })).toEqual({ items: true })
+  })
+
+  it('should getIsFetchingCurrentId', function () {
+    expect(fromGuide.getIsFetchingCurrentId()).toNotExist()
+    expect(fromGuide.getIsFetchingCurrentId({ loading: {} })).toNotExist()
+    expect(fromGuide.getIsFetchingCurrentId({ loading: { item: false } })).toEqual(false)
+    expect(fromGuide.getIsFetchingCurrentId({ loading: { item: true } })).toEqual(true)
+  })
+
+  it('should getIsFetchingCurrentIds', function () {
+    expect(fromGuide.getIsFetchingCurrentIds()).toNotExist()
+    expect(fromGuide.getIsFetchingCurrentIds({ loading: {} })).toNotExist()
+    expect(fromGuide.getIsFetchingCurrentIds({ loading: { items: false } })).toEqual(false)
+    expect(fromGuide.getIsFetchingCurrentIds({ loading: { items: true } })).toEqual(true)
+  })
+
+  it('should getIsCreating', function () {
+    expect(fromGuide.getIsCreating()).toNotExist()
+    expect(fromGuide.getIsCreating({ loading: {} })).toNotExist()
+    expect(fromGuide.getIsCreating({ loading: { create: false } })).toEqual(false)
+    expect(fromGuide.getIsCreating({ loading: { create: true } })).toEqual(true)
+  })
+
+  it('should getIsRemoving', function () {
+    expect(fromGuide.getIsRemoving()).toNotExist()
+    expect(fromGuide.getIsRemoving({ loading: {} })).toNotExist()
+    expect(fromGuide.getIsRemoving({ loading: { remove: false } })).toEqual(false)
+    expect(fromGuide.getIsRemoving({ loading: { remove: true } })).toEqual(true)
+  })
+
+  it('should getIsUpdating', function () {
+    expect(fromGuide.getIsUpdating()).toNotExist()
+    expect(fromGuide.getIsUpdating({ loading: {} })).toNotExist()
+    expect(fromGuide.getIsUpdating({ loading: { update: false } })).toEqual(false)
+    expect(fromGuide.getIsUpdating({ loading: { update: true } })).toEqual(true)
+  })
+
+  it('should getError', function () {
+    expect(fromGuide.getError()).toEqual({})
+    expect(fromGuide.getError({ error: { items: true } })).toEqual({ items: true })
+  })
+
+  it('should getCurrentIdFailed', function () {
+    expect(fromGuide.getCurrentIdFailed()).toNotExist()
+    expect(fromGuide.getCurrentIdFailed({ error: {} })).toNotExist()
+    expect(fromGuide.getCurrentIdFailed({ error: { item: false } })).toEqual(false)
+    expect(fromGuide.getCurrentIdFailed({ error: { item: true } })).toEqual(true)
+  })
+
+  it('should getCurrentIdsFailed', function () {
+    expect(fromGuide.getCurrentIdsFailed()).toNotExist()
+    expect(fromGuide.getCurrentIdsFailed({ error: {} })).toNotExist()
+    expect(fromGuide.getCurrentIdsFailed({ error: { items: false } })).toEqual(false)
+    expect(fromGuide.getCurrentIdsFailed({ error: { items: true } })).toEqual(true)
+  })
+
+  it('should getCreateFailed', function () {
+    expect(fromGuide.getCreateFailed()).toNotExist()
+    expect(fromGuide.getCreateFailed({ error: {} })).toNotExist()
+    expect(fromGuide.getCreateFailed({ error: { create: false } })).toEqual(false)
+    expect(fromGuide.getCreateFailed({ error: { create: true } })).toEqual(true)
+  })
+
+  it('should getRemoveFailed', function () {
+    expect(fromGuide.getRemoveFailed()).toNotExist()
+    expect(fromGuide.getRemoveFailed({ error: {} })).toNotExist()
+    expect(fromGuide.getRemoveFailed({ error: { remove: false } })).toEqual(false)
+    expect(fromGuide.getRemoveFailed({ error: { remove: true } })).toEqual(true)
+  })
+
+  it('should getUpdateFailed', function () {
+    expect(fromGuide.getUpdateFailed()).toNotExist()
+    expect(fromGuide.getUpdateFailed({ error: {} })).toNotExist()
+    expect(fromGuide.getUpdateFailed({ error: { update: false } })).toEqual(false)
+    expect(fromGuide.getUpdateFailed({ error: { update: true } })).toEqual(true)
   })
 
   it('should handle FETCH_GUIDES', function () {

@@ -1,5 +1,5 @@
 import expect from 'expect'
-import reducer from './challenge.reducer'
+import reducer, * as fromChallenge from './challenge.reducer'
 import * as types from './challenge.actions'
 
 describe('Challenge Reducer', function () {
@@ -25,6 +25,96 @@ describe('Challenge Reducer', function () {
     }
 
     expect(reducer(undefined, {})).toEqual(initialState)
+  })
+
+  it('should getCurrentId', function () {
+    expect(fromChallenge.getCurrentId()).toNotExist()
+    expect(fromChallenge.getCurrentId({ item: 1 })).toEqual(1)
+  })
+
+  it('should getCurrentIds', function () {
+    expect(fromChallenge.getCurrentIds()).toEqual([])
+    expect(fromChallenge.getCurrentIds({ items: [1, 2] })).toEqual([1, 2])
+  })
+
+  it('should getLoading', function () {
+    expect(fromChallenge.getLoading()).toEqual({})
+    expect(fromChallenge.getLoading({ loading: { items: true } })).toEqual({ items: true })
+  })
+
+  it('should getIsFetchingCurrentId', function () {
+    expect(fromChallenge.getIsFetchingCurrentId()).toNotExist()
+    expect(fromChallenge.getIsFetchingCurrentId({ loading: {} })).toNotExist()
+    expect(fromChallenge.getIsFetchingCurrentId({ loading: { item: false } })).toEqual(false)
+    expect(fromChallenge.getIsFetchingCurrentId({ loading: { item: true } })).toEqual(true)
+  })
+
+  it('should getIsFetchingCurrentIds', function () {
+    expect(fromChallenge.getIsFetchingCurrentIds()).toNotExist()
+    expect(fromChallenge.getIsFetchingCurrentIds({ loading: {} })).toNotExist()
+    expect(fromChallenge.getIsFetchingCurrentIds({ loading: { items: false } })).toEqual(false)
+    expect(fromChallenge.getIsFetchingCurrentIds({ loading: { items: true } })).toEqual(true)
+  })
+
+  it('should getIsCreating', function () {
+    expect(fromChallenge.getIsCreating()).toNotExist()
+    expect(fromChallenge.getIsCreating({ loading: {} })).toNotExist()
+    expect(fromChallenge.getIsCreating({ loading: { create: false } })).toEqual(false)
+    expect(fromChallenge.getIsCreating({ loading: { create: true } })).toEqual(true)
+  })
+
+  it('should getIsRemoving', function () {
+    expect(fromChallenge.getIsRemoving()).toNotExist()
+    expect(fromChallenge.getIsRemoving({ loading: {} })).toNotExist()
+    expect(fromChallenge.getIsRemoving({ loading: { remove: false } })).toEqual(false)
+    expect(fromChallenge.getIsRemoving({ loading: { remove: true } })).toEqual(true)
+  })
+
+  it('should getIsUpdating', function () {
+    expect(fromChallenge.getIsUpdating()).toNotExist()
+    expect(fromChallenge.getIsUpdating({ loading: {} })).toNotExist()
+    expect(fromChallenge.getIsUpdating({ loading: { update: false } })).toEqual(false)
+    expect(fromChallenge.getIsUpdating({ loading: { update: true } })).toEqual(true)
+  })
+
+  it('should getError', function () {
+    expect(fromChallenge.getError()).toEqual({})
+    expect(fromChallenge.getError({ error: { items: true } })).toEqual({ items: true })
+  })
+
+  it('should getCurrentIdFailed', function () {
+    expect(fromChallenge.getCurrentIdFailed()).toNotExist()
+    expect(fromChallenge.getCurrentIdFailed({ error: {} })).toNotExist()
+    expect(fromChallenge.getCurrentIdFailed({ error: { item: false } })).toEqual(false)
+    expect(fromChallenge.getCurrentIdFailed({ error: { item: true } })).toEqual(true)
+  })
+
+  it('should getCurrentIdsFailed', function () {
+    expect(fromChallenge.getCurrentIdsFailed()).toNotExist()
+    expect(fromChallenge.getCurrentIdsFailed({ error: {} })).toNotExist()
+    expect(fromChallenge.getCurrentIdsFailed({ error: { items: false } })).toEqual(false)
+    expect(fromChallenge.getCurrentIdsFailed({ error: { items: true } })).toEqual(true)
+  })
+
+  it('should getCreateFailed', function () {
+    expect(fromChallenge.getCreateFailed()).toNotExist()
+    expect(fromChallenge.getCreateFailed({ error: {} })).toNotExist()
+    expect(fromChallenge.getCreateFailed({ error: { create: false } })).toEqual(false)
+    expect(fromChallenge.getCreateFailed({ error: { create: true } })).toEqual(true)
+  })
+
+  it('should getRemoveFailed', function () {
+    expect(fromChallenge.getRemoveFailed()).toNotExist()
+    expect(fromChallenge.getRemoveFailed({ error: {} })).toNotExist()
+    expect(fromChallenge.getRemoveFailed({ error: { remove: false } })).toEqual(false)
+    expect(fromChallenge.getRemoveFailed({ error: { remove: true } })).toEqual(true)
+  })
+
+  it('should getUpdateFailed', function () {
+    expect(fromChallenge.getUpdateFailed()).toNotExist()
+    expect(fromChallenge.getUpdateFailed({ error: {} })).toNotExist()
+    expect(fromChallenge.getUpdateFailed({ error: { update: false } })).toEqual(false)
+    expect(fromChallenge.getUpdateFailed({ error: { update: true } })).toEqual(true)
   })
 
   it('should handle FETCH_CHALLENGES', function () {

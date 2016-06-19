@@ -24,6 +24,7 @@ const mapDispatchToProps = {}
 export default reduxForm({
   form: 'challengeCreation',
   fields: ['bigIdea', 'essentialQuestion', 'title', 'description'],
+  destroyOnUnmount: false,
   validate,
   onSubmit
 }, mapStateToProps, mapDispatchToProps)(ChallengeCreationForm)

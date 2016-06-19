@@ -3,9 +3,10 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { AppContainer } from 'react-hot-loader'
-import { Router, browserHistory } from 'react-router'
+import { Router, browserHistory, applyRouterMiddleware } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
-import configureStore from './store'
+import useScroll from 'react-router-scroll'
+import configureStore from './store/configure'
 import routes from './routes'
 
 const initialState = window.__INITIAL_STATE__
@@ -16,7 +17,10 @@ const root = document.getElementById('app')
 render(
   <AppContainer>
     <Provider store={store}>
-      <Router history={history} routes={routes} />
+      <Router
+        history={history}
+        routes={routes}
+        render={applyRouterMiddleware(useScroll())} />
     </Provider>
   </AppContainer>,
   root)
@@ -26,7 +30,10 @@ if (module.hot) {
     render(
       <AppContainer>
         <Provider store={store}>
-          <Router history={history} routes={require('./routes').default} />
+          <Router
+            history={history}
+            routes={require('./routes').default}
+            render={applyRouterMiddleware(useScroll())} />
         </Provider>
       </AppContainer>,
       root)

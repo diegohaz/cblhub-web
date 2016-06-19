@@ -1,8 +1,6 @@
 import { arrayOf, normalize } from 'normalizr'
 import schema from './guide.schema'
-import { getChallenge } from '../challenge/challenge.selector'
-import { getMe, getUser } from '../user/user.selector'
-import { getGuide } from './guide.selector'
+import { fromEntities, fromChallenge, fromUser, fromGuide } from '../'
 
 export const FETCH_GUIDES = 'FETCH_GUIDES'
 export const FETCH_GUIDES_SUCCESS = 'FETCH_GUIDES_SUCCESS'
@@ -36,20 +34,19 @@ export const fetchGuides = (
 }
 
 export const fetchChallengeGuides = (params = {}) => (dispatch, getState) =>
-  dispatch(fetchGuides({ challenge: getChallenge(getState()).id, ...params }))
+  dispatch(fetchGuides({ challenge: fromChallenge.getCurrentId(getState()), ...params }))
 
 export const fetchGuideGuides = (params = {}) => (dispatch, getState) =>
-  dispatch(fetchGuides({ guide: getGuide(getState()).id, ...params }))
+  dispatch(fetchGuides({ guide: fromGuide.getCurrentId(getState()), ...params }))
 
 export const fetchUserGuides = (params = {}) => (dispatch, getState) =>
-  dispatch(fetchGuides({ user: getUser(getState()).id, ...params }))
+  dispatch(fetchGuides({ user: fromUser.getCurrentId(getState()), ...params }))
 
 export const fetchMyGuides = (params = {}) => (dispatch, getState) =>
-  dispatch(fetchGuides({ user: getMe(getState()).id, ...params }))
+  dispatch(fetchGuides({ user: fromUser.getMyId(getState()), ...params }))
 
 export const fetchGuide = (id) => (dispatch, getState, api) => {
-  const { entities } = getState()
-  if (entities && entities.guides && entities.guides[id]) {
+  if (fromEntities.getGuide(getState(), id)) {
     dispatch({
       type: FETCH_GUIDE_SUCCESS,
       result: id,
@@ -81,11 +78,7 @@ export const createGuide = (body) => (dispatch, getState, api) => {
 }
 
 export const updateGuide = (body) => (dispatch, getState, api) => {
-  const { entities } = getState()
-  let oldEntity
-  if (entities && entities.guides && entities.guides[body.id]) {
-    oldEntity = entities.guides[body.id]
-  }
+  const oldEntity = fromEntities.getGuide(getState(), body.id)
   dispatch({
     type: UPDATE_GUIDE,
     entities: normalize(body, schema).entities

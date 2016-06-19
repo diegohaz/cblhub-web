@@ -9,6 +9,8 @@ const LayoutHeader = () => {
   return (
     <div className={styles.header}>
       <div className={styles.title}><Link to='/'><Logo /></Link></div>
+      <div className={styles.space} />
+      <Link className={styles.button} to='/challenges/create'>Create challenge</Link>
       <UserButton />
     </div>
   )

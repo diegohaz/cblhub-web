@@ -3,7 +3,6 @@ import cls from 'classnames'
 import styles from './LoginForm.scss'
 
 const LoginForm = ({
-  ...props,
   fields: { email, password },
   submitting,
   handleSubmit,
@@ -39,7 +38,8 @@ LoginForm.propTypes = {
   error: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  className: PropTypes.string
+  className: PropTypes.string,
+  back: PropTypes.string
 }
 
 export default LoginForm

@@ -10,6 +10,10 @@ const initialState = {
   error: false
 }
 
+export const getCurrentIds = (state = {}) => state.items || []
+export const getIsLoading = (state = {}) => state.loading
+export const getFailed = (state = {}) => state.error
+
 export default function tagReducer (state = initialState, action) {
   switch (action.type) {
     case FETCH_TAGS:

@@ -1,4 +1,5 @@
 import { reduxForm } from 'redux-form'
+import { push } from 'react-router-redux'
 import { createSession } from '../store/session/session.actions'
 import { fetchMe } from '../store/user/user.actions'
 import { createValidator, required, email, minLength } from '../services/validation'
@@ -9,10 +10,14 @@ const validate = createValidator({
   password: [required, minLength(6)]
 })
 
-const onSubmit = ({ email, password }, dispatch) =>
-  dispatch(createSession(email, password)).then(() => {
-    return dispatch(fetchMe())
-  }, ({ status }) => {
+const asyncValidate = ({ email, password }, dispatch, { back }) =>
+  dispatch(
+    createSession(email, password)
+  ).then(() =>
+    dispatch(fetchMe())
+  ).then(() =>
+    dispatch(push(back || '/'))
+  ).catch(({ status }) => {
     let error = {}
     if (status === 401) {
       error = { _error: 'Wrong email or password' }
@@ -29,5 +34,6 @@ export default reduxForm({
   form: 'login',
   fields: ['email', 'password'],
   validate,
-  onSubmit
+  asyncValidate,
+  onSubmit: () => true
 }, mapStateToProps, mapDispatchToProps)(LoginForm)

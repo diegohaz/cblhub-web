@@ -13,6 +13,10 @@ const initialState = {
   error: false
 }
 
+export const getToken = (state = {}) => state.token
+export const getIsLoading = (state = {}) => state.loading
+export const getFailed = (state = {}) => state.error
+
 export default function sessionReducer (state = initialState, action) {
   switch (action.type) {
     case CREATE_SESSION:

@@ -4,6 +4,7 @@ import nock from 'nock'
 import expect from 'expect'
 import api from '../../services/api'
 import { apiUrl } from '../../config'
+import { DESELECT_PHOTO } from '../photo/photo.actions'
 import * as actions from './challenge.actions'
 
 const middlewares = [ thunk.withExtraArgument(api) ]
@@ -165,7 +166,7 @@ describe('Challenge Actions', function () {
       })
     })
 
-    it('should get cached challenge', function () {
+    it('should fetch cached challenge', function () {
       nock(apiUrl).get('/challenges/1').reply(200, { id: 1 })
 
       store = mockStore({ entities: { challenges: { 1: { id: 1 } } } })
@@ -183,7 +184,7 @@ describe('Challenge Actions', function () {
       })
     })
 
-    it('should get challenge with error', function () {
+    it('should fetch challenge with error', function () {
       nock(apiUrl).get('/challenges/1').reply(500)
 
       return store.dispatch(actions.fetchChallenge(1)).then(() => {
@@ -241,11 +242,13 @@ describe('Challenge Actions', function () {
         }, {
           type: actions.UPDATE_CHALLENGE_SUCCESS,
           entities: { challenges: { 1: { id: 1, title: 'Test' } } }
+        }, {
+          type: DESELECT_PHOTO
         }])
       })
     })
 
-    it('should put challenge with error', function () {
+    it('should update challenge with error', function () {
       nock(apiUrl).put('/challenges').reply(500)
 
       store = mockStore({ entities: { challenges: { 1: { id: 1 } } } })
@@ -260,6 +263,8 @@ describe('Challenge Actions', function () {
         }, {
           type: actions.UPDATE_CHALLENGE_FAILURE,
           entities: { challenges: { 1: { id: 1 } } }
+        }, {
+          type: DESELECT_PHOTO
         }])
       })
     })

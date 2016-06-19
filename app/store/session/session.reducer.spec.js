@@ -1,5 +1,5 @@
 import expect from 'expect'
-import reducer from './session.reducer'
+import reducer, * as fromSession from './session.reducer'
 import * as types from './session.actions'
 
 describe('Session Reducer', function () {
@@ -9,6 +9,23 @@ describe('Session Reducer', function () {
       loading: false,
       error: false
     })
+  })
+
+  it('sould getToken', function () {
+    expect(fromSession.getToken()).toNotExist()
+    expect(fromSession.getToken({ token: 1 })).toEqual(1)
+  })
+
+  it('sould getIsLoading', function () {
+    expect(fromSession.getIsLoading()).toNotExist()
+    expect(fromSession.getIsLoading({ loading: false })).toEqual(false)
+    expect(fromSession.getIsLoading({ loading: true })).toEqual(true)
+  })
+
+  it('sould getFailed', function () {
+    expect(fromSession.getFailed()).toNotExist()
+    expect(fromSession.getFailed({ error: false })).toEqual(false)
+    expect(fromSession.getFailed({ error: true })).toEqual(true)
   })
 
   it('should handle CREATE_SESSION', function () {

@@ -1,5 +1,5 @@
 import expect from 'expect'
-import reducer from './tag.reducer'
+import reducer, * as fromTag from './tag.reducer'
 import * as types from './tag.actions'
 
 describe('Tag Reducer', function () {
@@ -11,6 +11,23 @@ describe('Tag Reducer', function () {
     }
 
     expect(reducer(undefined, {})).toEqual(initialState)
+  })
+
+  it('should getCurrentIds', function () {
+    expect(fromTag.getCurrentIds()).toEqual([])
+    expect(fromTag.getCurrentIds({ items: [1, 2] })).toEqual([1, 2])
+  })
+
+  it('should getIsLoading', function () {
+    expect(fromTag.getIsLoading()).toNotExist()
+    expect(fromTag.getIsLoading({ loading: false })).toEqual(false)
+    expect(fromTag.getIsLoading({ loading: true })).toEqual(true)
+  })
+
+  it('should getFailed', function () {
+    expect(fromTag.getFailed()).toNotExist()
+    expect(fromTag.getFailed({ error: false })).toEqual(false)
+    expect(fromTag.getFailed({ error: true })).toEqual(true)
   })
 
   it('should handle FETCH_TAGS', function () {

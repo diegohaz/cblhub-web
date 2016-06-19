@@ -3,21 +3,26 @@
 .list {
   @include breakpoint(small only) {
     @include cblhub-grid(1, $global-margin / 2);
+    max-width: rem-calc(420);
   }
 
   @include breakpoint(medium only) {
     @include cblhub-grid(2, $global-margin * 2);
+    max-width: rem-calc(420 * 2) + $global-margin * 4;
   }
 
   @include breakpoint(large only) {
     @include cblhub-grid(2, $global-margin * 2);
+    max-width: rem-calc(420 * 2) + $global-margin * 4;
   }
 
   @include breakpoint(xlarge only) {
     @include cblhub-grid(3, $global-margin * 2);
+    max-width: rem-calc(420 * 3) + $global-margin * 6;
   }
 
   @include breakpoint(xxlarge only) {
     @include cblhub-grid(4, $global-margin * 2);
+    max-width: rem-calc(420 * 4) + $global-margin * 8;
   }
 }

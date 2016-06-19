@@ -1,4 +1,6 @@
 import { arrayOf, normalize } from 'normalizr'
+import { fromEntities } from '../'
+import { deselectPhoto } from '../photo/photo.actions'
 import challenge from './challenge.schema'
 
 export const FETCH_CHALLENGES = 'FETCH_CHALLENGES'
@@ -33,8 +35,7 @@ export const fetchChallenges = (
 }
 
 export const fetchChallenge = (id) => (dispatch, getState, api) => {
-  const { entities } = getState()
-  if (entities && entities.challenges && entities.challenges[id]) {
+  if (fromEntities.getChallenge(getState(), id)) {
     dispatch({
       type: FETCH_CHALLENGE_SUCCESS,
       result: id,
@@ -66,11 +67,7 @@ export const createChallenge = (body) => (dispatch, getState, api) => {
 }
 
 export const updateChallenge = (body) => (dispatch, getState, api) => {
-  const { entities } = getState()
-  let oldEntity
-  if (entities && entities.challenges && entities.challenges[body.id]) {
-    oldEntity = entities.challenges[body.id]
-  }
+  const oldEntity = fromEntities.getChallenge(getState(), body.id)
   dispatch({
     type: UPDATE_CHALLENGE,
     entities: normalize(body, challenge).entities
@@ -79,10 +76,12 @@ export const updateChallenge = (body) => (dispatch, getState, api) => {
   return api.put(`/challenges/${body.id}`, {...body}).then(({ data }) => {
     const { entities } = normalize(data, challenge)
     dispatch({ type: UPDATE_CHALLENGE_SUCCESS, entities })
+    dispatch(deselectPhoto(body.id))
     return data
   }).catch((error) => {
     const { entities } = normalize(oldEntity, challenge)
     dispatch({ type: UPDATE_CHALLENGE_FAILURE, entities })
+    dispatch(deselectPhoto(body.id))
     throw error
   })
 }

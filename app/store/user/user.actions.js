@@ -8,6 +8,7 @@ export const FETCH_ME = 'FETCH_ME'
 export const FETCH_ME_SUCCESS = 'FETCH_ME_SUCCESS'
 export const FETCH_ME_FAILURE = 'FETCH_ME_FAILURE'
 export const UPDATE_ME = 'UPDATE_ME'
+export const REMOVE_ME = 'REMOVE_ME'
 
 export const fetchUser = (id) => (dispatch, getState, api) => {
   const { entities } = getState()
@@ -55,3 +56,7 @@ export const updateMe = (body) => (dispatch, getState, api) => {
     throw error
   })
 }
+
+export const removeMe = () => ({
+  type: REMOVE_ME
+})

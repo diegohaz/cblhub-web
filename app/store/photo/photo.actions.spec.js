@@ -66,4 +66,19 @@ describe('Photo Actions', function () {
       })
     })
   })
+
+  describe('selectPhoto', function () {
+    it('should select photo', function () {
+      store.dispatch(actions.selectPhoto(1))
+      expect(store.getActions()).toEqual([{
+        type: actions.SELECT_PHOTO,
+        id: 1
+      }])
+    })
+
+    it('should deselect photo', function () {
+      store.dispatch(actions.deselectPhoto(1))
+      expect(store.getActions()).toEqual([{ type: actions.DESELECT_PHOTO }])
+    })
+  })
 })

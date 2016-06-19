@@ -3,6 +3,7 @@ import cls from 'classnames'
 import styles from './Icon.scss'
 
 export const contributions = require('./icons/contributions.svg')
+export const down = require('./icons/down.svg')
 
 const Icon = ({ className, icon, size = 20 }) => {
   return (

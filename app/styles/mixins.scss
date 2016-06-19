@@ -8,8 +8,7 @@
 @mixin cblhub-grid($n: 3, $gutter: $global-margin) {
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
-  margin: $gutter/2;
+  padding: $gutter/2;
 
   & > * {
     margin: $gutter/2;
@@ -36,7 +35,7 @@
 @mixin cblhub-button($expand: false, $background: $button-background) {
   @include button($expand, $background);
   margin: 0;
-  
+
   &[disabled] {
     @include button-disabled;
   }
