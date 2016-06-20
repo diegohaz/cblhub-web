@@ -1,5 +1,5 @@
 import { arrayOf, normalize } from 'normalizr'
-import { fromEntities } from '../'
+import { fromEntities, fromStatus } from '../'
 import { deselectPhoto } from '../photo/photo.actions'
 import challenge from './challenge.schema'
 
@@ -28,6 +28,9 @@ export const fetchChallenges = (
   { ...params, q, user, page, limit, sort } = {},
   append = page > 1
 ) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), FETCH_CHALLENGES)) {
+    return Promise.resolve()
+  }
   dispatch({ type: FETCH_CHALLENGES_REQUEST, params })
   return api.get('/challenges', { params }).then(({ data }) => {
     const { result, entities } = normalize(data, arrayOf(challenge))
@@ -40,6 +43,9 @@ export const fetchChallenges = (
 }
 
 export const fetchChallenge = (id) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), FETCH_CHALLENGE)) {
+    return Promise.resolve()
+  }
   dispatch({ type: FETCH_CHALLENGE_REQUEST, id })
   return api.get(`/challenges/${id}`).then(({ data }) => {
     const { result, entities } = normalize(data, challenge)
@@ -52,6 +58,9 @@ export const fetchChallenge = (id) => (dispatch, getState, api) => {
 }
 
 export const createChallenge = (body) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), CREATE_CHALLENGE)) {
+    return Promise.resolve()
+  }
   dispatch({ type: CREATE_CHALLENGE_REQUEST })
   return api.post('/challenges', body).then(({ data }) => {
     const { result, entities } = normalize(data, challenge)
@@ -64,6 +73,9 @@ export const createChallenge = (body) => (dispatch, getState, api) => {
 }
 
 export const updateChallenge = (body) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), UPDATE_CHALLENGE)) {
+    return Promise.resolve()
+  }
   const oldEntity = fromEntities.getChallenge(getState(), body.id)
   dispatch({
     type: UPDATE_CHALLENGE_REQUEST,
@@ -84,6 +96,9 @@ export const updateChallenge = (body) => (dispatch, getState, api) => {
 }
 
 export const removeChallenge = (id) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), REMOVE_CHALLENGE)) {
+    return Promise.resolve()
+  }
   dispatch({ type: REMOVE_CHALLENGE_REQUEST, id })
   return api.delete(`/challenges/${id}`).then(() => {
     dispatch({ type: REMOVE_CHALLENGE_SUCCESS, id })

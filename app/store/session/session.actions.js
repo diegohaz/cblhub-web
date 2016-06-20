@@ -1,4 +1,5 @@
 import cookie from 'react-cookie'
+import { fromStatus, fromSession } from '../'
 import { removeMe } from '../user/user.actions'
 
 export const CREATE_SESSION = 'CREATE_SESSION'
@@ -11,7 +12,9 @@ export const REMOVE_SESSION_SUCCESS = 'REMOVE_SESSION_SUCCESS'
 export const REMOVE_SESSION_FAILURE = 'REMOVE_SESSION_FAILURE'
 
 export const createSession = (username, password) => (dispatch, getState, api) => {
-  const { session } = getState()
+  if (fromStatus.getIsLoading(getState(), CREATE_SESSION)) {
+    return Promise.resolve()
+  }
   const dispatchSession = (token) => {
     if (api && api.defaults && api.defaults.headers && api.defaults.headers.common) {
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`
@@ -21,14 +24,10 @@ export const createSession = (username, password) => (dispatch, getState, api) =
     return Promise.resolve({ token })
   }
 
-  if (typeof session === 'undefined') {
-    throw new Error('There is no session state')
-  }
-
   dispatch({ type: CREATE_SESSION_REQUEST })
 
-  if (session.token) {
-    return dispatchSession(session.token)
+  if (fromSession.getToken(getState())) {
+    return dispatchSession(fromSession.getToken(getState()))
   }
 
   return api.post('/sessions', {}, { auth: { username, password } }).then(({ data }) => {
@@ -40,12 +39,11 @@ export const createSession = (username, password) => (dispatch, getState, api) =
 }
 
 export const removeSession = (token) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), REMOVE_SESSION)) {
+    return Promise.resolve()
+  }
   if (typeof token === 'undefined') {
-    const { session } = getState()
-    if (!session || !session.token) {
-      throw new Error('There is no session.token state')
-    }
-    token = session.token
+    token = fromSession.getToken(getState())
   }
 
   dispatch({ type: REMOVE_SESSION_REQUEST })

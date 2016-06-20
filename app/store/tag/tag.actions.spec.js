@@ -21,7 +21,7 @@ describe('Tag Actions', function () {
   })
 
   describe('fetchTags', function () {
-    it('should get tags', function () {
+    it('should fetch tags', function () {
       nock(apiUrl).get('/tags').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchTags()).then(() => {
@@ -37,7 +37,7 @@ describe('Tag Actions', function () {
       })
     })
 
-    it('should get tags by q', function () {
+    it('should fetch tags by q', function () {
       nock(apiUrl).get('/tags?q=test').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchTags({ q: 'test' })).then(() => {
@@ -53,7 +53,7 @@ describe('Tag Actions', function () {
       })
     })
 
-    it('should get tags by page', function () {
+    it('should fetch tags by page', function () {
       nock(apiUrl).get('/tags?page=2').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchTags({ page: 2 })).then(() => {
@@ -69,7 +69,7 @@ describe('Tag Actions', function () {
       })
     })
 
-    it('should get tags by limit', function () {
+    it('should fetch tags by limit', function () {
       nock(apiUrl).get('/tags?limit=1').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchTags({ limit: 1 })).then(() => {
@@ -85,7 +85,7 @@ describe('Tag Actions', function () {
       })
     })
 
-    it('should get tags by sort', function () {
+    it('should fetch tags by sort', function () {
       nock(apiUrl).get('/tags?sort=title').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchTags({ sort: 'title' })).then(() => {
@@ -101,7 +101,7 @@ describe('Tag Actions', function () {
       })
     })
 
-    it('should get tags appending', function () {
+    it('should fetch tags appending', function () {
       nock(apiUrl).get('/tags').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchTags({}, true)).then(() => {
@@ -117,7 +117,17 @@ describe('Tag Actions', function () {
       })
     })
 
-    it('should get tags with error', function () {
+    it('should not fetch tags if it is already fetching', function () {
+      nock(apiUrl).get('/tags').reply(200, [{ id: 1 }])
+
+      store = mockStore({ status: { loading: { [actions.FETCH_TAGS]: true } } })
+
+      return store.dispatch(actions.fetchTags()).then(() => {
+        expect(store.getActions()).toEqual([])
+      })
+    })
+
+    it('should fetch tags with error', function () {
       nock(apiUrl).get('/tags').reply(500)
 
       return store.dispatch(actions.fetchTags()).then(() => {
@@ -134,7 +144,7 @@ describe('Tag Actions', function () {
   })
 
   describe('fetchTagsByCount', function () {
-    it('shout get tags by count', function () {
+    it('shout fetch tags by count', function () {
       nock(apiUrl).get('/tags?limit=1000&sort=count').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchTagsByCount()).then(() => {
@@ -150,7 +160,7 @@ describe('Tag Actions', function () {
       })
     })
 
-    it('shout get tags by count and q', function () {
+    it('shout fetch tags by count and q', function () {
       nock(apiUrl).get('/tags?limit=1000&sort=count&q=test').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchTagsByCount({ q: 'test' })).then(() => {
@@ -168,7 +178,7 @@ describe('Tag Actions', function () {
   })
 
   describe('fetchTag', function () {
-    it('should get tag', function () {
+    it('should fetch tag', function () {
       nock(apiUrl).get('/tags/1').reply(200, { id: 1 })
 
       return store.dispatch(actions.fetchTag(1)).then(() => {
@@ -183,7 +193,17 @@ describe('Tag Actions', function () {
       })
     })
 
-    it('should get tag with error', function () {
+    it('should not fetch tag if it is already fetching', function () {
+      nock(apiUrl).get('/tags/1').reply(200, { id: 1 })
+
+      store = mockStore({ status: { loading: { [actions.FETCH_TAG]: true } } })
+
+      return store.dispatch(actions.fetchTag(1)).then(() => {
+        expect(store.getActions()).toEqual([])
+      })
+    })
+
+    it('should fetch tag with error', function () {
       nock(apiUrl).get('/tags/1').reply(500)
 
       return store.dispatch(actions.fetchTag(1)).then(() => {

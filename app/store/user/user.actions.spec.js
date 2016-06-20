@@ -36,6 +36,16 @@ describe('User Actions', function () {
       })
     })
 
+    it('should not fetch user if it is already fetching', function () {
+      nock(apiUrl).get('/users/1').reply(200, { id: 1 })
+
+      store = mockStore({ status: { loading: { [actions.FETCH_USER]: true } } })
+
+      return store.dispatch(actions.fetchUser(1)).then(() => {
+        expect(store.getActions()).toEqual([])
+      })
+    })
+
     it('should fetch user with error', function () {
       nock(apiUrl).get('/users/1').reply(500)
 
@@ -62,6 +72,16 @@ describe('User Actions', function () {
           result: 1,
           entities: { users: { 1: { id: 1 } } }
         }])
+      })
+    })
+
+    it('should not fetch me if it is already fetching', function () {
+      nock(apiUrl).get('/users/me').reply(200, { id: 1 })
+
+      store = mockStore({ status: { loading: { [actions.FETCH_ME]: true } } })
+
+      return store.dispatch(actions.fetchMe()).then(() => {
+        expect(store.getActions()).toEqual([])
       })
     })
 
@@ -93,6 +113,16 @@ describe('User Actions', function () {
           result: 1,
           entities: { users: { 1: { id: 1, name: 'Diego Haz' } } }
         }])
+      })
+    })
+
+    it('should not update me if it is already updating', function () {
+      nock(apiUrl).put('/users/me').reply(200, { id: 1 })
+
+      store = mockStore({ status: { loading: { [actions.UPDATE_ME]: true } } })
+
+      return store.dispatch(actions.updateMe({ id: 1 })).then(() => {
+        expect(store.getActions()).toEqual([])
       })
     })
 

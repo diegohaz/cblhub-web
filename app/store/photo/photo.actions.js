@@ -1,4 +1,5 @@
 import { arrayOf, normalize } from 'normalizr'
+import { fromStatus } from '../'
 import photo from './photo.schema'
 
 export const SEARCH_PHOTOS = 'SEARCH_PHOTOS'
@@ -9,6 +10,9 @@ export const SELECT_PHOTO = 'SELECT_PHOTO'
 export const DESELECT_PHOTO = 'DESELECT_PHOTO'
 
 export const searchPhotos = ({ q, limit = 20 }) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), SEARCH_PHOTOS)) {
+    return Promise.resolve()
+  }
   dispatch({ type: SEARCH_PHOTOS_REQUEST, params: { q, limit } })
   return api.get('/photos/search', { params: { q, limit } }).then(({ data }) => {
     const { result, entities } = normalize(data, arrayOf(photo))

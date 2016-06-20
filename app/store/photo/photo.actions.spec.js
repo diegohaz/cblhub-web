@@ -51,6 +51,16 @@ describe('Photo Actions', function () {
       })
     })
 
+    it('should not search photos if it is already searching', function () {
+      nock(apiUrl).get('/photos/search?q=test&limit=20').reply(200, [{ id: 1 }])
+
+      store = mockStore({ status: { loading: { [actions.SEARCH_PHOTOS]: true } } })
+
+      return store.dispatch(actions.searchPhotos({ q: 'test' })).then(() => {
+        expect(store.getActions()).toEqual([])
+      })
+    })
+
     it('should search photos with error', function () {
       nock(apiUrl).get('/photos/search?q=test&limit=20').reply(500)
 

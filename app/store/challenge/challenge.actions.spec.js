@@ -22,7 +22,7 @@ describe('Challenge Actions', function () {
   })
 
   describe('fetchChallenges', function () {
-    it('should get challenges', function () {
+    it('should fetch challenges', function () {
       nock(apiUrl).get('/challenges').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchChallenges()).then(() => {
@@ -38,7 +38,7 @@ describe('Challenge Actions', function () {
       })
     })
 
-    it('should get challenges by q', function () {
+    it('should fetch challenges by q', function () {
       nock(apiUrl).get('/challenges?q=test').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchChallenges({ q: 'test' })).then(() => {
@@ -54,7 +54,7 @@ describe('Challenge Actions', function () {
       })
     })
 
-    it('should get challenges by user', function () {
+    it('should fetch challenges by user', function () {
       nock(apiUrl).get('/challenges?user=1').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchChallenges({ user: 1 })).then(() => {
@@ -70,7 +70,7 @@ describe('Challenge Actions', function () {
       })
     })
 
-    it('should get challenges by page', function () {
+    it('should fetch challenges by page', function () {
       nock(apiUrl).get('/challenges?page=2').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchChallenges({ page: 2 })).then(() => {
@@ -86,7 +86,7 @@ describe('Challenge Actions', function () {
       })
     })
 
-    it('should get challenges by limit', function () {
+    it('should fetch challenges by limit', function () {
       nock(apiUrl).get('/challenges?limit=1').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchChallenges({ limit: 1 })).then(() => {
@@ -102,7 +102,7 @@ describe('Challenge Actions', function () {
       })
     })
 
-    it('should get challenges by sort', function () {
+    it('should fetch challenges by sort', function () {
       nock(apiUrl).get('/challenges?sort=title').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchChallenges({ sort: 'title' })).then(() => {
@@ -118,7 +118,7 @@ describe('Challenge Actions', function () {
       })
     })
 
-    it('should get challenges appending', function () {
+    it('should fetch challenges appending', function () {
       nock(apiUrl).get('/challenges').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchChallenges({}, true)).then(() => {
@@ -134,7 +134,17 @@ describe('Challenge Actions', function () {
       })
     })
 
-    it('should get challenges with error', function () {
+    it('should not fetch challenges if it is already fetching ', function () {
+      nock(apiUrl).get('/challenges').reply(200, [{ id: 1 }])
+
+      store = mockStore({ status: { loading: { [actions.FETCH_CHALLENGES]: true } } })
+
+      return store.dispatch(actions.fetchChallenges()).then(() => {
+        expect(store.getActions()).toEqual([])
+      })
+    })
+
+    it('should fetch challenges with error', function () {
       nock(apiUrl).get('/challenges').reply(500)
 
       return store.dispatch(actions.fetchChallenges()).then(() => {
@@ -151,7 +161,7 @@ describe('Challenge Actions', function () {
   })
 
   describe('fetchChallenge', function () {
-    it('should get challenge', function () {
+    it('should fetch challenge', function () {
       nock(apiUrl).get('/challenges/1').reply(200, { id: 1 })
 
       return store.dispatch(actions.fetchChallenge(1)).then(() => {
@@ -163,6 +173,16 @@ describe('Challenge Actions', function () {
           result: 1,
           entities: { challenges: { 1: { id: 1 } } }
         }])
+      })
+    })
+
+    it('should not fetch challenge if it is already fetching ', function () {
+      nock(apiUrl).get('/challenges/1').reply(200, { id: 1 })
+
+      store = mockStore({ status: { loading: { [actions.FETCH_CHALLENGE]: true } } })
+
+      return store.dispatch(actions.fetchChallenge(1)).then(() => {
+        expect(store.getActions()).toEqual([])
       })
     })
 
@@ -194,6 +214,16 @@ describe('Challenge Actions', function () {
           result: 1,
           entities: { challenges: { 1: { id: 1 } } }
         }])
+      })
+    })
+
+    it('should not create challenge if it is already creating ', function () {
+      nock(apiUrl).post('/challenges').reply(201, { id: 1 })
+
+      store = mockStore({ status: { loading: { [actions.CREATE_CHALLENGE]: true } } })
+
+      return store.dispatch(actions.createChallenge()).then(() => {
+        expect(store.getActions()).toEqual([])
       })
     })
 
@@ -230,6 +260,16 @@ describe('Challenge Actions', function () {
       })
     })
 
+    it('should not update challenge if it is already updating ', function () {
+      nock(apiUrl).put('/challenges/1').reply(200, { id: 1 })
+
+      store = mockStore({ status: { loading: { [actions.UPDATE_CHALLENGE]: true } } })
+
+      return store.dispatch(actions.updateChallenge({ id: 1 })).then(() => {
+        expect(store.getActions()).toEqual([])
+      })
+    })
+
     it('should update challenge with error', function () {
       nock(apiUrl).put('/challenges').reply(500)
 
@@ -261,6 +301,16 @@ describe('Challenge Actions', function () {
           { type: actions.REMOVE_CHALLENGE_REQUEST, id: 1 },
           { type: actions.REMOVE_CHALLENGE_SUCCESS, id: 1 }
         ])
+      })
+    })
+
+    it('should not remove challenge if it is already removing ', function () {
+      nock(apiUrl).delete('/challenges/1').reply(204)
+
+      store = mockStore({ status: { loading: { [actions.REMOVE_CHALLENGE]: true } } })
+
+      return store.dispatch(actions.removeChallenge(1)).then(() => {
+        expect(store.getActions()).toEqual([])
       })
     })
 

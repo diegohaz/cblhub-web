@@ -1,4 +1,5 @@
 import { arrayOf, normalize } from 'normalizr'
+import { fromStatus } from '../'
 import tag from './tag.schema'
 
 export const FETCH_TAGS = 'FETCH_TAGS'
@@ -14,6 +15,9 @@ export const fetchTags = (
   { ...params, q, page, limit, sort } = {},
   append = page > 1
 ) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), FETCH_TAGS)) {
+    return Promise.resolve()
+  }
   dispatch({ type: FETCH_TAGS_REQUEST, params })
   return api.get('/tags', { params }).then(({ data }) => {
     const { result, entities } = normalize(data, arrayOf(tag))
@@ -29,8 +33,10 @@ export const fetchTagsByCount = (params = {}) =>
   fetchTags({ limit: 1000, sort: 'count', ...params })
 
 export const fetchTag = (id) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), FETCH_TAG)) {
+    return Promise.resolve()
+  }
   dispatch({ type: FETCH_TAG_REQUEST, id })
-
   return api.get(`/tags/${id}`).then(({ data }) => {
     const { result, entities } = normalize(data, tag)
     dispatch({ type: FETCH_TAG_SUCCESS, result, entities })

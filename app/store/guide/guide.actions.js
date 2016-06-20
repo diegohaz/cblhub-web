@@ -1,6 +1,6 @@
 import { arrayOf, normalize } from 'normalizr'
 import schema from './guide.schema'
-import { fromEntities, fromChallenge, fromUser, fromGuide } from '../'
+import { fromEntities, fromChallenge, fromUser, fromGuide, fromStatus } from '../'
 
 export const FETCH_GUIDES = 'FETCH_GUIDES'
 export const FETCH_GUIDES_REQUEST = 'FETCH_GUIDES_REQUEST'
@@ -27,6 +27,9 @@ export const fetchGuides = (
   { ...params, q, user, challenge, guide, type, page, limit, sort } = {},
   append = page > 1
 ) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), FETCH_GUIDES)) {
+    return Promise.resolve()
+  }
   dispatch({ type: FETCH_GUIDES_REQUEST, params })
   return api.get('/guides', { params }).then(({ data }) => {
     const { result, entities } = normalize(data, arrayOf(schema))
@@ -51,6 +54,9 @@ export const fetchMyGuides = (params = {}) => (dispatch, getState) =>
   dispatch(fetchGuides({ user: fromUser.getCurrentId(getState()), ...params }))
 
 export const fetchGuide = (id) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), FETCH_GUIDE)) {
+    return Promise.resolve()
+  }
   dispatch({ type: FETCH_GUIDE_REQUEST, id })
   return api.get(`/guides/${id}`).then(({ data }) => {
     const { result, entities } = normalize(data, schema)
@@ -63,6 +69,9 @@ export const fetchGuide = (id) => (dispatch, getState, api) => {
 }
 
 export const createGuide = (body) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), CREATE_GUIDE)) {
+    return Promise.resolve()
+  }
   dispatch({ type: CREATE_GUIDE_REQUEST })
   return api.post('/guides', body).then(({ data }) => {
     const { result, entities } = normalize(data, schema)
@@ -75,6 +84,9 @@ export const createGuide = (body) => (dispatch, getState, api) => {
 }
 
 export const updateGuide = (body) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), UPDATE_GUIDE)) {
+    return Promise.resolve()
+  }
   const oldEntity = fromEntities.getGuide(getState(), body.id)
   dispatch({
     type: UPDATE_GUIDE_REQUEST,
@@ -93,6 +105,9 @@ export const updateGuide = (body) => (dispatch, getState, api) => {
 }
 
 export const removeGuide = (id) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), REMOVE_GUIDE)) {
+    return Promise.resolve()
+  }
   dispatch({ type: REMOVE_GUIDE_REQUEST, id })
   return api.delete(`/guides/${id}`).then(() => {
     dispatch({ type: REMOVE_GUIDE_SUCCESS, id })

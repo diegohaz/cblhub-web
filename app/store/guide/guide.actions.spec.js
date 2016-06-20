@@ -21,7 +21,7 @@ describe('Guide Actions', function () {
   })
 
   describe('fetchGuides', function () {
-    it('should get guides', function () {
+    it('should fetch guides', function () {
       nock(apiUrl).get('/guides').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchGuides()).then(() => {
@@ -37,7 +37,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guides by q', function () {
+    it('should fetch guides by q', function () {
       nock(apiUrl).get('/guides?q=test').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchGuides({ q: 'test' })).then(() => {
@@ -53,7 +53,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guides by user', function () {
+    it('should fetch guides by user', function () {
       nock(apiUrl).get('/guides?user=1').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchGuides({ user: 1 })).then(() => {
@@ -69,7 +69,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guides by challenge', function () {
+    it('should fetch guides by challenge', function () {
       nock(apiUrl).get('/guides?challenge=1').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchGuides({ challenge: 1 })).then(() => {
@@ -85,7 +85,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guides by guide', function () {
+    it('should fetch guides by guide', function () {
       nock(apiUrl).get('/guides?guide=1').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchGuides({ guide: 1 })).then(() => {
@@ -101,7 +101,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guides by type', function () {
+    it('should fetch guides by type', function () {
       nock(apiUrl).get('/guides?type=Question').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchGuides({ type: 'Question' })).then(() => {
@@ -117,7 +117,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guides by page', function () {
+    it('should fetch guides by page', function () {
       nock(apiUrl).get('/guides?page=2').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchGuides({ page: 2 })).then(() => {
@@ -133,7 +133,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guides by limit', function () {
+    it('should fetch guides by limit', function () {
       nock(apiUrl).get('/guides?limit=1').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchGuides({ limit: 1 })).then(() => {
@@ -149,7 +149,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guides by sort', function () {
+    it('should fetch guides by sort', function () {
       nock(apiUrl).get('/guides?sort=title').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchGuides({ sort: 'title' })).then(() => {
@@ -165,7 +165,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guides appending', function () {
+    it('should fetch guides appending', function () {
       nock(apiUrl).get('/guides').reply(200, [{ id: 1 }])
 
       return store.dispatch(actions.fetchGuides({}, true)).then(() => {
@@ -181,7 +181,17 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guides with error', function () {
+    it('should not fetch guides if it is already fetching', function () {
+      nock(apiUrl).get('/guides').reply(200, [{ id: 1 }])
+
+      store = mockStore({ status: { loading: { [actions.FETCH_GUIDES]: true } } })
+
+      return store.dispatch(actions.fetchGuides({}, true)).then(() => {
+        expect(store.getActions()).toEqual([])
+      })
+    })
+
+    it('should fetch guides with error', function () {
       nock(apiUrl).get('/guides').reply(500)
 
       return store.dispatch(actions.fetchGuides()).then(() => {
@@ -198,7 +208,7 @@ describe('Guide Actions', function () {
   })
 
   describe('fetchChallengeGuides', function () {
-    it('should get challenge guides', function () {
+    it('should fetch challenge guides', function () {
       nock(apiUrl).get('/guides?challenge=1').reply(200, [{ id: 1 }])
 
       store = mockStore({ entities: { challenges: { 1: { id: 1 } } }, challenge: { active: 1 } })
@@ -216,7 +226,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get challenge guides by user', function () {
+    it('should fetch challenge guides by user', function () {
       nock(apiUrl).get('/guides?challenge=1&user=1').reply(200, [{ id: 1 }])
 
       store = mockStore({ entities: { challenges: { 1: { id: 1 } } }, challenge: { active: 1 } })
@@ -236,7 +246,7 @@ describe('Guide Actions', function () {
   })
 
   describe('fetchGuideGuides', function () {
-    it('should get guide guides', function () {
+    it('should fetch guide guides', function () {
       nock(apiUrl).get('/guides?guide=1').reply(200, [{ id: 1 }])
 
       store = mockStore({ entities: { guides: { 1: { id: 1 } } }, guide: { active: 1 } })
@@ -254,7 +264,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guide guides by user', function () {
+    it('should fetch guide guides by user', function () {
       nock(apiUrl).get('/guides?guide=1&user=1').reply(200, [{ id: 1 }])
 
       store = mockStore({ entities: { guides: { 1: { id: 1 } } }, guide: { active: 1 } })
@@ -274,7 +284,7 @@ describe('Guide Actions', function () {
   })
 
   describe('fetchUserGuides', function () {
-    it('should get user guides', function () {
+    it('should fetch user guides', function () {
       nock(apiUrl).get('/guides?user=1').reply(200, [{ id: 1 }])
 
       store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { active: 1 } })
@@ -292,7 +302,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get user guides by challenge', function () {
+    it('should fetch user guides by challenge', function () {
       nock(apiUrl).get('/guides?user=1&challenge=1').reply(200, [{ id: 1 }])
 
       store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { active: 1 } })
@@ -312,7 +322,7 @@ describe('Guide Actions', function () {
   })
 
   describe('fetchMyGuides', function () {
-    it('should get my guides', function () {
+    it('should fetch my guides', function () {
       nock(apiUrl).get('/guides?user=1').reply(200, [{ id: 1 }])
 
       store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { current: 1 } })
@@ -330,7 +340,7 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get my guides by challenge', function () {
+    it('should fetch my guides by challenge', function () {
       nock(apiUrl).get('/guides?user=1&challenge=1').reply(200, [{ id: 1 }])
 
       store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { current: 1 } })
@@ -350,7 +360,7 @@ describe('Guide Actions', function () {
   })
 
   describe('fetchGuide', function () {
-    it('should get guide', function () {
+    it('should fetch guide', function () {
       nock(apiUrl).get('/guides/1').reply(200, { id: 1 })
 
       return store.dispatch(actions.fetchGuide(1)).then(() => {
@@ -365,7 +375,17 @@ describe('Guide Actions', function () {
       })
     })
 
-    it('should get guide with error', function () {
+    it('should not fetch guide if it is already fetching', function () {
+      nock(apiUrl).get('/guides/1').reply(200, { id: 1 })
+
+      store = mockStore({ status: { loading: { [actions.FETCH_GUIDE]: true } } })
+
+      return store.dispatch(actions.fetchGuide(1)).then(() => {
+        expect(store.getActions()).toEqual([])
+      })
+    })
+
+    it('should fetch guide with error', function () {
       nock(apiUrl).get('/guides/1').reply(500)
 
       return store.dispatch(actions.fetchGuide(1)).then(() => {
@@ -393,6 +413,16 @@ describe('Guide Actions', function () {
           result: 1,
           entities: { guides: { 1: { id: 1 } } }
         }])
+      })
+    })
+
+    it('should not create guide if it is already creating', function () {
+      nock(apiUrl).post('/guides').reply(201, { id: 1 })
+
+      store = mockStore({ status: { loading: { [actions.CREATE_GUIDE]: true } } })
+
+      return store.dispatch(actions.createGuide()).then(() => {
+        expect(store.getActions()).toEqual([])
       })
     })
 
@@ -427,6 +457,16 @@ describe('Guide Actions', function () {
       })
     })
 
+    it('should not update guide if it is already updating', function () {
+      nock(apiUrl).put('/guides/1').reply(200, { id: 1 })
+
+      store = mockStore({ status: { loading: { [actions.UPDATE_GUIDE]: true } } })
+
+      return store.dispatch(actions.updateGuide({ id: 1 })).then(() => {
+        expect(store.getActions()).toEqual([])
+      })
+    })
+
     it('should put guide with error', function () {
       nock(apiUrl).put('/guides').reply(500)
 
@@ -456,6 +496,16 @@ describe('Guide Actions', function () {
           { type: actions.REMOVE_GUIDE_REQUEST, id: 1 },
           { type: actions.REMOVE_GUIDE_SUCCESS, id: 1 }
         ])
+      })
+    })
+
+    it('should not remove guide if it is already removing', function () {
+      nock(apiUrl).delete('/guides/1').reply(204)
+
+      store = mockStore({ status: { loading: { [actions.REMOVE_GUIDE]: true } } })
+
+      return store.dispatch(actions.removeGuide(1)).then(() => {
+        expect(store.getActions()).toEqual([])
       })
     })
 

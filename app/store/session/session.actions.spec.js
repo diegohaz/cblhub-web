@@ -15,6 +15,7 @@ describe('Session Actions', function () {
   let store, saveCookie, removeCookie
 
   beforeEach(function () {
+    expect.restoreSpies()
     store = mockStore({ session: {} })
     saveCookie = spyOn(cookie, 'save')
     removeCookie = spyOn(cookie, 'remove')
@@ -38,13 +39,15 @@ describe('Session Actions', function () {
       })
     })
 
-    it('should throw an error when creating session without session state', function () {
-      try {
-        mockStore().dispatch(actions.createSession())
-        expect(true).toBe(false, 'Expected to fail')
-      } catch (error) {
-        expect(error.message).toEqual('There is no session state')
-      }
+    it('should not create session if it is already creating', function () {
+      nock(apiUrl).post('/sessions').reply(201, { token: 1 })
+
+      store = mockStore({ status: { loading: { [actions.CREATE_SESSION]: true } } })
+
+      return store.dispatch(actions.createSession('name', 'password')).then(() => {
+        expect(store.getActions()).toEqual([])
+        expect(saveCookie).toNotHaveBeenCalled()
+      })
     })
 
     it('should return current session', function () {
@@ -89,6 +92,17 @@ describe('Session Actions', function () {
       })
     })
 
+    it('should not remove session if it is already removing', function () {
+      nock(apiUrl).delete('/sessions/1').reply(204)
+
+      store = mockStore({ status: { loading: { [actions.REMOVE_SESSION]: true } } })
+
+      return store.dispatch(actions.removeSession(1)).then(() => {
+        expect(store.getActions()).toEqual([])
+        expect(removeCookie).toNotHaveBeenCalled()
+      })
+    })
+
     it('should remove current session', function () {
       nock(apiUrl).delete('/sessions/1').reply(204)
 
@@ -103,15 +117,6 @@ describe('Session Actions', function () {
         expect(api.defaults.headers.common['Authorization']).toNotExist()
         expect(removeCookie).toHaveBeenCalledWith('token')
       })
-    })
-
-    it('should throw an error when removing session without session state', function () {
-      try {
-        mockStore().dispatch(actions.removeSession())
-        expect(true).toBe(false, 'Expected to fail')
-      } catch (error) {
-        expect(error.message).toEqual('There is no session.token state')
-      }
     })
 
     it('should remove session with error', function () {

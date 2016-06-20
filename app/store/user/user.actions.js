@@ -1,4 +1,5 @@
 import { normalize } from 'normalizr'
+import { fromStatus } from '../'
 import user from './user.schema'
 
 export const FETCH_USER = 'FETCH_USER'
@@ -16,6 +17,9 @@ export const UPDATE_ME_FAILURE = 'UPDATE_ME_FAILURE'
 export const REMOVE_ME = 'REMOVE_ME'
 
 export const fetchUser = (id) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), FETCH_USER)) {
+    return Promise.resolve()
+  }
   dispatch({ type: FETCH_USER_REQUEST, id })
   return api.get(`/users/${id}`).then(({ data }) => {
     const { result, entities } = normalize(data, user)
@@ -28,6 +32,9 @@ export const fetchUser = (id) => (dispatch, getState, api) => {
 }
 
 export const fetchMe = () => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), FETCH_ME)) {
+    return Promise.resolve()
+  }
   dispatch({ type: FETCH_ME_REQUEST })
   return api.get('/users/me').then(({ data }) => {
     const { result, entities } = normalize(data, user)
@@ -40,6 +47,9 @@ export const fetchMe = () => (dispatch, getState, api) => {
 }
 
 export const updateMe = (body) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), UPDATE_ME)) {
+    return Promise.resolve()
+  }
   const { result, entities } = normalize(body, user)
   dispatch({ type: UPDATE_ME_REQUEST, id: result, entities })
 
