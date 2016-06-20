@@ -26,7 +26,7 @@ describe('Resource Actions', function () {
 
       return store.dispatch(actions.fetchMeta('test')).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_META,
+          type: actions.FETCH_META_REQUEST,
           url: 'test'
         }, {
           type: actions.FETCH_META_SUCCESS,
@@ -42,7 +42,7 @@ describe('Resource Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_META,
+          type: actions.FETCH_META_REQUEST,
           url: 'test'
         }, {
           type: actions.FETCH_META_FAILURE

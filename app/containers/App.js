@@ -1,7 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchMe } from '../store/user/user.actions'
-import { fromEntities, fromUser, fromSession } from '../store'
+import { fromUser, fromSession, fromStatus, fetchMe } from '../store'
 
 import App from '../components/App'
 
@@ -31,7 +30,9 @@ class AppContainer extends Component {
 
 const mapStateToProps = (state) => ({
   token: fromSession.getToken(state),
-  user: fromEntities.getUser(state, fromUser.getMyId(state))
+  user: fromUser.getCurrentUser(state),
+  loading: fromStatus.getIsLoading(state),
+  error: fromStatus.getIsFailed(state)
 })
 
 const mapDispatchToProps = {

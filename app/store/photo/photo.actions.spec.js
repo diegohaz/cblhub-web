@@ -26,7 +26,7 @@ describe('Photo Actions', function () {
 
       return store.dispatch(actions.searchPhotos({ q: 'test' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.SEARCH_PHOTOS,
+          type: actions.SEARCH_PHOTOS_REQUEST,
           params: { q: 'test', limit: 20 }
         }, {
           type: actions.SEARCH_PHOTOS_SUCCESS,
@@ -41,7 +41,7 @@ describe('Photo Actions', function () {
 
       return store.dispatch(actions.searchPhotos({ q: 'test', limit: 30 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.SEARCH_PHOTOS,
+          type: actions.SEARCH_PHOTOS_REQUEST,
           params: { q: 'test', limit: 30 }
         }, {
           type: actions.SEARCH_PHOTOS_SUCCESS,
@@ -58,7 +58,7 @@ describe('Photo Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.SEARCH_PHOTOS,
+          type: actions.SEARCH_PHOTOS_REQUEST,
           params: { q: 'test', limit: 20 }
         }, {
           type: actions.SEARCH_PHOTOS_FAILURE

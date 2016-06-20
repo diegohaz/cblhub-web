@@ -1,8 +1,13 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
-import { getCurrentChallenge, fromEntities, fromPhoto } from '../store'
-import { fetchChallenge } from '../store/challenge/challenge.actions'
-import { searchPhotos, selectPhoto } from '../store/photo/photo.actions'
+import {
+  fromChallenge,
+  fromPhoto,
+  updateChallenge,
+  fetchChallenge,
+  searchPhotos,
+  selectPhoto
+} from '../store'
 
 import ChallengePage from '../components/ChallengePage'
 
@@ -28,15 +33,16 @@ class ChallengePageContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  challenge: getCurrentChallenge(state),
-  photos: fromPhoto.getCurrentIds(state).map((id) => fromEntities.getPhoto(state, id)),
+  challenge: fromChallenge.getActiveChallenge(state),
+  photos: fromPhoto.getPhotoList(state),
   selectedPhoto: fromPhoto.getSelectedId(state)
 })
 
 const mapDispatchToProps = {
   fetchChallenge,
   onPhotoSearch: searchPhotos,
-  onPhotoSelect: selectPhoto
+  onPhotoSelect: selectPhoto,
+  onChallengeUpdate: updateChallenge
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChallengePageContainer)

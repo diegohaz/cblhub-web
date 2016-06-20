@@ -1,9 +1,10 @@
 export const FETCH_META = 'FETCH_META'
+export const FETCH_META_REQUEST = 'FETCH_META_REQUEST'
 export const FETCH_META_SUCCESS = 'FETCH_META_SUCCESS'
 export const FETCH_META_FAILURE = 'FETCH_META_FAILURE'
 
 export const fetchMeta = (url) => (dispatch, getState, api) => {
-  dispatch({ type: FETCH_META, url })
+  dispatch({ type: FETCH_META_REQUEST, url })
   return api.get('/resources/meta', { params: { url } }).then(({ data }) => {
     dispatch({ type: FETCH_META_SUCCESS, data })
     return data

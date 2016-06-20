@@ -26,7 +26,7 @@ describe('Tag Actions', function () {
 
       return store.dispatch(actions.fetchTags()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAGS,
+          type: actions.FETCH_TAGS_REQUEST,
           params: {}
         }, {
           type: actions.FETCH_TAGS_SUCCESS,
@@ -42,7 +42,7 @@ describe('Tag Actions', function () {
 
       return store.dispatch(actions.fetchTags({ q: 'test' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAGS,
+          type: actions.FETCH_TAGS_REQUEST,
           params: { q: 'test' }
         }, {
           type: actions.FETCH_TAGS_SUCCESS,
@@ -58,7 +58,7 @@ describe('Tag Actions', function () {
 
       return store.dispatch(actions.fetchTags({ page: 2 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAGS,
+          type: actions.FETCH_TAGS_REQUEST,
           params: { page: 2 }
         }, {
           type: actions.FETCH_TAGS_SUCCESS,
@@ -74,7 +74,7 @@ describe('Tag Actions', function () {
 
       return store.dispatch(actions.fetchTags({ limit: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAGS,
+          type: actions.FETCH_TAGS_REQUEST,
           params: { limit: 1 }
         }, {
           type: actions.FETCH_TAGS_SUCCESS,
@@ -90,7 +90,7 @@ describe('Tag Actions', function () {
 
       return store.dispatch(actions.fetchTags({ sort: 'title' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAGS,
+          type: actions.FETCH_TAGS_REQUEST,
           params: { sort: 'title' }
         }, {
           type: actions.FETCH_TAGS_SUCCESS,
@@ -106,7 +106,7 @@ describe('Tag Actions', function () {
 
       return store.dispatch(actions.fetchTags({}, true)).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAGS,
+          type: actions.FETCH_TAGS_REQUEST,
           params: {}
         }, {
           type: actions.FETCH_TAGS_SUCCESS,
@@ -124,7 +124,7 @@ describe('Tag Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAGS,
+          type: actions.FETCH_TAGS_REQUEST,
           params: {}
         }, {
           type: actions.FETCH_TAGS_FAILURE
@@ -139,7 +139,7 @@ describe('Tag Actions', function () {
 
       return store.dispatch(actions.fetchTagsByCount()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAGS,
+          type: actions.FETCH_TAGS_REQUEST,
           params: { limit: 1000, sort: 'count' }
         }, {
           type: actions.FETCH_TAGS_SUCCESS,
@@ -155,7 +155,7 @@ describe('Tag Actions', function () {
 
       return store.dispatch(actions.fetchTagsByCount({ q: 'test' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAGS,
+          type: actions.FETCH_TAGS_REQUEST,
           params: { q: 'test', limit: 1000, sort: 'count' }
         }, {
           type: actions.FETCH_TAGS_SUCCESS,
@@ -173,26 +173,8 @@ describe('Tag Actions', function () {
 
       return store.dispatch(actions.fetchTag(1)).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAG,
+          type: actions.FETCH_TAG_REQUEST,
           id: 1
-        }, {
-          type: actions.FETCH_TAG_SUCCESS,
-          result: 1,
-          entities: { tags: { 1: { id: 1 } } }
-        }])
-      })
-    })
-
-    it('should get cached tag', function () {
-      nock(apiUrl).get('/tags/1').reply(200, { id: 1 })
-
-      store = mockStore({ entities: { tags: { 1: { id: 1 } } } })
-
-      return store.dispatch(actions.fetchTag(1)).then(() => {
-        expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAG_SUCCESS,
-          result: 1,
-          cached: true
         }, {
           type: actions.FETCH_TAG_SUCCESS,
           result: 1,
@@ -208,7 +190,7 @@ describe('Tag Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_TAG,
+          type: actions.FETCH_TAG_REQUEST,
           id: 1
         }, {
           type: actions.FETCH_TAG_FAILURE

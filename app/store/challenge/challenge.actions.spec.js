@@ -27,7 +27,7 @@ describe('Challenge Actions', function () {
 
       return store.dispatch(actions.fetchChallenges()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_CHALLENGES,
+          type: actions.FETCH_CHALLENGES_REQUEST,
           params: {}
         }, {
           type: actions.FETCH_CHALLENGES_SUCCESS,
@@ -43,7 +43,7 @@ describe('Challenge Actions', function () {
 
       return store.dispatch(actions.fetchChallenges({ q: 'test' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_CHALLENGES,
+          type: actions.FETCH_CHALLENGES_REQUEST,
           params: { q: 'test' }
         }, {
           type: actions.FETCH_CHALLENGES_SUCCESS,
@@ -59,7 +59,7 @@ describe('Challenge Actions', function () {
 
       return store.dispatch(actions.fetchChallenges({ user: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_CHALLENGES,
+          type: actions.FETCH_CHALLENGES_REQUEST,
           params: { user: 1 }
         }, {
           type: actions.FETCH_CHALLENGES_SUCCESS,
@@ -75,7 +75,7 @@ describe('Challenge Actions', function () {
 
       return store.dispatch(actions.fetchChallenges({ page: 2 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_CHALLENGES,
+          type: actions.FETCH_CHALLENGES_REQUEST,
           params: { page: 2 }
         }, {
           type: actions.FETCH_CHALLENGES_SUCCESS,
@@ -91,7 +91,7 @@ describe('Challenge Actions', function () {
 
       return store.dispatch(actions.fetchChallenges({ limit: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_CHALLENGES,
+          type: actions.FETCH_CHALLENGES_REQUEST,
           params: { limit: 1 }
         }, {
           type: actions.FETCH_CHALLENGES_SUCCESS,
@@ -107,7 +107,7 @@ describe('Challenge Actions', function () {
 
       return store.dispatch(actions.fetchChallenges({ sort: 'title' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_CHALLENGES,
+          type: actions.FETCH_CHALLENGES_REQUEST,
           params: { sort: 'title' }
         }, {
           type: actions.FETCH_CHALLENGES_SUCCESS,
@@ -123,7 +123,7 @@ describe('Challenge Actions', function () {
 
       return store.dispatch(actions.fetchChallenges({}, true)).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_CHALLENGES,
+          type: actions.FETCH_CHALLENGES_REQUEST,
           params: {}
         }, {
           type: actions.FETCH_CHALLENGES_SUCCESS,
@@ -141,7 +141,7 @@ describe('Challenge Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_CHALLENGES,
+          type: actions.FETCH_CHALLENGES_REQUEST,
           params: {}
         }, {
           type: actions.FETCH_CHALLENGES_FAILURE
@@ -156,26 +156,8 @@ describe('Challenge Actions', function () {
 
       return store.dispatch(actions.fetchChallenge(1)).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_CHALLENGE,
+          type: actions.FETCH_CHALLENGE_REQUEST,
           id: 1
-        }, {
-          type: actions.FETCH_CHALLENGE_SUCCESS,
-          result: 1,
-          entities: { challenges: { 1: { id: 1 } } }
-        }])
-      })
-    })
-
-    it('should fetch cached challenge', function () {
-      nock(apiUrl).get('/challenges/1').reply(200, { id: 1 })
-
-      store = mockStore({ entities: { challenges: { 1: { id: 1 } } } })
-
-      return store.dispatch(actions.fetchChallenge(1)).then(() => {
-        expect(store.getActions()).toEqual([{
-          type: actions.FETCH_CHALLENGE_SUCCESS,
-          result: 1,
-          cached: true
         }, {
           type: actions.FETCH_CHALLENGE_SUCCESS,
           result: 1,
@@ -191,7 +173,7 @@ describe('Challenge Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_CHALLENGE,
+          type: actions.FETCH_CHALLENGE_REQUEST,
           id: 1
         }, {
           type: actions.FETCH_CHALLENGE_FAILURE
@@ -206,7 +188,7 @@ describe('Challenge Actions', function () {
 
       return store.dispatch(actions.createChallenge()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.CREATE_CHALLENGE
+          type: actions.CREATE_CHALLENGE_REQUEST
         }, {
           type: actions.CREATE_CHALLENGE_SUCCESS,
           result: 1,
@@ -222,7 +204,7 @@ describe('Challenge Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([
-          { type: actions.CREATE_CHALLENGE },
+          { type: actions.CREATE_CHALLENGE_REQUEST },
           { type: actions.CREATE_CHALLENGE_FAILURE }
         ])
       })
@@ -237,7 +219,7 @@ describe('Challenge Actions', function () {
 
       return store.dispatch(actions.updateChallenge({ id: 1, title: 'Test' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.UPDATE_CHALLENGE,
+          type: actions.UPDATE_CHALLENGE_REQUEST,
           entities: { challenges: { 1: { id: 1, title: 'Test' } } }
         }, {
           type: actions.UPDATE_CHALLENGE_SUCCESS,
@@ -258,7 +240,7 @@ describe('Challenge Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.UPDATE_CHALLENGE,
+          type: actions.UPDATE_CHALLENGE_REQUEST,
           entities: { challenges: { 1: { id: 1, title: 'Test' } } }
         }, {
           type: actions.UPDATE_CHALLENGE_FAILURE,
@@ -276,7 +258,7 @@ describe('Challenge Actions', function () {
 
       return store.dispatch(actions.removeChallenge(1)).then(() => {
         expect(store.getActions()).toEqual([
-          { type: actions.REMOVE_CHALLENGE, id: 1 },
+          { type: actions.REMOVE_CHALLENGE_REQUEST, id: 1 },
           { type: actions.REMOVE_CHALLENGE_SUCCESS, id: 1 }
         ])
       })
@@ -289,7 +271,7 @@ describe('Challenge Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([
-          { type: actions.REMOVE_CHALLENGE, id: 1 },
+          { type: actions.REMOVE_CHALLENGE_REQUEST, id: 1 },
           { type: actions.REMOVE_CHALLENGE_FAILURE, id: 1 }
         ])
       })

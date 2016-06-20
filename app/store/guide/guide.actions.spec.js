@@ -26,7 +26,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.fetchGuides()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: {}
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -42,7 +42,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.fetchGuides({ q: 'test' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { q: 'test' }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -58,7 +58,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.fetchGuides({ user: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { user: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -74,7 +74,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.fetchGuides({ challenge: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { challenge: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -90,7 +90,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.fetchGuides({ guide: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { guide: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -106,7 +106,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.fetchGuides({ type: 'Question' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { type: 'Question' }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -122,7 +122,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.fetchGuides({ page: 2 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { page: 2 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -138,7 +138,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.fetchGuides({ limit: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { limit: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -154,7 +154,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.fetchGuides({ sort: 'title' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { sort: 'title' }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -170,7 +170,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.fetchGuides({}, true)).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: {}
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -188,7 +188,7 @@ describe('Guide Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: {}
         }, {
           type: actions.FETCH_GUIDES_FAILURE
@@ -201,11 +201,11 @@ describe('Guide Actions', function () {
     it('should get challenge guides', function () {
       nock(apiUrl).get('/guides?challenge=1').reply(200, [{ id: 1 }])
 
-      store = mockStore({ entities: { challenges: { 1: { id: 1 } } }, challenge: { item: 1 } })
+      store = mockStore({ entities: { challenges: { 1: { id: 1 } } }, challenge: { active: 1 } })
 
       return store.dispatch(actions.fetchChallengeGuides()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { challenge: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -219,11 +219,11 @@ describe('Guide Actions', function () {
     it('should get challenge guides by user', function () {
       nock(apiUrl).get('/guides?challenge=1&user=1').reply(200, [{ id: 1 }])
 
-      store = mockStore({ entities: { challenges: { 1: { id: 1 } } }, challenge: { item: 1 } })
+      store = mockStore({ entities: { challenges: { 1: { id: 1 } } }, challenge: { active: 1 } })
 
       return store.dispatch(actions.fetchChallengeGuides({ user: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { challenge: 1, user: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -239,11 +239,11 @@ describe('Guide Actions', function () {
     it('should get guide guides', function () {
       nock(apiUrl).get('/guides?guide=1').reply(200, [{ id: 1 }])
 
-      store = mockStore({ entities: { guides: { 1: { id: 1 } } }, guide: { item: 1 } })
+      store = mockStore({ entities: { guides: { 1: { id: 1 } } }, guide: { active: 1 } })
 
       return store.dispatch(actions.fetchGuideGuides()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { guide: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -257,11 +257,11 @@ describe('Guide Actions', function () {
     it('should get guide guides by user', function () {
       nock(apiUrl).get('/guides?guide=1&user=1').reply(200, [{ id: 1 }])
 
-      store = mockStore({ entities: { guides: { 1: { id: 1 } } }, guide: { item: 1 } })
+      store = mockStore({ entities: { guides: { 1: { id: 1 } } }, guide: { active: 1 } })
 
       return store.dispatch(actions.fetchGuideGuides({ user: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { guide: 1, user: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -277,11 +277,11 @@ describe('Guide Actions', function () {
     it('should get user guides', function () {
       nock(apiUrl).get('/guides?user=1').reply(200, [{ id: 1 }])
 
-      store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { item: 1 } })
+      store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { active: 1 } })
 
       return store.dispatch(actions.fetchUserGuides()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { user: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -295,11 +295,11 @@ describe('Guide Actions', function () {
     it('should get user guides by challenge', function () {
       nock(apiUrl).get('/guides?user=1&challenge=1').reply(200, [{ id: 1 }])
 
-      store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { item: 1 } })
+      store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { active: 1 } })
 
       return store.dispatch(actions.fetchUserGuides({ challenge: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { user: 1, challenge: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -315,11 +315,11 @@ describe('Guide Actions', function () {
     it('should get my guides', function () {
       nock(apiUrl).get('/guides?user=1').reply(200, [{ id: 1 }])
 
-      store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { me: 1 } })
+      store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { current: 1 } })
 
       return store.dispatch(actions.fetchMyGuides()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { user: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -333,11 +333,11 @@ describe('Guide Actions', function () {
     it('should get my guides by challenge', function () {
       nock(apiUrl).get('/guides?user=1&challenge=1').reply(200, [{ id: 1 }])
 
-      store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { me: 1 } })
+      store = mockStore({ entities: { users: { 1: { id: 1 } } }, user: { current: 1 } })
 
       return store.dispatch(actions.fetchMyGuides({ challenge: 1 })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDES,
+          type: actions.FETCH_GUIDES_REQUEST,
           params: { user: 1, challenge: 1 }
         }, {
           type: actions.FETCH_GUIDES_SUCCESS,
@@ -355,26 +355,8 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.fetchGuide(1)).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDE,
+          type: actions.FETCH_GUIDE_REQUEST,
           id: 1
-        }, {
-          type: actions.FETCH_GUIDE_SUCCESS,
-          result: 1,
-          entities: { guides: { 1: { id: 1 } } }
-        }])
-      })
-    })
-
-    it('should get cached guide', function () {
-      nock(apiUrl).get('/guides/1').reply(200, { id: 1 })
-
-      store = mockStore({ entities: { guides: { 1: { id: 1 } } } })
-
-      return store.dispatch(actions.fetchGuide(1)).then(() => {
-        expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDE_SUCCESS,
-          result: 1,
-          cached: true
         }, {
           type: actions.FETCH_GUIDE_SUCCESS,
           result: 1,
@@ -390,7 +372,7 @@ describe('Guide Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_GUIDE,
+          type: actions.FETCH_GUIDE_REQUEST,
           id: 1
         }, {
           type: actions.FETCH_GUIDE_FAILURE
@@ -405,7 +387,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.createGuide()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.CREATE_GUIDE
+          type: actions.CREATE_GUIDE_REQUEST
         }, {
           type: actions.CREATE_GUIDE_SUCCESS,
           result: 1,
@@ -421,7 +403,7 @@ describe('Guide Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([
-          { type: actions.CREATE_GUIDE },
+          { type: actions.CREATE_GUIDE_REQUEST },
           { type: actions.CREATE_GUIDE_FAILURE }
         ])
       })
@@ -436,7 +418,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.updateGuide({ id: 1, title: 'Test' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.UPDATE_GUIDE,
+          type: actions.UPDATE_GUIDE_REQUEST,
           entities: { guides: { 1: { id: 1, title: 'Test' } } }
         }, {
           type: actions.UPDATE_GUIDE_SUCCESS,
@@ -455,7 +437,7 @@ describe('Guide Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.UPDATE_GUIDE,
+          type: actions.UPDATE_GUIDE_REQUEST,
           entities: { guides: { 1: { id: 1, title: 'Test' } } }
         }, {
           type: actions.UPDATE_GUIDE_FAILURE,
@@ -471,7 +453,7 @@ describe('Guide Actions', function () {
 
       return store.dispatch(actions.removeGuide(1)).then(() => {
         expect(store.getActions()).toEqual([
-          { type: actions.REMOVE_GUIDE, id: 1 },
+          { type: actions.REMOVE_GUIDE_REQUEST, id: 1 },
           { type: actions.REMOVE_GUIDE_SUCCESS, id: 1 }
         ])
       })
@@ -484,7 +466,7 @@ describe('Guide Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([
-          { type: actions.REMOVE_GUIDE, id: 1 },
+          { type: actions.REMOVE_GUIDE_REQUEST, id: 1 },
           { type: actions.REMOVE_GUIDE_FAILURE, id: 1 }
         ])
       })

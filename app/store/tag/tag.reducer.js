@@ -1,40 +1,18 @@
-import {
-  FETCH_TAGS,
-  FETCH_TAGS_SUCCESS,
-  FETCH_TAGS_FAILURE
-} from './tag.actions'
+import { FETCH_TAGS_SUCCESS } from './tag.actions'
 
 const initialState = {
-  items: [],
-  loading: false,
-  error: false
+  list: []
 }
 
-export const getCurrentIds = (state = {}) => state.items || []
-export const getIsLoading = (state = {}) => state.loading
-export const getFailed = (state = {}) => state.error
+export const getListIds = (state = initialState) => state.list || []
 
 export default function tagReducer (state = initialState, action) {
   switch (action.type) {
-    case FETCH_TAGS:
-      return {
-        ...state,
-        loading: true,
-        error: false
-      }
     case FETCH_TAGS_SUCCESS:
       return {
         ...state,
-        items: action.append ? [ ...state.items, ...action.result ] : action.result,
-        loading: false
+        list: action.append ? [ ...state.list, ...action.result ] : action.result
       }
-    case FETCH_TAGS_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: true
-      }
-
     default:
       return state
   }

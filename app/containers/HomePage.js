@@ -1,7 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
-import { getCurrentChallenges } from '../store'
-import { fetchChallenges } from '../store/challenge/challenge.actions'
+import { fromChallenge, fetchChallenges } from '../store'
 
 import HomePage from '../components/HomePage'
 
@@ -37,7 +36,7 @@ class HomePageContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  challenges: getCurrentChallenges(state)
+  challenges: fromChallenge.getChallengeList(state)
 })
 
 const mapDispatchToProps = {

@@ -30,7 +30,7 @@ describe('Session Actions', function () {
 
       return store.dispatch(actions.createSession('name', 'password')).then(() => {
         expect(store.getActions()).toEqual([
-          { type: actions.CREATE_SESSION },
+          { type: actions.CREATE_SESSION_REQUEST },
           { type: actions.CREATE_SESSION_SUCCESS, token: 1 }
         ])
         expect(api.defaults.headers.common['Authorization']).toEqual('Bearer 1')
@@ -52,7 +52,7 @@ describe('Session Actions', function () {
 
       return store.dispatch(actions.createSession('name', 'password')).then(() => {
         expect(store.getActions()).toEqual([
-          { type: actions.CREATE_SESSION },
+          { type: actions.CREATE_SESSION_REQUEST },
           { type: actions.CREATE_SESSION_SUCCESS, token: 1 }
         ])
         expect(api.defaults.headers.common['Authorization']).toEqual('Bearer 1')
@@ -67,7 +67,7 @@ describe('Session Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([
-          { type: actions.CREATE_SESSION },
+          { type: actions.CREATE_SESSION_REQUEST },
           { type: actions.CREATE_SESSION_FAILURE }
         ])
       })
@@ -80,7 +80,7 @@ describe('Session Actions', function () {
 
       return store.dispatch(actions.removeSession(1)).then(() => {
         expect(store.getActions()).toEqual([
-          { type: actions.REMOVE_SESSION },
+          { type: actions.REMOVE_SESSION_REQUEST },
           { type: REMOVE_ME },
           { type: actions.REMOVE_SESSION_SUCCESS }
         ])
@@ -96,7 +96,7 @@ describe('Session Actions', function () {
 
       return store.dispatch(actions.removeSession()).then(() => {
         expect(store.getActions()).toEqual([
-          { type: actions.REMOVE_SESSION },
+          { type: actions.REMOVE_SESSION_REQUEST },
           { type: REMOVE_ME },
           { type: actions.REMOVE_SESSION_SUCCESS }
         ])
@@ -121,7 +121,7 @@ describe('Session Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([
-          { type: actions.REMOVE_SESSION },
+          { type: actions.REMOVE_SESSION_REQUEST },
           { type: REMOVE_ME },
           { type: actions.REMOVE_SESSION_FAILURE }
         ])

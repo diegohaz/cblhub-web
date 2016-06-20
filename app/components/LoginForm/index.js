@@ -3,25 +3,28 @@ import cls from 'classnames'
 import styles from './LoginForm.scss'
 
 const LoginForm = ({
+  ...props,
   fields: { email, password },
   submitting,
   handleSubmit,
+  onSubmit,
   error,
   className = {}
 }) => {
+  const submit = (values, dispatch) => onSubmit(values, dispatch, props)
   return (
-    <form onSubmit={handleSubmit} className={cls(styles.form, className, {[styles.error]: error})}>
+    <form onSubmit={handleSubmit(submit)} className={cls(styles.form, className, {[styles.error]: error})}>
       <div className={styles.formError}>{error}</div>
       <div className={styles.formControl}>
         <label>E-mail</label>
-        <input type='email' { ...email } />
+        <input type='email' {...email} />
         {email.touched && email.error &&
           <div className={styles.fieldError}>{email.error}</div>
         }
       </div>
       <div className={styles.formControl}>
         <label>Password</label>
-        <input type='password' { ...password } />
+        <input type='password' {...password} />
         {password.touched && password.error &&
           <div className={styles.fieldError}>{password.error}</div>
         }
@@ -38,6 +41,7 @@ LoginForm.propTypes = {
   error: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   className: PropTypes.string,
   back: PropTypes.string
 }

@@ -21,12 +21,12 @@ describe('User Actions', function () {
   })
 
   describe('fetchUser', function () {
-    it('should get user', function () {
+    it('should fetch user', function () {
       nock(apiUrl).get('/users/1').reply(200, { id: 1 })
 
       return store.dispatch(actions.fetchUser(1)).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_USER,
+          type: actions.FETCH_USER_REQUEST,
           id: 1
         }, {
           type: actions.FETCH_USER_SUCCESS,
@@ -36,32 +36,14 @@ describe('User Actions', function () {
       })
     })
 
-    it('should get cached user', function () {
-      nock(apiUrl).get('/users/1').reply(200, { id: 1 })
-
-      store = mockStore({ entities: { users: { 1: { id: 1 } } } })
-
-      return store.dispatch(actions.fetchUser(1)).then(() => {
-        expect(store.getActions()).toEqual([{
-          type: actions.FETCH_USER_SUCCESS,
-          result: 1,
-          cached: true
-        }, {
-          type: actions.FETCH_USER_SUCCESS,
-          result: 1,
-          entities: { users: { 1: { id: 1 } } }
-        }])
-      })
-    })
-
-    it('should get user with error', function () {
+    it('should fetch user with error', function () {
       nock(apiUrl).get('/users/1').reply(500)
 
       return store.dispatch(actions.fetchUser(1)).then(() => {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([
-          { type: actions.FETCH_USER, id: 1 },
+          { type: actions.FETCH_USER_REQUEST, id: 1 },
           { type: actions.FETCH_USER_FAILURE }
         ])
       })
@@ -69,12 +51,12 @@ describe('User Actions', function () {
   })
 
   describe('fetchMe', function () {
-    it('should get me', function () {
+    it('should fetch me', function () {
       nock(apiUrl).get('/users/me').reply(200, { id: 1 })
 
       return store.dispatch(actions.fetchMe()).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.FETCH_ME
+          type: actions.FETCH_ME_REQUEST
         }, {
           type: actions.FETCH_ME_SUCCESS,
           result: 1,
@@ -83,14 +65,14 @@ describe('User Actions', function () {
       })
     })
 
-    it('should get me with error', function () {
+    it('should fetch me with error', function () {
       nock(apiUrl).get('/users/me').reply(500)
 
       return store.dispatch(actions.fetchMe()).then(() => {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([
-          { type: actions.FETCH_ME },
+          { type: actions.FETCH_ME_REQUEST },
           { type: actions.FETCH_ME_FAILURE }
         ])
       })
@@ -103,11 +85,11 @@ describe('User Actions', function () {
 
       return store.dispatch(actions.updateMe({ id: 1, name: 'Diego Haz' })).then(() => {
         expect(store.getActions()).toEqual([{
-          type: actions.UPDATE_ME,
-          result: 1,
+          type: actions.UPDATE_ME_REQUEST,
+          id: 1,
           entities: { users: { 1: { id: 1, name: 'Diego Haz' } } }
         }, {
-          type: actions.FETCH_ME_SUCCESS,
+          type: actions.UPDATE_ME_SUCCESS,
           result: 1,
           entities: { users: { 1: { id: 1, name: 'Diego Haz' } } }
         }])
@@ -121,11 +103,11 @@ describe('User Actions', function () {
         expect(true).toBe(false, 'Expected to fail')
       }, () => {
         expect(store.getActions()).toEqual([{
-          type: actions.UPDATE_ME,
-          result: 1,
+          type: actions.UPDATE_ME_REQUEST,
+          id: 1,
           entities: { users: { 1: { id: 1, name: 'Diego Haz' } } }
         }, {
-          type: actions.FETCH_ME_FAILURE
+          type: actions.UPDATE_ME_FAILURE
         }])
       })
     })

@@ -1,42 +1,26 @@
 import {
-  SEARCH_PHOTOS,
+  SEARCH_PHOTOS_REQUEST,
   SEARCH_PHOTOS_SUCCESS,
-  SEARCH_PHOTOS_FAILURE,
   SELECT_PHOTO,
   DESELECT_PHOTO
 } from './photo.actions'
 
 const initialState = {
   selected: null,
-  items: [],
-  loading: false,
-  error: false
+  list: []
 }
 
-export const getSelectedId = (state = {}) => state.selected
-export const getCurrentIds = (state = {}) => state.items || []
-export const getIsLoading = (state = {}) => state.loading
-export const getFailed = (state = {}) => state.error
+export const getSelectedId = (state = initialState) => state.selected
+export const getListIds = (state = initialState) => state.list || []
 
 export default function photoReducer (state = initialState, action) {
   switch (action.type) {
-    case SEARCH_PHOTOS:
-      return {
-        ...state,
-        loading: true,
-        error: false
-      }
+    case SEARCH_PHOTOS_REQUEST:
+      return initialState
     case SEARCH_PHOTOS_SUCCESS:
       return {
         ...state,
-        items: action.result,
-        loading: false
-      }
-    case SEARCH_PHOTOS_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: true
+        list: action.result
       }
     case SELECT_PHOTO:
       return {

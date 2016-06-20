@@ -3,78 +3,59 @@ import reducer, * as fromPhoto from './photo.reducer'
 import * as types from './photo.actions'
 
 describe('Photo Reducer', function () {
-  it('should return the initial state', function () {
-    const initialState = {
-      selected: null,
-      items: [],
-      loading: false,
-      error: false
-    }
+  const initialState = {
+    selected: null,
+    list: []
+  }
 
+  const altState = {
+    selected: 2,
+    list: [1, 2]
+  }
+
+  it('should return the initial state', function () {
     expect(reducer(undefined, {})).toEqual(initialState)
   })
 
   it('should getSelectedId', function () {
     expect(fromPhoto.getSelectedId()).toNotExist()
-    expect(fromPhoto.getSelectedId({ selected: 1 })).toEqual(1)
+    expect(fromPhoto.getSelectedId(initialState)).toEqual(initialState.selected)
+    expect(fromPhoto.getSelectedId(altState)).toEqual(altState.selected)
   })
 
-  it('should getCurrentIds', function () {
-    expect(fromPhoto.getCurrentIds()).toEqual([])
-    expect(fromPhoto.getCurrentIds({ items: [1, 2] })).toEqual([1, 2])
+  it('should getListIds', function () {
+    expect(fromPhoto.getListIds()).toEqual([])
+    expect(fromPhoto.getListIds(initialState)).toEqual(initialState.list)
+    expect(fromPhoto.getListIds(altState)).toEqual(altState.list)
   })
 
-  it('should getIsLoading', function () {
-    expect(fromPhoto.getIsLoading()).toNotExist()
-    expect(fromPhoto.getIsLoading({ loading: false })).toEqual(false)
-    expect(fromPhoto.getIsLoading({ loading: true })).toEqual(true)
-  })
-
-  it('should getFailed', function () {
-    expect(fromPhoto.getFailed()).toNotExist()
-    expect(fromPhoto.getFailed({ error: false })).toEqual(false)
-    expect(fromPhoto.getFailed({ error: true })).toEqual(true)
-  })
-
-  it('should handle SEARCH_PHOTOS', function () {
-    expect(
-      reducer({}, { type: types.SEARCH_PHOTOS })
-    ).toEqual({
-      error: false,
-      loading: true
-    })
+  it('should handle SEARCH_PHOTOS_REQUEST', function () {
+    expect(reducer(altState, { type: types.SEARCH_PHOTOS_REQUEST })).toEqual(initialState)
   })
 
   it('should handle SEARCH_PHOTOS_SUCCESS', function () {
     expect(
-      reducer({}, { type: types.SEARCH_PHOTOS_SUCCESS, result: [1] })
+      reducer(initialState, { type: types.SEARCH_PHOTOS_SUCCESS, result: [1] })
     ).toEqual({
-      items: [1],
-      loading: false
-    })
-  })
-
-  it('should handle SEARCH_PHOTOS_FAILURE', function () {
-    expect(
-      reducer({}, { type: types.SEARCH_PHOTOS_FAILURE })
-    ).toEqual({
-      loading: false,
-      error: true
+      ...initialState,
+      list: [1]
     })
   })
 
   it('should handle SELECT_PHOTO', function () {
     expect(
-      reducer({}, { type: types.SELECT_PHOTO, id: 1 })
+      reducer(initialState, { type: types.SELECT_PHOTO, id: 1 })
     ).toEqual({
+      ...initialState,
       selected: 1
     })
   })
 
   it('should handle DESELECT_PHOTO', function () {
     expect(
-      reducer({ selected: 1 }, { type: types.DESELECT_PHOTO })
+      reducer(altState, { type: types.DESELECT_PHOTO })
     ).toEqual({
+      ...altState,
       selected: null
     })
   })

@@ -2,9 +2,11 @@ import cookie from 'react-cookie'
 import { removeMe } from '../user/user.actions'
 
 export const CREATE_SESSION = 'CREATE_SESSION'
+export const CREATE_SESSION_REQUEST = 'CREATE_SESSION_REQUEST'
 export const CREATE_SESSION_SUCCESS = 'CREATE_SESSION_SUCCESS'
 export const CREATE_SESSION_FAILURE = 'CREATE_SESSION_FAILURE'
 export const REMOVE_SESSION = 'REMOVE_SESSION'
+export const REMOVE_SESSION_REQUEST = 'REMOVE_SESSION_REQUEST'
 export const REMOVE_SESSION_SUCCESS = 'REMOVE_SESSION_SUCCESS'
 export const REMOVE_SESSION_FAILURE = 'REMOVE_SESSION_FAILURE'
 
@@ -23,7 +25,7 @@ export const createSession = (username, password) => (dispatch, getState, api) =
     throw new Error('There is no session state')
   }
 
-  dispatch({ type: CREATE_SESSION })
+  dispatch({ type: CREATE_SESSION_REQUEST })
 
   if (session.token) {
     return dispatchSession(session.token)
@@ -46,7 +48,7 @@ export const removeSession = (token) => (dispatch, getState, api) => {
     token = session.token
   }
 
-  dispatch({ type: REMOVE_SESSION })
+  dispatch({ type: REMOVE_SESSION_REQUEST })
   dispatch(removeMe())
   cookie.remove('token')
 

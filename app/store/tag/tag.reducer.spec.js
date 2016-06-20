@@ -3,64 +3,43 @@ import reducer, * as fromTag from './tag.reducer'
 import * as types from './tag.actions'
 
 describe('Tag Reducer', function () {
-  it('should return the initial state', function () {
-    const initialState = {
-      items: [],
-      loading: false,
-      error: false
-    }
+  const initialState = {
+    list: []
+  }
+  const altState = {
+    list: [1, 2]
+  }
 
+  it('should return the initial state', function () {
     expect(reducer(undefined, {})).toEqual(initialState)
   })
 
-  it('should getCurrentIds', function () {
-    expect(fromTag.getCurrentIds()).toEqual([])
-    expect(fromTag.getCurrentIds({ items: [1, 2] })).toEqual([1, 2])
-  })
-
-  it('should getIsLoading', function () {
-    expect(fromTag.getIsLoading()).toNotExist()
-    expect(fromTag.getIsLoading({ loading: false })).toEqual(false)
-    expect(fromTag.getIsLoading({ loading: true })).toEqual(true)
-  })
-
-  it('should getFailed', function () {
-    expect(fromTag.getFailed()).toNotExist()
-    expect(fromTag.getFailed({ error: false })).toEqual(false)
-    expect(fromTag.getFailed({ error: true })).toEqual(true)
-  })
-
-  it('should handle FETCH_TAGS', function () {
-    expect(
-      reducer({}, { type: types.FETCH_TAGS })
-    ).toEqual({
-      error: false,
-      loading: true
-    })
+  it('should getListIds', function () {
+    expect(fromTag.getListIds()).toEqual([])
+    expect(fromTag.getListIds(initialState)).toEqual(initialState.list)
+    expect(fromTag.getListIds(altState)).toEqual(altState.list)
   })
 
   it('should handle FETCH_TAGS_SUCCESS', function () {
     expect(
-      reducer({}, { type: types.FETCH_TAGS_SUCCESS, result: [1] })
+      reducer(initialState, { type: types.FETCH_TAGS_SUCCESS, result: [1] })
     ).toEqual({
-      items: [1],
-      loading: false
+      ...initialState,
+      list: [1]
     })
 
     expect(
-      reducer({ items: [1] }, { type: types.FETCH_TAGS_SUCCESS, result: [2], append: true })
+      reducer({
+        ...initialState,
+        list: [1]
+      }, {
+        type: types.FETCH_TAGS_SUCCESS,
+        result: [2],
+        append: true
+      })
     ).toEqual({
-      items: [1, 2],
-      loading: false
-    })
-  })
-
-  it('should handle FETCH_TAGS_FAILURE', function () {
-    expect(
-      reducer({}, { type: types.FETCH_TAGS_FAILURE })
-    ).toEqual({
-      loading: false,
-      error: true
+      ...initialState,
+      list: [1, 2]
     })
   })
 })
