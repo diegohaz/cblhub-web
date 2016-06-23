@@ -5,9 +5,10 @@
   "main": "./app",
   "scripts": {
     "start": "node ./",
-    "test": "istanbul cover -x *.spec.js _mocha -- --compilers js:babel-register -r ignore-styles 'app/**/*.spec.js'",
+    "test": "mocha --compilers js:babel-register -r ignore-styles 'app/**/*.spec.js'",
     "dev": "concurrently --kill-others 'nodemon ./' 'node webpack/webpack-dev-server'",
-    "coverage": "npm test --coverage && open ./coverage/lcov-report/index.html",
+    "coverage": "istanbul cover -x *.spec.js _mocha -- --compilers js:babel-register -r ignore-styles 'app/**/*.spec.js'",
+    "coverage-open": "npm run coverage && open ./coverage/lcov-report/index.html",
     "lint": "eslint app/** -c ./.eslintrc",
     "build": "rimraf dist/ && webpack --config webpack/webpack.config",
     "postinstall": "npm run build"
@@ -78,6 +79,7 @@
     "lodash": "^4.13.1",
     "moment": "^2.13.0",
     "normalizr": "^2.1.0",
+    "radium": "^0.17.1",
     "react": "^15.1.0",
     "react-aria-menubutton": "^4.1.2",
     "react-cookie": "^0.4.7",

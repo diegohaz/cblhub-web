@@ -35,6 +35,7 @@ describe('Session Actions', function () {
           { type: actions.CREATE_SESSION_SUCCESS, token: 1 }
         ])
         expect(api.defaults.headers.common['Authorization']).toEqual('Bearer 1')
+        expect(removeCookie).toHaveBeenCalledWith('token')
         expect(saveCookie).toHaveBeenCalledWith('token', 1)
       })
     })
@@ -46,6 +47,7 @@ describe('Session Actions', function () {
 
       return store.dispatch(actions.createSession('name', 'password')).then(() => {
         expect(store.getActions()).toEqual([])
+        expect(removeCookie).toNotHaveBeenCalled()
         expect(saveCookie).toNotHaveBeenCalled()
       })
     })
@@ -59,6 +61,7 @@ describe('Session Actions', function () {
           { type: actions.CREATE_SESSION_SUCCESS, token: 1 }
         ])
         expect(api.defaults.headers.common['Authorization']).toEqual('Bearer 1')
+        expect(removeCookie).toHaveBeenCalledWith('token')
         expect(saveCookie).toHaveBeenCalledWith('token', 1)
       })
     })

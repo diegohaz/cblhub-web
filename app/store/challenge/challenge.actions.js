@@ -25,8 +25,7 @@ export const REMOVE_CHALLENGE_SUCCESS = 'REMOVE_CHALLENGE_SUCCESS'
 export const REMOVE_CHALLENGE_FAILURE = 'REMOVE_CHALLENGE_FAILURE'
 
 export const fetchChallenges = (
-  { ...params, q, user, page, limit, sort } = {},
-  append = page > 1
+  params = {}, append = params.page > 1
 ) => (dispatch, getState, api) => {
   if (fromStatus.getIsLoading(getState(), FETCH_CHALLENGES)) {
     return Promise.resolve()

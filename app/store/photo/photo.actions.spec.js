@@ -77,6 +77,13 @@ describe('Photo Actions', function () {
     })
   })
 
+  describe('resetPhotos', function () {
+    it('should reset photos', function () {
+      store.dispatch(actions.resetPhotos())
+      expect(store.getActions()).toEqual([{ type: actions.RESET_PHOTOS }])
+    })
+  })
+
   describe('selectPhoto', function () {
     it('should select photo', function () {
       store.dispatch(actions.selectPhoto(1))

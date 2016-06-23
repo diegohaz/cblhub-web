@@ -1,6 +1,8 @@
+import { LOCATION_CHANGE } from 'react-router-redux'
 import {
   SEARCH_PHOTOS_REQUEST,
   SEARCH_PHOTOS_SUCCESS,
+  RESET_PHOTOS,
   SELECT_PHOTO,
   DESELECT_PHOTO
 } from './photo.actions'
@@ -15,6 +17,8 @@ export const getListIds = (state = initialState) => state.list || []
 
 export default function photoReducer (state = initialState, action) {
   switch (action.type) {
+    case LOCATION_CHANGE:
+    case RESET_PHOTOS:
     case SEARCH_PHOTOS_REQUEST:
       return initialState
     case SEARCH_PHOTOS_SUCCESS:

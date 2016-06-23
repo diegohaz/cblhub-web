@@ -1,38 +1,50 @@
 import React, { PropTypes } from 'react'
+import cls from 'classnames'
+import styles from './ChallengePhotoList.scss'
+
+import ProgressLoader from '../ProgressLoader'
+
+const handleSelect = ({ onPhotoSelect }, photo) =>
+  onPhotoSelect.bind(null, photo && photo.id)
+
+const handleSave = ({ onPhotoSave, selectedPhoto }) =>
+  onPhotoSave.bind(null, selectedPhoto && selectedPhoto.id)
 
 const ChallengePhotoList = ({
-  challenge,
-  photos = [],
-  selectedPhoto,
-  onPhotoSearch,
-  onPhotoSelect,
-  onChallengeUpdate
+  ...props,
+  className,
+  loadingPhotos,
+  onPhotoCancel,
+  photos = []
 }) => {
-  const handleSearch = () => onPhotoSearch({ q: challenge.bigIdea })
-  const handleSubmit = () => onChallengeUpdate({ id: challenge.id, photo: selectedPhoto })
-  const handleSelect = (photo) => onPhotoSelect.bind(null, photo.id)
+  if (!photos.length && !loadingPhotos) return null
   return (
-    <div>
-      <button onClick={handleSearch}>Search</button>
+    <div className={cls(styles.list, className)}>
+      {loadingPhotos && <ProgressLoader />}
       <ul>
         {photos.map((photo, i) =>
           <li key={i}>
-            <img src={photo.small.src} alt={photo.title} onClick={handleSelect(photo)} />
+            <button onClick={handleSelect(props, photo)}>
+              <img src={photo.small.src} alt={photo.title} />
+            </button>
           </li>
         )}
       </ul>
-      <button onClick={handleSubmit}>Save</button>
+      <div className={styles.alert}>This product uses the Flickr API but is not endorsed or certified by Flickr.</div>
+      <button onClick={onPhotoCancel}>Cancel</button>
+      <button onClick={handleSave(props)}>Save</button>
     </div>
   )
 }
 
 ChallengePhotoList.propTypes = {
-  challenge: PropTypes.object.isRequired,
   photos: PropTypes.array,
+  className: PropTypes.string,
   selectedPhoto: PropTypes.string,
-  onPhotoSearch: PropTypes.func.isRequired,
   onPhotoSelect: PropTypes.func.isRequired,
-  onChallengeUpdate: PropTypes.func.isRequired
+  onPhotoSave: PropTypes.func.isRequired,
+  onPhotoCancel: PropTypes.func.isRequired,
+  loadingPhotos: PropTypes.bool
 }
 
 export default ChallengePhotoList

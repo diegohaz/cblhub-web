@@ -6,6 +6,7 @@ export const SEARCH_PHOTOS = 'SEARCH_PHOTOS'
 export const SEARCH_PHOTOS_REQUEST = 'SEARCH_PHOTOS_REQUEST'
 export const SEARCH_PHOTOS_SUCCESS = 'SEARCH_PHOTOS_SUCCESS'
 export const SEARCH_PHOTOS_FAILURE = 'SEARCH_PHOTOS_FAILURE'
+export const RESET_PHOTOS = 'RESET_PHOTOS'
 export const SELECT_PHOTO = 'SELECT_PHOTO'
 export const DESELECT_PHOTO = 'DESELECT_PHOTO'
 
@@ -23,6 +24,10 @@ export const searchPhotos = ({ q, limit = 20 }) => (dispatch, getState, api) => 
     throw error
   })
 }
+
+export const resetPhotos = () => ({
+  type: RESET_PHOTOS
+})
 
 export const selectPhoto = (id) => ({
   type: SELECT_PHOTO,

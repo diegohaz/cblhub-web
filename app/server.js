@@ -62,7 +62,7 @@ app.use((req, res, next) => {
     const render = (store) => {
       const content = renderToString(
         <Provider store={store}>
-          <RouterContext { ...renderProps } />
+          <RouterContext {...renderProps} />
         </Provider>
       )
 

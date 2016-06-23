@@ -10,7 +10,7 @@ describe('UserButton Component', function () {
     onUserLogout = createSpy()
     location = { pathname: '/test' }
     render = (props = {}) =>
-      shallow(<UserButton onUserLogout={onUserLogout} location={location} { ...props } />)
+      shallow(<UserButton onUserLogout={onUserLogout} location={location} {...props} />)
   })
 
   it('should apply class name', function () {

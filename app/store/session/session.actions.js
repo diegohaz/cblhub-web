@@ -20,6 +20,7 @@ export const createSession = (username, password) => (dispatch, getState, api) =
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`
     }
     dispatch({ type: CREATE_SESSION_SUCCESS, token })
+    cookie.remove('token')
     cookie.save('token', token)
     return Promise.resolve({ token })
   }

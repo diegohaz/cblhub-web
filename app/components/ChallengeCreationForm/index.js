@@ -23,7 +23,7 @@ const ChallengeCreationForm = ({
       <div className={styles.formError}>{error}</div>
       <div className={styles.formControl}>
         <label htmlFor='challengeBigIdea'>Big Idea</label>
-        <input type='text' id='challengeBigIdea' maxLength={48} { ...bigIdea } />
+        <input type='text' id='challengeBigIdea' maxLength={48} {...bigIdea} />
         {bigIdea.touched && bigIdea.error &&
           <div className={styles.fieldError}>{bigIdea.error}</div>
         }
@@ -31,7 +31,7 @@ const ChallengeCreationForm = ({
       </div>
       <div className={styles.formControl}>
         <label htmlFor='challengeEssentialQuestion'>Essential Question</label>
-        <input type='text' id='challengeEssentialQuestion' maxLength={96} { ...essentialQuestion } />
+        <input type='text' id='challengeEssentialQuestion' maxLength={96} {...essentialQuestion} />
         {essentialQuestion.touched && essentialQuestion.error &&
           <div className={styles.fieldError}>{essentialQuestion.error}</div>
         }
@@ -39,7 +39,7 @@ const ChallengeCreationForm = ({
       </div>
       <div className={styles.formControl}>
         <label htmlFor='challengeTitle'>The Challenge</label>
-        <input type='text' id='challengeTitle' maxLength={96} { ...title } />
+        <input type='text' id='challengeTitle' maxLength={96} {...title} />
         {title.touched && title.error &&
           <div className={styles.fieldError}>{title.error}</div>
         }
@@ -47,7 +47,7 @@ const ChallengeCreationForm = ({
       </div>
       <div className={styles.formControl}>
         <label htmlFor='challengeDescription'>Description</label>
-        <textarea id='challengeDescription' rows={4} maxLength={2048} { ...description } />
+        <textarea id='challengeDescription' rows={4} maxLength={2048} {...description} />
         {description.touched && description.error &&
           <div className={styles.fieldError}>{description.error}</div>
         }

@@ -1,6 +1,14 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
-import { fromUser, fromSession, fromStatus, fetchMe } from '../store'
+import {
+  fromUser,
+  fromSession,
+  fromStatus,
+  fetchMe,
+  FETCH_CHALLENGE,
+  FETCH_CHALLENGES,
+  FETCH_GUIDE
+} from '../store'
 
 import App from '../components/App'
 
@@ -12,7 +20,11 @@ class AppContainer extends Component {
   }
 
   static fetchData ({ store }) {
-    return store.dispatch(fetchMe()).catch(() => true)
+    if (fromSession.getToken(store.getState())) {
+      return store.dispatch(fetchMe()).catch(() => true)
+    } else {
+      return Promise.resolve()
+    }
   }
 
   componentDidMount () {
@@ -31,7 +43,11 @@ class AppContainer extends Component {
 const mapStateToProps = (state) => ({
   token: fromSession.getToken(state),
   user: fromUser.getCurrentUser(state),
-  loading: fromStatus.getIsLoading(state),
+  loading: fromStatus.getIsLoading(state, [
+    FETCH_CHALLENGE,
+    FETCH_CHALLENGES,
+    FETCH_GUIDE
+  ]),
   error: fromStatus.getIsFailed(state)
 })
 

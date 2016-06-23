@@ -1,4 +1,5 @@
 import expect from 'expect'
+import { LOCATION_CHANGE } from 'react-router-redux'
 import reducer, * as fromPhoto from './photo.reducer'
 import * as types from './photo.actions'
 
@@ -40,6 +41,18 @@ describe('Photo Reducer', function () {
       ...initialState,
       list: [1]
     })
+  })
+
+  it('should handle RESET_PHOTOS', function () {
+    expect(
+      reducer(altState, { type: types.RESET_PHOTOS, id: 1 })
+    ).toEqual(initialState)
+  })
+
+  it('should handle LOCATION_CHANGE', function () {
+    expect(
+      reducer(altState, { type: LOCATION_CHANGE })
+    ).toEqual(initialState)
   })
 
   it('should handle SELECT_PHOTO', function () {

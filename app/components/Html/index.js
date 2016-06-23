@@ -6,7 +6,7 @@ const Html = ({ assets, state, content }) => {
   const attrs = helmet.htmlAttributes.toComponent()
 
   return (
-    <html { ...attrs }>
+    <html {...attrs}>
       <head>
         <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no' />
         {helmet.base.toComponent()}
