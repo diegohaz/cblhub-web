@@ -14,6 +14,7 @@ import routes from './routes'
 import configureStore from './store/configure'
 import Html from './components/Html'
 import { createSession } from './store/session/session.actions'
+import { StyleRoot } from 'radium'
 
 const app = new Express()
 
@@ -62,7 +63,9 @@ app.use((req, res, next) => {
     const render = (store) => {
       const content = renderToString(
         <Provider store={store}>
-          <RouterContext {...renderProps} />
+          <StyleRoot radiumConfig={{ userAgent: req.headers['user-agent'] }}>
+            <RouterContext {...renderProps} />
+          </StyleRoot>
         </Provider>
       )
 

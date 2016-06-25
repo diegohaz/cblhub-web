@@ -30,18 +30,18 @@
       background-image: linear-gradient(to bottom, rgba($black, .75), rgba($black, 0) 35%, rgba($black, 0) 40%, rgba($black, .85) 100%);
     }
 
-    img {
-      min-height: 100%;
-      min-width: 100%;
-      object-fit: cover;
-      object-position: center;
-      transition: transform 500ms ease-in-out;
-    }
-
-    _:-ms-lang(x), img {
-      width: 100%;
-      height: auto;
-    }
+    // img {
+    //   min-height: 100%;
+    //   min-width: 100%;
+    //   object-fit: cover;
+    //   object-position: center;
+    //   transition: transform 500ms ease-in-out;
+    // }
+    //
+    // _:-ms-lang(x), img {
+    //   width: 100%;
+    //   height: auto;
+    // }
 
     & > :not(img) {
       position: absolute;

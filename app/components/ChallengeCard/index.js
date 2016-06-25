@@ -6,13 +6,14 @@ import styles from './ChallengeCard.scss'
 
 import Icon, { contributions } from '../Icon'
 import TagLink from '../TagLink'
+import Image from '../Image'
 
 const ChallengeCard = ({ challenge, className }) => {
   return (
     <div className={cls(styles.card, className)}>
       <Link to={`/challenges/${challenge.id}`} className={styles.link} />
       <div className={styles.cover}>
-        {challenge.photo && <img src={challenge.photo.medium.src} />}
+        {challenge.photo && <Image src={challenge.photo.medium.src} />}
         <Link to={`/?q=${challenge.bigIdea}`} className={styles.bigIdea}>{challenge.bigIdea}</Link>
         <Link to={`/challenges/${challenge.id}`} className={styles.title}>{challenge.title}</Link>
       </div>

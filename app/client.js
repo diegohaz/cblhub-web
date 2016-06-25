@@ -6,6 +6,7 @@ import { AppContainer } from 'react-hot-loader'
 import { Router, browserHistory, applyRouterMiddleware } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import useScroll from 'react-router-scroll'
+import { StyleRoot } from 'radium'
 import configureStore from './store/configure'
 import routes from './routes'
 
@@ -14,28 +15,20 @@ const store = configureStore(initialState, browserHistory)
 const history = syncHistoryWithStore(browserHistory, store)
 const root = document.getElementById('app')
 
-render(
+const renderApp = (routes) => (
   <AppContainer>
     <Provider store={store}>
-      <Router
-        history={history}
-        routes={routes}
-        render={applyRouterMiddleware(useScroll())} />
+      <StyleRoot radiumConfig={{ userAgent: navigator.userAgent }}>
+        <Router history={history} render={applyRouterMiddleware(useScroll())} routes={routes} />
+      </StyleRoot>
     </Provider>
-  </AppContainer>,
-  root)
+  </AppContainer>
+)
+
+render(renderApp(routes), root)
 
 if (module.hot) {
   module.hot.accept('./routes', () => {
-    render(
-      <AppContainer>
-        <Provider store={store}>
-          <Router
-            history={history}
-            routes={require('./routes').default}
-            render={applyRouterMiddleware(useScroll())} />
-        </Provider>
-      </AppContainer>,
-      root)
+    render(renderApp(require('./routes').default), root)
   })
 }

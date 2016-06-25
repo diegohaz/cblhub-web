@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import Helmet from 'react-helmet'
+import Radium from 'radium'
 
 const Html = ({ assets, state, content }) => {
   let helmet = Helmet.rewind()
@@ -38,4 +39,4 @@ Html.propTypes = {
   content: PropTypes.string.isRequired
 }
 
-export default Html
+export default Radium(Html)

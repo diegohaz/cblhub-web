@@ -2,6 +2,9 @@ import React, { PropTypes } from 'react'
 import cls from 'classnames'
 import styles from './ChallengeCreationForm.scss'
 
+import Button from '../Button'
+import Input from '../Input'
+
 const bigIdeaText = <p>The big idea is a broad concept that can be explored in multiple ways, e.g. <strong>Resilience</strong>, <strong>Separation</strong>, <strong>Creativity</strong>, <strong>Health</strong>, <strong>Sustainability</strong>, <strong>Democracy</strong> etc. <a href='http://challengebasedlearning.org/pages/about-cbl' target='_blank'>Learn more</a></p>
 
 const essentialQuestionText = <p>By design, the big idea allows for the generation of a wide variety of essential questions. Eventually the process narrows to one essential question that reflects the interests of the learners and the needs of their community. <a href='http://challengebasedlearning.org/pages/about-cbl' target='_blank'>Learn more</a></p>
@@ -22,27 +25,13 @@ const ChallengeCreationForm = ({
     <form onSubmit={handleSubmit} className={cls(styles.form, className, {[styles.error]: error})}>
       <div className={styles.formError}>{error}</div>
       <div className={styles.formControl}>
-        <label htmlFor='challengeBigIdea'>Big Idea</label>
-        <input type='text' id='challengeBigIdea' maxLength={48} {...bigIdea} />
-        {bigIdea.touched && bigIdea.error &&
-          <div className={styles.fieldError}>{bigIdea.error}</div>
-        }
-        {bigIdeaText}
+        <Input type='text' label='Big Idea' maxLength={48} field={bigIdea} description={bigIdeaText} />
       </div>
       <div className={styles.formControl}>
-        <label htmlFor='challengeEssentialQuestion'>Essential Question</label>
-        <input type='text' id='challengeEssentialQuestion' maxLength={96} {...essentialQuestion} />
-        {essentialQuestion.touched && essentialQuestion.error &&
-          <div className={styles.fieldError}>{essentialQuestion.error}</div>
-        }
-        {essentialQuestionText}
+        <Input type='text' label='Essential Question' maxLength={96} field={essentialQuestion} description={essentialQuestionText} />
       </div>
       <div className={styles.formControl}>
-        <label htmlFor='challengeTitle'>The Challenge</label>
-        <input type='text' id='challengeTitle' maxLength={96} {...title} />
-        {title.touched && title.error &&
-          <div className={styles.fieldError}>{title.error}</div>
-        }
+        <Input type='text' label='The Challenge' maxLength={96} field={title} />
         {challengeText}
       </div>
       <div className={styles.formControl}>
@@ -54,8 +43,8 @@ const ChallengeCreationForm = ({
         {descriptionText}
       </div>
       <div className={styles.formControl}>
-        <button type='submit' disabled={submitting}>Create challenge</button>
-        <button type='button' onClick={resetForm}>Reset</button>
+        <Button type='submit' disabled={submitting}>Create challenge</Button>
+        <Button kind='secondary' type='button' onClick={resetForm}>Reset</Button>
       </div>
     </form>
   )

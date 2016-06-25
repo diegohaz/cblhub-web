@@ -4,37 +4,38 @@ import { shallow } from 'enzyme'
 import UserButton from './'
 
 describe('UserButton Component', function () {
-  let render, onUserLogout, location
+  let onUserLogout, render, location
 
   beforeEach(function () {
     onUserLogout = createSpy()
     location = { pathname: '/test' }
     render = (props = {}) =>
-      shallow(<UserButton onUserLogout={onUserLogout} location={location} {...props} />)
+      shallow(<UserButton location={location} onUserLogout={onUserLogout} {...props} />)
   })
 
-  it('should apply class name', function () {
-    const button = render({ className: 'test-class-name' })
-    expect(button.prop('className')).toEqual('test-class-name')
+  it('should display login button if user was not passed', function () {
+    const button = render()
+    expect(button.find('UserDropdown').length).toEqual(0)
+    expect(button.find('Button').length).toEqual(1)
   })
 
-  it('should display a link to login when there is no user', function () {
-    const link = render().find('Link[to="/login?back=/test"]')
-    expect(link.length).toBeMoreThan(0)
+  it('login button should have proper path', function () {
+    const button = render()
+    expect(button.find('[to="/login?back=/test"]').length).toEqual(1)
   })
 
-  describe('When user is logged in', function () {
-    let renderWithUser
+  describe('When user is passed', function () {
+    let renderWithUser, user
 
     beforeEach(function () {
-      const user = { picture: 'picture.jpg', name: 'Foo bar' }
-      renderWithUser = (props = {}) => render({ user, ...props })
+      user = { picture: 'picture.jpg', name: 'Foo bar' }
+      renderWithUser = (props = {}) => render({ user })
     })
 
-    it('should display picture and name of the user when there is one', function () {
+    it('should display picture and name of the user', function () {
       const button = renderWithUser()
-      expect(button.findWhere((n) => n.prop('src') === 'picture.jpg').length).toBeMoreThan(0)
-      expect(button.findWhere((n) => n.text() === 'Foo bar').length).toBeMoreThan(0)
+      expect(button.findWhere((n) => n.prop('src') === user.picture).length).toBeMoreThan(0)
+      expect(button.findWhere((n) => n.text() === user.name).length).toBeMoreThan(0)
     })
 
     it('should display a log out option', function () {
@@ -44,9 +45,8 @@ describe('UserButton Component', function () {
 
     it('should call onUserLogout when click on log out option', function () {
       const button = renderWithUser()
-      const wrapper = button.children().first()
       expect(onUserLogout).toNotHaveBeenCalled()
-      wrapper.simulate('selection', onUserLogout)
+      button.simulate('selection', onUserLogout)
       expect(onUserLogout).toHaveBeenCalled()
     })
   })

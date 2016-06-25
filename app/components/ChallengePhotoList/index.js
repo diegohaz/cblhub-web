@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import cls from 'classnames'
 import styles from './ChallengePhotoList.scss'
 
-import ProgressLoader from '../ProgressLoader'
+import Image from '../Image'
 
 const handleSelect = ({ onPhotoSelect }, photo) =>
   onPhotoSelect.bind(null, photo && photo.id)
@@ -20,12 +20,11 @@ const ChallengePhotoList = ({
   if (!photos.length && !loadingPhotos) return null
   return (
     <div className={cls(styles.list, className)}>
-      {loadingPhotos && <ProgressLoader />}
       <ul>
         {photos.map((photo, i) =>
           <li key={i}>
             <button onClick={handleSelect(props, photo)}>
-              <img src={photo.small.src} alt={photo.title} />
+              <Image src={photo.small.src} alt={photo.title} />
             </button>
           </li>
         )}

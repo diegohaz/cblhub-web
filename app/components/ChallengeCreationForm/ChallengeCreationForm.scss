@@ -16,10 +16,6 @@
     @include cblhub-field-error;
   }
 
-  button {
-    @include cblhub-button;
-  }
-
   &.error {
     .form-error {
       display: block;
