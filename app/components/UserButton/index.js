@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import * as ariaMenu from 'react-aria-menubutton'
 import Radium from 'radium'
-import { colors } from '../../config/theme'
+import { colors } from '../../config/style'
 
 import Icon, { down } from '../Icon'
 
@@ -18,13 +18,8 @@ const UserButton = ({ ...props, user, onUserLogout, location }) => {
   if (user) {
     return (
       <Wrapper style={styles.wrapper} onSelection={handleSection}>
-        <Trigger style={[styles.trigger, { display: 'inline-flex' }]}>
-          <img
-            src={user.picture}
-            alt={user.name}
-            width={24}
-            height={24}
-            style={styles.picture} />
+        <Trigger style={styles.trigger}>
+          <img src={user.picture} alt={user.name} width={24} height={24} style={styles.picture} />
           {user.name}
           <Icon icon={down} size={16} style={{ marginLeft: 8 }} />
         </Trigger>
@@ -36,12 +31,6 @@ const UserButton = ({ ...props, user, onUserLogout, location }) => {
   } else {
     return <Button kind='secondary' to={`/login?back=${location.pathname}`}>Sign in</Button>
   }
-}
-
-UserButton.propTypes = {
-  user: PropTypes.object,
-  onUserLogout: PropTypes.func.isRequired,
-  location: PropTypes.object.isRequired
 }
 
 const focusStyle = {
@@ -63,7 +52,7 @@ const styles = {
     padding: '0 1em',
     borderRadius: '0.13rem',
     backgroundColor: 'transparent',
-    border: `1px solid ${colors.grayscale.light}`,
+    border: `1px solid ${colors.grayscale.medium}`,
     transition: 'background-color 250ms ease-out, color 250ms ease-out',
     cursor: 'pointer',
     ':hover': focusStyle,
@@ -89,6 +78,12 @@ const styles = {
     overflow: 'hidden',
     border: `1px solid ${colors.grayscale.medium}`
   }
+}
+
+UserButton.propTypes = {
+  user: PropTypes.object,
+  onUserLogout: PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired
 }
 
 export default Radium(UserButton)

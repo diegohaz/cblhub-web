@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react'
-import cls from 'classnames'
-import styles from './LoginForm.scss'
+
+import Dialog from '../Dialog'
+import FormControl from '../FormControl'
+import Button from '../Button'
 
 const LoginForm = ({
   ...props,
@@ -8,30 +10,15 @@ const LoginForm = ({
   submitting,
   handleSubmit,
   onSubmit,
-  error,
-  className = {}
+  error
 }) => {
   const submit = (values, dispatch) => onSubmit(values, dispatch, props)
   return (
-    <form onSubmit={handleSubmit(submit)} className={cls(styles.form, className, {[styles.error]: error})}>
-      <div className={styles.formError}>{error}</div>
-      <div className={styles.formControl}>
-        <label>E-mail</label>
-        <input type='email' {...email} />
-        {email.touched && email.error &&
-          <div className={styles.fieldError}>{email.error}</div>
-        }
-      </div>
-      <div className={styles.formControl}>
-        <label>Password</label>
-        <input type='password' {...password} />
-        {password.touched && password.error &&
-          <div className={styles.fieldError}>{password.error}</div>
-        }
-      </div>
-      <div className={styles.formControl}>
-        <button type='submit' disabled={submitting}>Sign In</button>
-      </div>
+    <form onSubmit={handleSubmit(submit)}>
+      {error && <Dialog type='error'>{error}</Dialog>}
+      <FormControl type='email' label='E-mail' field={email} />
+      <FormControl type='password' label='Password' field={password} />
+      <Button type='submit' disabled={submitting} style={{ width: '100%' }}>Sign In</Button>
     </form>
   )
 }
@@ -42,7 +29,6 @@ LoginForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  className: PropTypes.string,
   back: PropTypes.string
 }
 

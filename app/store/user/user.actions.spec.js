@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import nock from 'nock'
-import expect from 'expect'
+import expect, { spyOn } from 'expect'
 import api from '../../services/api'
 import { apiUrl } from '../../config'
 import * as actions from './user.actions'
@@ -10,10 +10,12 @@ const middlewares = [ thunk.withExtraArgument(api) ]
 const mockStore = configureMockStore(middlewares)
 
 describe('User Actions', function () {
-  let store
+  let store, unsetToken
 
   beforeEach(function () {
+    expect.restoreSpies()
     store = mockStore()
+    unsetToken = spyOn(api, 'unsetToken')
   })
 
   afterEach(function () {
@@ -95,6 +97,21 @@ describe('User Actions', function () {
           { type: actions.FETCH_ME_REQUEST },
           { type: actions.FETCH_ME_FAILURE }
         ])
+        expect(unsetToken).toNotHaveBeenCalled()
+      })
+    })
+
+    it('should fetch me with error 401', function () {
+      nock(apiUrl).get('/users/me').reply(401)
+
+      return store.dispatch(actions.fetchMe()).then(() => {
+        expect(true).toBe(false, 'Expected to fail')
+      }, () => {
+        expect(store.getActions()).toEqual([
+          { type: actions.FETCH_ME_REQUEST },
+          { type: actions.FETCH_ME_FAILURE }
+        ])
+        expect(unsetToken).toHaveBeenCalled()
       })
     })
   })

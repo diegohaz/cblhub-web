@@ -5,11 +5,7 @@ import * as router from 'react-router'
 const Link = Radium(router.Link)
 
 const TagLink = ({ tag, style }) => (
-  <Link
-    to={`/?q=${tag.name}`}
-    style={[styles.link, style]}>
-    {tag.name}
-  </Link>
+  <Link to={`/?q=${tag.name}`} style={[styles.link, style]}>{tag.name}</Link>
 )
 
 TagLink.propTypes = {

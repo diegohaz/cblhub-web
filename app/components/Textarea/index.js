@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react'
 import Radium from 'radium'
 import { colors } from '../../config/style'
 
-const Input = ({ ...props, style }) => {
+const Textarea = ({ ...props, style }) => {
   return (
-    <input {...props} style={[getStyle(props), style]} />
+    <textarea {...props} style={[getStyle(props), style]} />
   )
 }
 
@@ -14,15 +14,14 @@ const getStyle = ({ invalid }) => ({
   color: 'inherit',
   margin: 0,
   boxSizing: 'border-box',
-  fontSize: '1.125rem',
-  height: '2.5rem',
-  border: `1px solid ${colors[invalid ? 'error' : 'grayscale'].light}`,
+  fontSize: '1.2rem',
+  border: `1px solid ${invalid ? colors.error.light : colors.grayscale.light}`,
   borderRadius: 2
 })
 
-Input.propTypes = {
+Textarea.propTypes = {
   style: PropTypes.object,
   invalid: PropTypes.bool
 }
 
-export default Radium(Input)
+export default Radium(Textarea)

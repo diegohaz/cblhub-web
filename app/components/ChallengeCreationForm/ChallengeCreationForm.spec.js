@@ -39,33 +39,24 @@ describe('ChallengeCreationForm Component', function () {
 
   it('should call resetForm when reset button is clicked', function () {
     form = render()
-    form.find('button[type="button"]').first().simulate('click')
+    form.find('Button[type="button"]').first().simulate('click')
     expect(resetForm).toHaveBeenCalled()
   })
 
   it('should not disable submit button', function () {
     form = render()
-    expect(form.find('button[disabled=true]').length).toEqual(0)
+    expect(form.find('Button[disabled=true]').length).toEqual(0)
   })
 
   it('should disable submit button while submitting', function () {
     submitting = true
     form = render()
-    expect(form.find('button[disabled=true]').length).toEqual(1)
+    expect(form.find('Button[disabled=true]').length).toEqual(1)
   })
 
   it('should display form error message', function () {
     formError = 'Boom'
     form = render()
     expect(form.find(':contains("Boom")').length).toEqual(0)
-  })
-
-  it('should display field error message', function () {
-    touched = true
-    fieldError = 'Required'
-    form = render()
-    const fieldErrors = form.find('input + div')
-    expect(fieldErrors.length).toEqual(3)
-    fieldErrors.forEach((fieldError) => expect(fieldError.text()).toEqual('Required'))
   })
 })
