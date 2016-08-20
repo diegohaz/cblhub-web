@@ -10,17 +10,20 @@ import {
 const initialState = {
   active: null,
   list: [],
+  canLoadMore: true,
   removeIndex: -1
 }
 
 export const getActiveId = (state = initialState) => state.active
 export const getListIds = (state = initialState) => state.list || []
+export const getCanLoadMore = (state = initialState) => state.canLoadMore
 
 export default function challengeReducer (state = initialState, action) {
   switch (action.type) {
     case FETCH_CHALLENGES_SUCCESS:
       return {
         ...state,
+        canLoadMore: !!(!action.append || action.result && action.result.length),
         list: action.append ? [ ...state.list, ...action.result ] : action.result
       }
     case FETCH_CHALLENGE_REQUEST:

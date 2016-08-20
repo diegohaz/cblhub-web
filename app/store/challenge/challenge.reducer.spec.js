@@ -6,12 +6,14 @@ describe('Challenge Reducer', function () {
   const initialState = {
     active: null,
     list: [],
+    canLoadMore: true,
     removeIndex: -1
   }
 
   const altState = {
     active: 1,
     list: [1, 2],
+    canLoadMore: false,
     removeIndex: 1
   }
 
@@ -29,6 +31,12 @@ describe('Challenge Reducer', function () {
     expect(fromChallenge.getListIds()).toEqual([])
     expect(fromChallenge.getListIds(initialState)).toEqual(initialState.list)
     expect(fromChallenge.getListIds(altState)).toEqual(altState.list)
+  })
+
+  it('should getCanLoadMore', function () {
+    expect(fromChallenge.getCanLoadMore()).toEqual(true)
+    expect(fromChallenge.getCanLoadMore(initialState)).toEqual(initialState.canLoadMore)
+    expect(fromChallenge.getCanLoadMore(altState)).toEqual(altState.canLoadMore)
   })
 
   it('should handle FETCH_CHALLENGES_SUCCESS', function () {
@@ -51,6 +59,21 @@ describe('Challenge Reducer', function () {
     ).toEqual({
       ...initialState,
       list: [1, 2]
+    })
+
+    expect(
+      reducer({
+        ...initialState,
+        list: [1]
+      }, {
+        type: types.FETCH_CHALLENGES_SUCCESS,
+        result: [],
+        append: true
+      })
+    ).toEqual({
+      ...initialState,
+      list: [1],
+      canLoadMore: false
     })
   })
 

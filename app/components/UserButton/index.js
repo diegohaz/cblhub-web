@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import * as ariaMenu from 'react-aria-menubutton'
 import Radium from 'radium'
-import { colors } from '../../config/style'
+import { colors, writeMediaQuery, breakpoints } from '../../config/style'
 
 import Icon, { down } from '../Icon'
 
@@ -20,7 +20,7 @@ const UserButton = ({ ...props, user, onUserLogout, location }) => {
       <Wrapper style={styles.wrapper} onSelection={handleSection}>
         <Trigger style={styles.trigger}>
           <img src={user.picture} alt={user.name} width={24} height={24} style={styles.picture} />
-          {user.name}
+          <span style={styles.username}>{user.name}</span>
           <Icon icon={down} size={16} style={{ marginLeft: 8 }} />
         </Trigger>
         <Menu style={styles.menu}>
@@ -29,7 +29,8 @@ const UserButton = ({ ...props, user, onUserLogout, location }) => {
       </Wrapper>
     )
   } else {
-    return <Button kind='secondary' to={`/login?back=${location.pathname}`}>Sign in</Button>
+    const backPath = location.query.back || location.pathname
+    return <Button kind='secondary' to={`/login?back=${backPath}`}>Sign in</Button>
   }
 }
 
@@ -64,7 +65,8 @@ const styles = {
     width: '100%',
     border: `1px solid ${colors.grayscale.medium}`,
     cursor: 'pointer',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    zIndex: 999
   },
   item: {
     padding: 8,
@@ -77,6 +79,11 @@ const styles = {
     borderRadius: '50%',
     overflow: 'hidden',
     border: `1px solid ${colors.grayscale.medium}`
+  },
+  username: {
+    [writeMediaQuery(breakpoints.small)]: {
+      display: 'none'
+    }
   }
 }
 

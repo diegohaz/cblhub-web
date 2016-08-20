@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import Radium from 'radium'
 
 import Dialog from '../Dialog'
 import Button from '../Button'
@@ -56,4 +55,4 @@ ChallengeCreationForm.propTypes = {
   resetForm: PropTypes.func.isRequired
 }
 
-export default Radium(ChallengeCreationForm)
+export default ChallengeCreationForm

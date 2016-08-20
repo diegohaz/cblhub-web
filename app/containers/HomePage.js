@@ -1,18 +1,27 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
-import { fromChallenge, fetchChallenges } from '../store'
+import { fromChallenge, fetchChallenges, fetchMoreChallenges } from '../store'
 
 import HomePage from '../components/HomePage'
 
+const limit = 24
+
 class HomePageContainer extends Component {
+  constructor (props) {
+    super(props)
+    this.fetchMoreChallenges = this.fetchMoreChallenges.bind(this)
+  }
+
   static propTypes = {
     challenges: PropTypes.array.isRequired,
     fetchChallenges: PropTypes.func.isRequired,
-    location: PropTypes.object.isRequired
+    fetchMoreChallenges: PropTypes.func.isRequired,
+    location: PropTypes.object.isRequired,
+    displayLoadMore: PropTypes.bool
   }
 
   static fetchData ({ store, location }) {
-    return store.dispatch(fetchChallenges({ q: location.query.q, limit: 24 }))
+    return store.dispatch(fetchChallenges({ q: location.query.q, limit }))
   }
 
   componentDidMount () {
@@ -27,20 +36,30 @@ class HomePageContainer extends Component {
 
   fetchChallenges () {
     const { location } = this.props
-    return this.props.fetchChallenges({ q: location.query.q, limit: 24 })
+    return this.props.fetchChallenges({ q: location.query.q, limit })
+  }
+
+  fetchMoreChallenges () {
+    const { location } = this.props
+    return this.props.fetchMoreChallenges({ q: location.query.q, limit })
   }
 
   render () {
-    return <HomePage {...this.props} />
+    return <HomePage
+      {...this.props}
+      onLoadMore={this.fetchMoreChallenges}
+      displayLoadMore={this.props.displayLoadMore} />
   }
 }
 
 const mapStateToProps = (state) => ({
-  challenges: fromChallenge.getChallengeList(state)
+  challenges: fromChallenge.getChallengeList(state),
+  displayLoadMore: fromChallenge.getCanLoadMore(state)
 })
 
 const mapDispatchToProps = {
-  fetchChallenges
+  fetchChallenges,
+  fetchMoreChallenges
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePageContainer)

@@ -34,7 +34,7 @@ describe('ChallengeCard Component', function () {
 
   it('should have img if challenge has photo', function () {
     challenge.photo = { medium: { src: 'test.jpg', width: 640, height: 480 } }
-    const img = render(challenge).find('img')
+    const img = render(challenge).find('Image')
     expect(img.length).toBeMoreThan(0)
   })
 

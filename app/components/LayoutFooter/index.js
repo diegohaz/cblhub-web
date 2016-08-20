@@ -13,6 +13,7 @@ const LayoutFooter = () => {
 const getStyle = () => ({
   width: '100%',
   padding: '1rem',
+  marginTop: 'auto',
   backgroundColor: colors.grayscale.dark,
   color: colors.grayscale.white,
   boxSizing: 'border-box'

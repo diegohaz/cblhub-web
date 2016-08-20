@@ -1,5 +1,5 @@
 import { arrayOf, normalize } from 'normalizr'
-import { fromEntities, fromStatus } from '../'
+import { fromEntities, fromChallenge, fromStatus } from '../'
 import { deselectPhoto } from '../photo/photo.actions'
 import challenge from './challenge.schema'
 
@@ -39,6 +39,12 @@ export const fetchChallenges = (
     dispatch({ type: FETCH_CHALLENGES_FAILURE })
     throw error
   })
+}
+
+export const fetchMoreChallenges = (params = {}) => (dispatch, getState, api) => {
+  const challenges = fromChallenge.getChallengeList(getState())
+  const page = Math.ceil(challenges.length / params.limit || 1) + 1 || 1
+  return dispatch(fetchChallenges({ ...params, page }))
 }
 
 export const fetchChallenge = (id) => (dispatch, getState, api) => {

@@ -6,6 +6,10 @@ export const FETCH_USER = 'FETCH_USER'
 export const FETCH_USER_REQUEST = 'FETCH_USER_REQUEST'
 export const FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS'
 export const FETCH_USER_FAILURE = 'FETCH_USER_FAILURE'
+export const CREATE_USER = 'CREATE_USER'
+export const CREATE_USER_REQUEST = 'CREATE_USER_REQUEST'
+export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS'
+export const CREATE_USER_FAILURE = 'CREATE_USER_FAILURE'
 export const FETCH_ME = 'FETCH_ME'
 export const FETCH_ME_REQUEST = 'FETCH_ME_REQUEST'
 export const FETCH_ME_SUCCESS = 'FETCH_ME_SUCCESS'
@@ -45,6 +49,21 @@ export const fetchMe = () => (dispatch, getState, api) => {
     if (error.status === 401) {
       api.unsetToken()
     }
+    throw error
+  })
+}
+
+export const createUser = (body) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), CREATE_USER)) {
+    return Promise.resolve()
+  }
+  dispatch({ type: CREATE_USER_REQUEST })
+  return api.post('/users', body).then(({ data }) => {
+    const { result, entities } = normalize(data, user)
+    dispatch({ type: CREATE_USER_SUCCESS, result, entities })
+    return data
+  }).catch((error) => {
+    dispatch({ type: CREATE_USER_FAILURE })
     throw error
   })
 }

@@ -29,7 +29,7 @@ export const oneOf = (values) => (value) => !isIn(value, values) &&
   `Must be one of: ${values.join(', ')}`
 
 export const match = (field) => (value, data) => data && value !== data[field] &&
-  'Do not match'
+  'Must match'
 
 export const createValidator = (rules) => (data = {}) => {
   const errors = {}

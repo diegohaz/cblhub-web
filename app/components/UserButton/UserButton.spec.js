@@ -8,7 +8,7 @@ describe('UserButton Component', function () {
 
   beforeEach(function () {
     onUserLogout = createSpy()
-    location = { pathname: '/test' }
+    location = { pathname: '/test', query: {} }
     render = (props = {}) =>
       shallow(<UserButton location={location} onUserLogout={onUserLogout} {...props} />)
   })
@@ -22,6 +22,12 @@ describe('UserButton Component', function () {
   it('login button should have proper path', function () {
     const button = render()
     expect(button.find('[to="/login?back=/test"]').length).toEqual(1)
+  })
+
+  it('login button should have proper path with query back', function () {
+    location = { pathname: '/test1', query: { back: '/test2' } }
+    const button = render()
+    expect(button.find('[to="/login?back=/test2"]').length).toEqual(1)
   })
 
   describe('When user is passed', function () {

@@ -1,16 +1,17 @@
-import expect, { createSpy } from 'expect'
 import React from 'react'
+import expect, { createSpy } from 'expect'
 import { shallow } from 'enzyme'
-import LoginForm from './'
+import RegisterForm from './'
 
-describe('LoginForm Component', function () {
-  let form, submitting, touched, formError, fieldError, handleSubmit
+describe('RegisterForm Component', function () {
+  let form, submitting, touched, formError, fieldError, handleSubmit, resetForm
 
   beforeEach(function () {
     submitting = false
     touched = false
     formError = null
     fieldError = null
+    resetForm = createSpy()
     handleSubmit = createSpy()
   })
 
@@ -18,13 +19,17 @@ describe('LoginForm Component', function () {
     const props = {
       submitting,
       handleSubmit,
+      resetForm,
       error: formError,
       fields: {
+        name: { value: '', error: fieldError, touched },
         email: { value: '', error: fieldError, touched },
-        password: { value: '', error: fieldError, touched }
+        email2: { value: '', error: fieldError, touched },
+        password: { value: '', error: fieldError, touched },
+        password2: { value: '', error: fieldError, touched }
       }
     }
-    return shallow(<LoginForm {...props} />)
+    return shallow(<RegisterForm {...props} />)
   }
 
   it('should call handleSubmit when submit form', function () {

@@ -160,6 +160,29 @@ describe('Challenge Actions', function () {
     })
   })
 
+  describe('fetchMoreChallenges', function () {
+    it('should fetch more challenges', function () {
+      nock(apiUrl).get('/challenges?limit=2&page=2').reply(200, [{ id: 1 }])
+
+      store = mockStore({ challenge: { list: [1, 2] } })
+
+      return store.dispatch(actions.fetchMoreChallenges({ limit: 2 })).then(() => {
+        expect(store.getActions()).toEqual([{
+          type: actions.FETCH_CHALLENGES_REQUEST,
+          params: {
+            limit: 2,
+            page: 2
+          }
+        }, {
+          type: actions.FETCH_CHALLENGES_SUCCESS,
+          result: [1],
+          append: true,
+          entities: { challenges: { 1: { id: 1 } } }
+        }])
+      })
+    })
+  })
+
   describe('fetchChallenge', function () {
     it('should fetch challenge', function () {
       nock(apiUrl).get('/challenges/1').reply(200, { id: 1 })
