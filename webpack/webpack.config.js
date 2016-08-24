@@ -1,15 +1,11 @@
 var path = require('path')
 var webpack = require('webpack')
-var autoprefixer = require('autoprefixer')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin')
 var webpackIsomorphicToolsConfig = require('./webpack-isomorphic-tools')
 
-var ip = process.env.IP || '0.0.0.0'
+var ip = process.env.IP || '192.168.25.2'
 var port = (+process.env.PORT + 1) || 3001
 var DEBUG = process.env.NODE_ENV !== 'production'
-
-var style = 'css?camelCase&modules&importLoaders=2&sourceMap!postcss!sass?outputStyle=expanded&sourceMap=true&sourceMapContents=true'
 
 var config = {
   devtool: DEBUG ? 'inline-source-map' : false,
@@ -38,12 +34,8 @@ var config = {
       {test: /\.ttf$/, loader: 'file?prefix=fonts/'},
       {test: /\.eot$/, loader: 'file?prefix=fonts/'},
       {test: /\.svg$/, loader: 'raw'},
-      {test: /\.json$/, loader: 'json'},
-      {test: /\.s?css$/, loader: DEBUG ? 'style!' + style : ExtractTextPlugin.extract('style', style)}
+      {test: /\.json$/, loader: 'json'}
     ]
-  },
-  postcss: function () {
-    return [autoprefixer]
   }
 }
 
@@ -60,7 +52,6 @@ if (DEBUG) {
   ])
 } else {
   config.plugins = config.plugins.concat([
-    new ExtractTextPlugin('[name]-[chunkhash].css', {allChunks: true}),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin(),
     new WebpackIsomorphicToolsPlugin(webpackIsomorphicToolsConfig)

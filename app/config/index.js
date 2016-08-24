@@ -14,7 +14,7 @@ const config = {
     root: path.join(__dirname, '..', '..'),
     ip: process.env.IP || '0.0.0.0',
     port: process.env.PORT || 3000,
-    apiUrl: 'http://localhost:9000'
+    apiUrl: 'http://192.168.25.2:9000'
   },
   test: {},
   development: {},

@@ -1,8 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router'
+import { writeMediaQuery, breakpoints } from '../../config/style'
 
 import Logo from '../Logo'
 import Button from '../Button'
+import Icon, { plus } from '../Icon'
 import UserButton from '../../containers/UserButton'
 
 const LayoutHeader = () => {
@@ -14,7 +16,8 @@ const LayoutHeader = () => {
         kind='accent'
         style={{ marginRight: '0.5rem' }}
         to='/challenges/create'>
-        Create challenge
+        <Icon icon={plus} style={{ display: 'none', [writeMediaQuery(breakpoints.small)]: { display: 'block' } }} />
+        <span style={{ [writeMediaQuery(breakpoints.small)]: { display: 'none' } }}>Create challenge</span>
       </Button>
       <UserButton />
     </div>

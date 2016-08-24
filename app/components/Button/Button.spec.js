@@ -3,7 +3,7 @@ import expect from 'expect'
 import { shallow } from 'enzyme'
 import Button from './'
 
-describe('Button Component', function () {
+describe.only('Button Component', function () {
   it('should render a button if property "to" was not passed', function () {
     const button = shallow(<Button />)
     expect(button.type()).toEqual('button')

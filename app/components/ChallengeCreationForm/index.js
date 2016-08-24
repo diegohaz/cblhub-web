@@ -13,14 +13,17 @@ const challengeText = <p>From the essential question a concise challenge is arti
 const descriptionText = <p>Summarize the challenge, so people can understand the feelings behind it. Markdown supported.</p>
 
 const ChallengeCreationForm = ({
+  ...props,
   fields: { title, bigIdea, essentialQuestion, description },
   submitting,
   handleSubmit,
   error,
+  onSubmit,
   resetForm
 }) => {
+  const submit = (values, dispatch) => onSubmit(values, dispatch, props)
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(submit)}>
       {error && <Dialog type='error'>{error}</Dialog>}
       <FormControl
         label='Big Idea'
@@ -52,6 +55,7 @@ ChallengeCreationForm.propTypes = {
   error: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   resetForm: PropTypes.func.isRequired
 }
 

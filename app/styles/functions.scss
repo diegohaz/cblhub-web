@@ -1,5 +1,0 @@
-@import 'settings';
-
-@function palette($selector) {
-  @return map-get($foundation-palette, $selector);
-}

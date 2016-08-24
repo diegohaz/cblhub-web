@@ -8,14 +8,13 @@ const Link = Radium(router.Link)
 const Button = ({ ...props, children, to, style, kind = 'primary', type = 'button' }) => {
   const cx = [styles.button, styles[kind], style]
   return to
-    ? <Link {...props} style={cx}>{children}</Link>
+    ? <Link {...props} style={[cx, { display: 'inline-flex' }]}>{children}</Link>
     : <button {...props} type={type} style={cx}>{children}</button>
 }
 
 const styles = {
   button: {
     fontFamily: '"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif',
-    display: 'inline-flex',
     alignItems: 'center',
     height: '2.7rem',
     justifyContent: 'center',

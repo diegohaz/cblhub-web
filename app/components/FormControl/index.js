@@ -5,7 +5,15 @@ import { colors, writeMediaQuery, breakpoints } from '../../config/style'
 import Input from '../Input'
 import Textarea from '../Textarea'
 
-export const FormControl = ({ ...props, children, type = 'text', desc, style, label, field }) => {
+export const FormControl = ({
+  ...props,
+  children,
+  type = 'text',
+  desc,
+  style,
+  label,
+  field = {}
+}) => {
   const { maxLength } = field
   const invalid = field && field.touched && field.error
   const fieldId = `${field.name}Field`

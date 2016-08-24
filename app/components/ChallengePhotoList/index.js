@@ -1,6 +1,4 @@
 import React, { PropTypes } from 'react'
-import cls from 'classnames'
-import styles from './ChallengePhotoList.scss'
 
 import Image from '../Image'
 
@@ -12,14 +10,13 @@ const handleSave = ({ onPhotoSave, selectedPhoto }) =>
 
 const ChallengePhotoList = ({
   ...props,
-  className,
   loadingPhotos,
   onPhotoCancel,
   photos = []
 }) => {
   if (!photos.length && !loadingPhotos) return null
   return (
-    <div className={cls(styles.list, className)}>
+    <div>
       <ul>
         {photos.map((photo, i) =>
           <li key={i}>
@@ -29,7 +26,7 @@ const ChallengePhotoList = ({
           </li>
         )}
       </ul>
-      <div className={styles.alert}>This product uses the Flickr API but is not endorsed or certified by Flickr.</div>
+      <div>This product uses the Flickr API but is not endorsed or certified by Flickr.</div>
       <button onClick={onPhotoCancel}>Cancel</button>
       <button onClick={handleSave(props)}>Save</button>
     </div>
@@ -38,7 +35,6 @@ const ChallengePhotoList = ({
 
 ChallengePhotoList.propTypes = {
   photos: PropTypes.array,
-  className: PropTypes.string,
   selectedPhoto: PropTypes.string,
   onPhotoSelect: PropTypes.func.isRequired,
   onPhotoSave: PropTypes.func.isRequired,

@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import Helmet from 'react-helmet'
 
 import ChallengePhotoList from '../ChallengePhotoList'
+import ChallengeCover from '../ChallengeCover'
 
 const handlePhotoSave = ({ onChallengeUpdate, challenge, selectedPhoto }) =>
   onChallengeUpdate.bind(null, { id: challenge.id, photo: selectedPhoto ? selectedPhoto.id : undefined })
@@ -12,10 +13,10 @@ const handlePhotoSearch = ({ onPhotoSearch, challenge }) =>
 const ChallengePage = ({ ...props, selectedPhoto, photos = [], loadingPhotos, challenge }) => {
   if (!challenge) return null
   return (
-    <div style={{ width: '80%', marginTop: '20px' }}>
+    <div style={{ width: '100%' }}>
       <Helmet title={`${challenge.title} | CBLHub`} />
       <ChallengePhotoList {...props} onPhotoSave={handlePhotoSave(props)} />
-      <img src={selectedPhoto ? selectedPhoto.small.src : challenge.photo.small.src} />
+      <ChallengeCover {...props} />
       <button
         disabled={loadingPhotos || photos.length}
         onClick={handlePhotoSearch(props)}>

@@ -7,7 +7,7 @@ import LayoutFooter from '../LayoutFooter'
 const App = ({ ...props, children }) => {
   return (
     <div style={getStyle(props)}>
-      <Style scopeSelector='body' rules={getBodyStyle(props)} />
+      <Style scopeSelector='body' rules={{ margin: 0 }} />
       <LayoutHeader />
       {children}
       <LayoutFooter />
@@ -22,10 +22,6 @@ const getStyle = () => ({
   minHeight: '100vh',
   fontFamily: '"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif',
   WebkitFontSmoothing: 'antialiased'
-})
-
-const getBodyStyle = () => ({
-  margin: 0
 })
 
 App.propTypes = {

@@ -6,11 +6,19 @@ class Image extends Component {
     style: PropTypes.object
   }
 
+  constructor (props) {
+    super(props)
+    this.state = {
+      loaded: false
+    }
+  }
+
   componentDidMount () {
     const { image } = this.refs
     if (!image.complete) {
-      this.setState({ loaded: false })
       image.addEventListener('load', () => this.setState({ loaded: true }))
+    } else {
+      this.setState({ loaded: true })
     }
   }
 
@@ -19,11 +27,11 @@ class Image extends Component {
     return (
       <img
         ref='image'
+        {...this.props}
         style={[{
-          opacity: typeof loaded === 'undefined' || loaded ? 1 : 0,
+          opacity: loaded ? 1 : 0,
           transition: 'opacity 500ms ease'
-        }, this.props.style]}
-        {...this.props} />
+        }, this.props.style]} />
     )
   }
 }

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import * as router from 'react-router'
-import Radium from 'radium'
+import Radium, { Style } from 'radium'
 import moment from 'moment'
 import { colors } from '../../config/style'
 
@@ -13,9 +13,9 @@ const Link = Radium(router.Link)
 const ChallengeCard = ({ challenge, style }) => {
   return (
     <div style={[styles.card, style]}>
-      <style dangerouslySetInnerHTML={{
-        __html: `.link${challenge.id}:hover + div img { transform: scale(1.2) }`
-      }} />
+      <Style
+        scopeSelector={`.link${challenge.id}:hover + div img`}
+        rules={{ transform: 'scale(1.2)' }} />
       <Link
         to={`/challenges/${challenge.id}`}
         style={styles.link}
@@ -78,10 +78,10 @@ const styles = {
     right: 0,
     bottom: 0,
     left: 0,
-    backgroundImage: `linear-gradient(
-      170deg,
-      rgba(0,0,0,0.7),
-      rgba(0,0,0,0) 25%
+    backgroundImage: `radial-gradient(
+      closest-corner at 8% 8%,
+      black -600%,
+      transparent 600%
     )`
   },
   shadowBottom: {
@@ -92,8 +92,8 @@ const styles = {
     left: 0,
     backgroundImage: `linear-gradient(
       to bottom,
-      rgba(0,0,0,0) 40%,
-      rgba(0,0,0,0.7) 100%
+      transparent 30%,
+      black 130%
     )`
   },
   image: {
@@ -156,6 +156,7 @@ const styles = {
     display: 'flex'
   },
   tag: {
+    position: 'relative',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
