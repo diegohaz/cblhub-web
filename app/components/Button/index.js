@@ -14,12 +14,12 @@ const Button = ({ ...props, children, to, style, kind = 'primary', type = 'butto
 
 const styles = {
   button: {
+    display: 'inline-flex',
     fontFamily: '"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif',
     alignItems: 'center',
     height: '2.7rem',
     justifyContent: 'center',
     textDecoration: 'none',
-    lineHeight: 1,
     cursor: 'pointer',
     appearance: 'none',
     transition: 'background-color 250ms ease-out, color 250ms ease-out',

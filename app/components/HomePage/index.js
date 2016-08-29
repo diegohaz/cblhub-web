@@ -4,11 +4,13 @@ import Helmet from 'react-helmet'
 import ChallengeList from '../ChallengeList'
 
 const HomePage = ({ challenges, onLoadMore, displayLoadMore, location }) => {
-  const title = location.query.q ? location.query.q + ' | CBLHub' : 'CBLHub'
+  const { q } = location.query
+  const title = q ? q + ' | CBLHub' : 'CBLHub'
   return (
     <div style={{ width: '100%' }}>
       <Helmet title={title} />
       <ChallengeList
+        title={q ? `Results for "${q}"` : ''}
         challenges={challenges}
         onLoadMore={onLoadMore}
         displayLoadMore={displayLoadMore} />

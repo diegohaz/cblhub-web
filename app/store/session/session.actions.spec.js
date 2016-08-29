@@ -74,6 +74,56 @@ describe('Session Actions', function () {
     })
   })
 
+  describe('createFacebookSession', function () {
+    it('should create facebook session', function () {
+      nock(apiUrl).post('/sessions/facebook').reply(201, { token: 1 })
+
+      return store.dispatch(actions.createFacebookSession('123')).then(() => {
+        expect(store.getActions()).toEqual([
+          { type: actions.CREATE_SESSION_REQUEST },
+          { type: actions.CREATE_SESSION_SUCCESS, token: 1 }
+        ])
+        expect(setToken).toHaveBeenCalledWith(1)
+      })
+    })
+
+    it('should not create facebook session if it is already creating', function () {
+      nock(apiUrl).post('/sessions/facebook').reply(201, { token: 1 })
+
+      store = mockStore({ status: { loading: { [actions.CREATE_SESSION]: true } } })
+
+      return store.dispatch(actions.createFacebookSession('123')).then(() => {
+        expect(store.getActions()).toEqual([])
+        expect(setToken).toNotHaveBeenCalled()
+      })
+    })
+
+    it('should return current session', function () {
+      store = mockStore({ session: { token: 1 } })
+
+      return store.dispatch(actions.createFacebookSession('123')).then(() => {
+        expect(store.getActions()).toEqual([
+          { type: actions.CREATE_SESSION_REQUEST },
+          { type: actions.CREATE_SESSION_SUCCESS, token: 1 }
+        ])
+        expect(setToken).toHaveBeenCalledWith(1)
+      })
+    })
+
+    it('should create facebook session with error', function () {
+      nock(apiUrl).post('/sessions/facebook').reply(500)
+
+      return store.dispatch(actions.createFacebookSession()).then(() => {
+        expect(true).toBe(false, 'Expected to fail')
+      }, () => {
+        expect(store.getActions()).toEqual([
+          { type: actions.CREATE_SESSION_REQUEST },
+          { type: actions.CREATE_SESSION_FAILURE }
+        ])
+      })
+    })
+  })
+
   describe('removeSession', function () {
     it('should remove session', function () {
       nock(apiUrl).delete('/sessions/1').reply(204)

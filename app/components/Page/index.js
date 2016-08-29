@@ -20,7 +20,7 @@ const getWrapperStyle = () => ({
   flexDirection: 'column',
   justifyContent: 'center',
   margin: 'auto',
-  padding: '1rem',
+  padding: '1rem 1rem 4rem',
   [writeMediaQuery(breakpoints.small)]: {
     width: '100%',
     margin: 0,

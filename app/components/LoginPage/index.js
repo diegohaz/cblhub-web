@@ -1,26 +1,25 @@
 import React, { PropTypes } from 'react'
-import { colors } from '../../config/style'
 
 import Page from '../Page'
 import LoginForm from '../../containers/LoginForm'
-import Button from '../Button'
+import Dialog from '../Dialog'
+import Separator from '../Separator'
+import FacebookLoginButton from '../../containers/FacebookLoginButton'
+import Link from '../Link'
+
+const alert = 'You need to log in first. Don\'t worry, you will be redirected back at the end of this process.'
 
 const LoginPage = ({ location }) => {
+  const { warn } = location.query
   return (
-    <Page title='Login' style={{ width: 480 }}>
+    <Page title='Join the community' browserTitle='Log In' style={{ width: 480 }}>
+      {typeof warn !== 'undefined' && <Dialog type='alert'>{alert}</Dialog>}
+      <FacebookLoginButton style={{ width: '100%' }} />
+      <Separator title='Or use your email account' />
       <LoginForm back={location.query.back} />
-      <div>
-        <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
-          <div style={{ backgroundColor: colors.grayscale.light, width: '100%', height: 1 }} />
-          <div style={{ padding: '1rem', backgroundColor: colors.grayscale.white }}>or</div>
-          <div style={{ backgroundColor: colors.grayscale.light, width: '100%', height: 1 }} />
-        </div>
-        <Button
-          style={{ width: '100%' }}
-          kind='accent'
-          to={`/register?back=${location.query.back}`}>
-          Register a new account
-        </Button>
+      <Separator />
+      <div style={{ fontSize: '0.85rem' }}>
+        By creating an account, you agree to our <Link to='/terms'>Terms of Service</Link> and <Link to='/privacy'>Privacy Policy</Link>.
       </div>
     </Page>
   )

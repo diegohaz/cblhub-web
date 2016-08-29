@@ -27,7 +27,7 @@ const LayoutHeader = () => {
 const getStyle = () => ({
   display: 'flex',
   alignItems: 'center',
-  padding: '0 1rem',
+  padding: '0 0.5rem 0 1rem',
   width: '100%',
   height: '4rem',
   boxSizing: 'border-box'

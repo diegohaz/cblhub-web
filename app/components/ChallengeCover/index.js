@@ -8,7 +8,7 @@ import Image from '../Image'
 
 const ChallengeCover = ({ ...props, challenge, selectedPhoto }) => {
   return (
-    <div style={styles.cover}>
+    <div style={[styles.cover, { backgroundColor: challenge.photo.color }]}>
       {challenge.photo &&
         <Image key={challenge.id} src={challenge.photo.large.src} style={styles.photo} width={200} height={200} />}
       <div style={styles.shadow1} />
@@ -44,7 +44,7 @@ const styles = {
     height: 'calc(100vh - 4rem)',
     minHeight: 420,
     overflow: 'hidden',
-    backgroundColor: colors.primary.medium
+    backgroundColor: colors.primary.light
   },
   photo: {
     position: 'absolute',

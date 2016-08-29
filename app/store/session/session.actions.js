@@ -34,6 +34,30 @@ export const createSession = (username, password) => (dispatch, getState, api) =
   })
 }
 
+export const createFacebookSession = (accessToken) => (dispatch, getState, api) => {
+  if (fromStatus.getIsLoading(getState(), CREATE_SESSION)) {
+    return Promise.resolve()
+  }
+  const dispatchSession = (token) => {
+    dispatch({ type: CREATE_SESSION_SUCCESS, token })
+    api.setToken(token)
+    return Promise.resolve({ token })
+  }
+
+  dispatch({ type: CREATE_SESSION_REQUEST })
+
+  if (fromSession.getToken(getState())) {
+    return dispatchSession(fromSession.getToken(getState()))
+  }
+
+  return api.post('/sessions/facebook', { access_token: accessToken }).then(({ data }) => {
+    return dispatchSession(data.token)
+  }).catch((error) => {
+    dispatch({ type: CREATE_SESSION_FAILURE })
+    throw error
+  })
+}
+
 export const removeSession = (token) => (dispatch, getState, api) => {
   if (fromStatus.getIsLoading(getState(), REMOVE_SESSION)) {
     return Promise.resolve()

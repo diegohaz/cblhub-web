@@ -20,7 +20,7 @@ const validate = createValidator({
 
 const onSubmit = (body, dispatch, { user }) => {
   if (!user) {
-    return dispatch(push('/login?back=/challenges/create'))
+    return dispatch(push('/login?back=/challenges/create&warn'))
   }
   return dispatch(createChallenge(body)).then(() => {
     console.log('created')

@@ -46,7 +46,7 @@ export const fetchMe = () => (dispatch, getState, api) => {
     return data
   }).catch((error) => {
     dispatch({ type: FETCH_ME_FAILURE })
-    if (error.status === 401) {
+    if (error.response.status === 401) {
       api.unsetToken()
     }
     throw error

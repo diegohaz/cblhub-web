@@ -1,8 +1,11 @@
 import React, { PropTypes } from 'react'
+import Radium from 'radium'
+import { writeMediaQuery, breakpoints } from '../../config/style'
 
 import Dialog from '../Dialog'
 import FormControl from '../FormControl'
 import Button from '../Button'
+import Link from '../Link'
 
 const LoginForm = ({
   ...props,
@@ -10,7 +13,8 @@ const LoginForm = ({
   submitting,
   handleSubmit,
   onSubmit,
-  error
+  error,
+  back
 }) => {
   const submit = (values, dispatch) => onSubmit(values, dispatch, props)
   return (
@@ -18,9 +22,45 @@ const LoginForm = ({
       {error && <Dialog type='error'>{error}</Dialog>}
       <FormControl type='email' label='E-mail' field={email} />
       <FormControl type='password' label='Password' field={password} />
-      <Button type='submit' disabled={submitting} style={{ width: '100%' }}>Sign In</Button>
+      <div style={styles.options}>
+        <Button style={styles.button} type='submit' disabled={submitting}>Log In</Button>
+        <div style={styles.links}>
+          <div>
+            {"Forgot your password? "}
+            <Link to={`/register?back=${back}`}>Reset password</Link>
+          </div>
+          <div>
+            {"Don't you have an account? "}
+            <Link to={`/register?back=${back}`} kind='accent'>Sign up</Link>
+          </div>
+        </div>
+      </div>
     </form>
   )
+}
+
+const styles = {
+  options: {
+    display: 'flex',
+    alignItems: 'center',
+    [writeMediaQuery(breakpoints.small)]: {
+      flexDirection: 'column'
+    }
+  },
+  button: {
+    [writeMediaQuery(breakpoints.small)]: {
+      width: '100%'
+    }
+  },
+  links: {
+    marginLeft: 'auto',
+    lineHeight: 1.5,
+    [writeMediaQuery(breakpoints.small)]: {
+      fontSize: '0.9rem',
+      marginTop: '1rem',
+      marginLeft: 0
+    }
+  }
 }
 
 LoginForm.propTypes = {
@@ -32,4 +72,4 @@ LoginForm.propTypes = {
   back: PropTypes.string
 }
 
-export default LoginForm
+export default Radium(LoginForm)

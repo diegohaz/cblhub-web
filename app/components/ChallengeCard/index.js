@@ -20,8 +20,10 @@ const ChallengeCard = ({ challenge, style }) => {
         to={`/challenges/${challenge.id}`}
         style={styles.link}
         className={`link${challenge.id}`} />
-      <div style={styles.cover}>
-        {challenge.photo && <Image src={challenge.photo.medium.src} style={styles.image} />}
+      <div style={[styles.cover, challenge.photo && { backgroundColor: challenge.photo.color }]}>
+        {challenge.photo &&
+          <Image src={challenge.photo.medium.src} style={styles.image} width='100%' />
+        }
         <Link to={`/?q=${challenge.bigIdea}`} style={styles.bigIdea}>{challenge.bigIdea}</Link>
         <Link to={`/challenges/${challenge.id}`} style={styles.title}>{challenge.title}</Link>
         <div style={styles.shadowTop}></div>
@@ -70,7 +72,7 @@ const styles = {
     justifyContent: 'center',
     height: '15rem',
     overflow: 'hidden',
-    backgroundColor: colors.primary.medium
+    backgroundColor: colors.primary.light
   },
   shadowTop: {
     position: 'absolute',
