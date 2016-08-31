@@ -9,13 +9,11 @@ const RegisterForm = ({
   fields: { name, email, email2, password, password2 },
   submitting,
   handleSubmit,
-  onSubmit,
   resetForm,
   error
 }) => {
-  const submit = (values, dispatch) => onSubmit(values, dispatch, props)
   return (
-    <form onSubmit={handleSubmit(submit)}>
+    <form onSubmit={handleSubmit}>
       {error && <Dialog type='error'>{error}</Dialog>}
       <FormControl label='Name' field={name} />
       <FormControl type='email' label='E-mail' field={email} />
@@ -36,7 +34,6 @@ RegisterForm.propTypes = {
   error: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   back: PropTypes.string
 }
 

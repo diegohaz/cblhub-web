@@ -18,12 +18,10 @@ const ChallengeCreationForm = ({
   submitting,
   handleSubmit,
   error,
-  onSubmit,
   resetForm
 }) => {
-  const submit = (values, dispatch) => onSubmit(values, dispatch, props)
   return (
-    <form onSubmit={handleSubmit(submit)}>
+    <form onSubmit={handleSubmit}>
       {error && <Dialog type='error'>{error}</Dialog>}
       <FormControl
         label='Big Idea'
@@ -55,7 +53,6 @@ ChallengeCreationForm.propTypes = {
   error: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   resetForm: PropTypes.func.isRequired
 }
 

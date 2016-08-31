@@ -5,9 +5,9 @@
   "main": "./app",
   "scripts": {
     "start": "node ./",
-    "test": "mocha --compilers js:babel-register -r ignore-styles 'app/**/*.spec.js'",
+    "test": "mocha -r babel-register -r ignore-styles 'app/**/*.spec.js'",
     "dev": "concurrently --kill-others 'nodemon ./' 'node webpack/webpack-dev-server'",
-    "coverage": "istanbul cover -x *.spec.js _mocha -- --compilers js:babel-register -r ignore-styles 'app/**/*.spec.js'",
+    "coverage": "istanbul cover -x *.spec.js _mocha -- -r babel-register -r ignore-styles 'app/**/*.spec.js'",
     "coverage-open": "npm run coverage && open ./coverage/lcov-report/index.html",
     "lint": "eslint app/** -c ./.eslintrc",
     "build": "rimraf dist/ && webpack --config webpack/webpack.config",

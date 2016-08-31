@@ -14,6 +14,7 @@ const config = {
     root: path.join(__dirname, '..', '..'),
     ip: process.env.IP || '0.0.0.0',
     port: process.env.PORT || 3000,
+    baseUrl: 'http://192.168.25.2:3000',
     apiUrl: 'http://192.168.25.2:9000'
   },
   test: {},
@@ -21,6 +22,7 @@ const config = {
   production: {
     ip: process.env.IP || '0.0.0.0',
     port: process.env.PORT || 8080,
+    baseUrl: 'http://cblhub.diegohaz.com',
     apiUrl: 'https://cblhub-api.diegohaz.com'
   }
 }

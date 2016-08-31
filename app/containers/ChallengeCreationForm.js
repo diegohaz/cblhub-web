@@ -1,15 +1,8 @@
-import React, { Component } from 'react'
 import { reduxForm } from 'redux-form'
 import { push } from 'react-router-redux'
 import { createChallenge, fromUser } from '../store'
 import { createValidator, required, maxLength } from '../services/validation'
 import ChallengeCreationForm from '../components/ChallengeCreationForm'
-
-class ChallengeCreationFormContainer extends Component {
-  render () {
-    return <ChallengeCreationForm onSubmit={onSubmit} {...this.props} />
-  }
-}
 
 const validate = createValidator({
   bigIdea: [required, maxLength(48)],
@@ -41,4 +34,4 @@ export default reduxForm({
   destroyOnUnmount: false,
   validate,
   onSubmit
-}, mapStateToProps, mapDispatchToProps)(ChallengeCreationFormContainer)
+}, mapStateToProps, mapDispatchToProps)(ChallengeCreationForm)

@@ -1,4 +1,5 @@
 import { normalize } from 'normalizr'
+import { baseUrl } from '../../config'
 import { fromStatus } from '../'
 import user from './user.schema'
 
@@ -88,3 +89,7 @@ export const updateMe = (body) => (dispatch, getState, api) => {
 export const removeMe = () => ({
   type: REMOVE_ME
 })
+
+export const resetPassword = (email) => (dispatch, getState, api) => {
+  return api.post('/password-resets', { email, link: `${baseUrl}/reset-password` })
+}

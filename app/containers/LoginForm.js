@@ -1,9 +1,11 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { reduxForm } from 'redux-form'
 import { push } from 'react-router-redux'
 import { fetchMe, createSession } from '../store'
 import { createValidator, required, email, minLength } from '../services/validation'
 import LoginForm from '../components/LoginForm'
+
+import Link from '../components/Link'
 
 const onSubmit = ({ email, password }, dispatch, { back }) =>
   dispatch(
@@ -12,21 +14,16 @@ const onSubmit = ({ email, password }, dispatch, { back }) =>
     dispatch(fetchMe())
   ).then(() =>
     dispatch(push(back || '/'))
-  ).catch(({ status }) => {
+  ).catch(({ response }) => {
     let error = {}
-    if (status === 401) {
-      error = { _error: 'Wrong email or password' }
+    if (response.status === 401) {
+      const link = <Link to={`/reset-password?back=${back}`}>Forgot your password?</Link>
+      error = { _error: <span>Wrong email or password. {link}</span> }
     } else {
       error = { _error: 'A unknown error occurred. Please try again later.' }
     }
     throw error
   })
-
-class LoginFormContainer extends Component {
-  render () {
-    return <LoginForm onSubmit={onSubmit} {...this.props} />
-  }
-}
 
 const validate = createValidator({
   email: [required, email],
@@ -39,5 +36,6 @@ const mapDispatchToProps = {}
 export default reduxForm({
   form: 'login',
   fields: ['email', 'password'],
-  validate
-}, mapStateToProps, mapDispatchToProps)(LoginFormContainer)
+  validate,
+  onSubmit
+}, mapStateToProps, mapDispatchToProps)(LoginForm)

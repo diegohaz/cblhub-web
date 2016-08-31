@@ -12,13 +12,11 @@ const LoginForm = ({
   fields: { email, password },
   submitting,
   handleSubmit,
-  onSubmit,
   error,
   back
 }) => {
-  const submit = (values, dispatch) => onSubmit(values, dispatch, props)
   return (
-    <form onSubmit={handleSubmit(submit)}>
+    <form onSubmit={handleSubmit}>
       {error && <Dialog type='error'>{error}</Dialog>}
       <FormControl type='email' label='E-mail' field={email} />
       <FormControl type='password' label='Password' field={password} />
@@ -27,7 +25,7 @@ const LoginForm = ({
         <div style={styles.links}>
           <div>
             {"Forgot your password? "}
-            <Link to={`/register?back=${back}`}>Reset password</Link>
+            <Link to={`/reset-password?back=${back}`}>Reset password</Link>
           </div>
           <div>
             {"Don't you have an account? "}
@@ -68,7 +66,6 @@ LoginForm.propTypes = {
   error: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   back: PropTypes.string
 }
 

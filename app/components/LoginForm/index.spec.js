@@ -1,7 +1,10 @@
 import expect, { createSpy } from 'expect'
 import React from 'react'
 import { shallow } from 'enzyme'
+import Radium from 'radium'
 import LoginForm from './'
+
+Radium.TestMode.enable()
 
 describe('LoginForm Component', function () {
   let form, submitting, touched, formError, fieldError, handleSubmit
