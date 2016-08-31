@@ -13,7 +13,7 @@ export const facebook = require('./icons/facebook.svg')
 const Icon = ({ style, icon, size = 20 }) => {
   return (
     <div style={[styles.icon, { width: `${size}px`, height: `${size}px` }, style]}>
-      <Style scopeSelector='svg' rules={{
+      <Style scopeSelector="svg" rules={{
         width: '100%',
         height: '100%',
         fill: 'currentcolor',

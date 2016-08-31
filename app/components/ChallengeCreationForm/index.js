@@ -22,27 +22,27 @@ const ChallengeCreationForm = ({
 }) => {
   return (
     <form onSubmit={handleSubmit}>
-      {error && <Dialog type='error'>{error}</Dialog>}
+      {error && <Dialog type="error">{error}</Dialog>}
       <FormControl
-        label='Big Idea'
+        label="Big Idea"
         field={{ ...bigIdea, maxLength: 48 }}
         desc={bigIdeaText} />
       <FormControl
-        label='Essential Question'
+        label="Essential Question"
         field={{ ...essentialQuestion, maxLength: 96 }}
         desc={essentialQuestionText} />
       <FormControl
-        label='The Challenge'
+        label="The Challenge"
         field={{ ...title, maxLength: 96 }}
         desc={challengeText} />
       <FormControl
-        type='textarea'
-        label='Description'
+        type="textarea"
+        label="Description"
         field={{ rows: 4, maxLength: 1024, ...description }}
         desc={descriptionText} />
       <div>
-        <Button type='submit' disabled={submitting} style={{ marginRight: '1rem' }}>Create challenge</Button>
-        <Button kind='secondary' type='button' onClick={resetForm}>Reset</Button>
+        <Button type="submit" disabled={submitting} style={{ marginRight: '1rem' }}>Create challenge</Button>
+        <Button kind="secondary" type="button" onClick={resetForm}>Reset</Button>
       </div>
     </form>
   )

@@ -29,10 +29,10 @@ class ResetPasswordForm extends Component {
     const { submitted } = this.state
     return (
       <form onSubmit={this.submit}>
-        {submitted && !error && <Dialog type='success'>Email was sent succesfully.</Dialog>}
-        {error && <Dialog type='error'>{error}</Dialog>}
-        <FormControl type='email' label='E-mail' field={email} />
-        <Button type='submit' disabled={submitting}>Send</Button>
+        {submitted && !error && <Dialog type="success">Email was sent succesfully.</Dialog>}
+        {error && <Dialog type="error">{error}</Dialog>}
+        <FormControl type="email" label="E-mail" field={email} />
+        <Button type="submit" disabled={submitting}>Send</Button>
       </form>
     )
   }

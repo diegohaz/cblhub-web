@@ -60,7 +60,7 @@ class Image extends Component {
       return (
         <img
           {...this.props}
-          ref='image'
+          ref="image"
           src={this.state.inViewport ? this.props.src : undefined}
           style={[getStyle(this.state), this.props.style]} />
       )

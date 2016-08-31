@@ -17,11 +17,11 @@ const LoginForm = ({
 }) => {
   return (
     <form onSubmit={handleSubmit}>
-      {error && <Dialog type='error'>{error}</Dialog>}
-      <FormControl type='email' label='E-mail' field={email} />
-      <FormControl type='password' label='Password' field={password} />
+      {error && <Dialog type="error">{error}</Dialog>}
+      <FormControl type="email" label="E-mail" field={email} />
+      <FormControl type="password" label="Password" field={password} />
       <div style={styles.options}>
-        <Button style={styles.button} type='submit' disabled={submitting}>Log In</Button>
+        <Button style={styles.button} type="submit" disabled={submitting}>Log In</Button>
         <div style={styles.links}>
           <div>
             {"Forgot your password? "}
@@ -29,7 +29,7 @@ const LoginForm = ({
           </div>
           <div>
             {"Don't you have an account? "}
-            <Link to={`/register?back=${back}`} kind='accent'>Sign up</Link>
+            <Link to={`/register?back=${back}`} kind="accent">Sign up</Link>
           </div>
         </div>
       </div>

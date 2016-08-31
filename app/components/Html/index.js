@@ -9,7 +9,7 @@ const Html = ({ assets, state, content }) => {
   return (
     <html {...attrs}>
       <head>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no' />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         {helmet.base.toComponent()}
         {helmet.title.toComponent()}
         {helmet.meta.toComponent()}
@@ -19,13 +19,13 @@ const Html = ({ assets, state, content }) => {
           <link
             href={assets.styles[style]}
             key={key}
-            media='screen, projection'
-            rel='stylesheet'
-            type='text/css' />
+            media="screen, projection"
+            rel="stylesheet"
+            type="text/css" />
         )}
       </head>
       <body>
-        <div id='app' dangerouslySetInnerHTML={{ __html: content }} />
+        <div id="app" dangerouslySetInnerHTML={{ __html: content }} />
         <script dangerouslySetInnerHTML={{ __html: state }} />
         <script src={assets.javascript.app} />
       </body>

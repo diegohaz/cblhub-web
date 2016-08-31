@@ -4,5 +4,5 @@ import { shallow } from 'enzyme'
 import SearchBar from './'
 
 describe('SearchBar Component', function () {
-  
+
 })

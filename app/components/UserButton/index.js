@@ -32,7 +32,7 @@ const UserButton = ({ ...props, user, onUserLogout, location }) => {
     const backPath = location.query.back || location.pathname
     return (
       <Button
-        kind='secondary'
+        kind="secondary"
         to={`/login?back=${backPath}`}>
         <Icon icon={userIcon} style={styles.userIcon} />
         <span style={styles.loginLabel}>Login / Register</span>

@@ -5,7 +5,7 @@ import ChallengeCreationForm from '../../containers/ChallengeCreationForm'
 
 const ChallengeCreationPage = () => {
   return (
-    <Page title='Create Challenge'>
+    <Page title="Create Challenge">
       <ChallengeCreationForm />
     </Page>
   )

@@ -10,7 +10,7 @@ describe('Button Component', function () {
   })
 
   it('should set property "type" correctly to button', function () {
-    const button = shallow(<Button type='submit' />)
+    const button = shallow(<Button type="submit" />)
     expect(button.find('[type="submit"]').length).toBeMoreThan(0)
   })
 
@@ -27,7 +27,7 @@ describe('Button Component', function () {
   })
 
   it('should render a link if property "to" was passed', function () {
-    const button = shallow(<Button to='/test' />)
+    const button = shallow(<Button to="/test" />)
     expect(button.find('Link[to="/test"]').length).toBeMoreThan(0)
   })
 })

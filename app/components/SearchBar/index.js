@@ -14,7 +14,7 @@ class SearchBar extends Component {
   render () {
     return (
       <div style={{ display: 'flex', position: 'relative' }}>
-        <Input type='search' style={{ height: '2.7rem' }} />
+        <Input type="search" style={{ height: '2.7rem' }} />
         <Button style={{ borderRadius: '0 0.13rem 0.13rem 0' }}><Icon icon={search} /></Button>
       </div>
     )

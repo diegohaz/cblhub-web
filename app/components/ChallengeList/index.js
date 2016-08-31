@@ -16,7 +16,7 @@ const ChallengeList = ({ title, challenges, onLoadMore, displayLoadMore }) => {
       </div>
       {displayLoadMore && <Button
         onClick={onLoadMore}
-        kind='secondary'
+        kind="secondary"
         style={{ margin: '4rem auto 0' }}>
         Load more
       </Button>}

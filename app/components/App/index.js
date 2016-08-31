@@ -7,7 +7,7 @@ import LayoutFooter from '../LayoutFooter'
 const App = ({ ...props, children }) => {
   return (
     <div style={getStyle(props)}>
-      <Style scopeSelector='body' rules={{ margin: 0 }} />
+      <Style scopeSelector="body" rules={{ margin: 0 }} />
       <LayoutHeader />
       {children}
       <LayoutFooter />

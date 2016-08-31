@@ -3,7 +3,7 @@ import expect from 'expect'
 import { shallow } from 'enzyme'
 import Icon from './'
 
-const render = (props) => shallow(<Icon icon='test' {...props} />)
+const render = (props) => shallow(<Icon icon="test" {...props} />)
 
 describe('Icon Component', function () {
   it('should set size properly', function () {

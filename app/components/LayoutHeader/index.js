@@ -10,12 +10,12 @@ import UserButton from '../../containers/UserButton'
 const LayoutHeader = () => {
   return (
     <div style={getStyle()}>
-      <Link to='/'><Logo /></Link>
+      <Link to="/"><Logo /></Link>
       <div style={{ flex: 1 }} />
       <Button
-        kind='accent'
+        kind="accent"
         style={{ marginRight: '0.5rem' }}
-        to='/challenges/create'>
+        to="/challenges/create">
         <Icon icon={plus} style={{ display: 'none', [writeMediaQuery(breakpoints.small)]: { display: 'block' } }} />
         <span style={{ [writeMediaQuery(breakpoints.small)]: { display: 'none' } }}>Create challenge</span>
       </Button>

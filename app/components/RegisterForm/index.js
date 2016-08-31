@@ -14,15 +14,15 @@ const RegisterForm = ({
 }) => {
   return (
     <form onSubmit={handleSubmit}>
-      {error && <Dialog type='error'>{error}</Dialog>}
-      <FormControl label='Name' field={name} />
-      <FormControl type='email' label='E-mail' field={email} />
-      <FormControl type='email' label='Repeat e-mail' field={email2} />
-      <FormControl type='password' label='Password' field={password} />
-      <FormControl type='password' label='Repeat password' field={password2} />
+      {error && <Dialog type="error">{error}</Dialog>}
+      <FormControl label="Name" field={name} />
+      <FormControl type="email" label="E-mail" field={email} />
+      <FormControl type="email" label="Repeat e-mail" field={email2} />
+      <FormControl type="password" label="Password" field={password} />
+      <FormControl type="password" label="Repeat password" field={password2} />
       <div>
-        <Button type='submit' disabled={submitting} style={{ marginRight: '1rem' }}>Register</Button>
-        <Button type='button' kind='secondary' onClick={resetForm}>Reset</Button>
+        <Button type="submit" disabled={submitting} style={{ marginRight: '1rem' }}>Register</Button>
+        <Button type="button" kind="secondary" onClick={resetForm}>Reset</Button>
       </div>
     </form>
   )
