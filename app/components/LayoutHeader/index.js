@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import Radium from 'radium'
 import { writeMediaQuery, breakpoints } from '../../config/style'
 
 import Logo from '../Logo'
@@ -27,10 +28,14 @@ const LayoutHeader = () => {
 const getStyle = () => ({
   display: 'flex',
   alignItems: 'center',
-  padding: '0 0.5rem 0 1rem',
+  padding: '0 1rem',
   width: '100%',
-  height: '4rem',
-  boxSizing: 'border-box'
+  height: '4.5rem',
+  boxSizing: 'border-box',
+  [writeMediaQuery(breakpoints.small)]: {
+    padding: '0 0.5rem',
+    height: '4rem'
+  }
 })
 
-export default LayoutHeader
+export default Radium(LayoutHeader)

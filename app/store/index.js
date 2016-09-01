@@ -18,6 +18,7 @@ import user, * as fromUser from './user/user.reducer'
 
 export * from './challenge/challenge.actions'
 export * from './guide/guide.actions'
+export * from './password-reset/password-reset.actions'
 export * from './photo/photo.actions'
 export * from './session/session.actions'
 export * from './tag/tag.actions'

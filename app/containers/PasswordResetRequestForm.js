@@ -1,13 +1,13 @@
 import React from 'react'
 import { reduxForm } from 'redux-form'
-import { resetPassword } from '../store'
+import { createPasswordReset } from '../store'
 import { createValidator, required, email } from '../services/validation'
-import ResetPasswordForm from '../components/ResetPasswordForm'
+import PasswordResetRequestForm from '../components/PasswordResetRequestForm'
 
 import Link from '../components/Link'
 
 const onSubmit = ({ email }, dispatch, { back }) =>
-  dispatch(resetPassword(email)).then(() => {}).catch(({ response }) => {
+  dispatch(createPasswordReset(email)).then(() => {}).catch(({ response }) => {
     let error = {}
     if (response.status === 404) {
       const link = <Link to={`/register?back=${back}`}>Want to create an account?</Link>
@@ -26,9 +26,9 @@ const mapStateToProps = () => ({})
 const mapDispatchToProps = {}
 
 export default reduxForm({
-  form: 'resetPassword',
+  form: 'passwordResetRequest',
   fields: ['email'],
   destroyOnUnmount: false,
   validate,
   onSubmit
-}, mapStateToProps, mapDispatchToProps)(ResetPasswordForm)
+}, mapStateToProps, mapDispatchToProps)(PasswordResetRequestForm)

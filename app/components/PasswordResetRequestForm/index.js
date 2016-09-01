@@ -5,7 +5,7 @@ import Dialog from '../Dialog'
 import FormControl from '../FormControl'
 import Button from '../Button'
 
-class ResetPasswordForm extends Component {
+class PasswordResetRequestForm extends Component {
   static propTypes = {
     fields: PropTypes.object.isRequired,
     error: PropTypes.string,
@@ -38,4 +38,4 @@ class ResetPasswordForm extends Component {
   }
 }
 
-export default Radium(ResetPasswordForm)
+export default Radium(PasswordResetRequestForm)

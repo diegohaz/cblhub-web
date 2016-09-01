@@ -15,19 +15,19 @@ class Image extends Component {
   componentDidMount () {
     if (typeof window !== 'undefined') {
       this.setImageState()
-      window.addEventListener('scroll', this.setImageState)
+      document.addEventListener('scroll', this.setImageState, true)
     }
   }
 
   componentWillUnmount () {
-    window.removeEventListener('scroll', this.setImageState)
+    document.removeEventListener('scroll', this.setImageState, true)
   }
 
   setImageState () {
     const { image } = this.refs
 
     if (image && this.isInViewport()) {
-      window.removeEventListener('scroll', this.setImageState)
+      document.removeEventListener('scroll', this.setImageState, true)
       this.setState({ inViewport: true })
 
       if (!image.complete) {

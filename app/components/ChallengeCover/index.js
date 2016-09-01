@@ -3,16 +3,35 @@ import Radium from 'radium'
 import moment from 'moment'
 import { colors, writeMediaQuery, breakpoints } from '../../config/style'
 
-import Icon, { time, contributions } from '../Icon'
+import Icon, { time, contributions, photo } from '../Icon'
 import Image from '../Image'
+import Button from '../Button'
 
-const ChallengeCover = ({ ...props, challenge, selectedPhoto }) => {
+const handlePhotoSearch = ({ onPhotoSearch, challenge }) => () =>
+  onPhotoSearch({ q: challenge.bigIdea, limit: 50 })
+
+const isAuthor = ({ user, challenge }) => user && user.id === challenge.user.id
+
+const ChallengeCover = ({ ...props, user, challenge, selectedPhoto }) => {
   return (
-    <div style={[styles.cover, { backgroundColor: challenge.photo.color }]}>
-      {challenge.photo &&
-        <Image key={challenge.id} src={challenge.photo.large.src} style={styles.photo} width={200} height={200} />}
+    <div style={[styles.cover, challenge.photo && { backgroundColor: challenge.photo.color }]}>
+      {(challenge.photo || selectedPhoto) &&
+        <Image
+          key={challenge.id}
+          src={selectedPhoto ? selectedPhoto.large.src : challenge.photo.large.src}
+          style={styles.photo}
+          width="100%"
+          height="100%" />
+      }
       <div style={styles.shadow1} />
       <div style={styles.shadow2} />
+      <div style={styles.options}>
+        {isAuthor(props) &&
+          <Button onClick={handlePhotoSearch(props)} style={styles.photoButton}>
+            <Icon icon={photo} />
+          </Button>
+        }
+      </div>
       <h2 style={styles.title}>{challenge.title}</h2>
       <div style={styles.info}>
         <div style={[styles.infoItem, styles.user]}>
@@ -41,10 +60,13 @@ const styles = {
     alignItems: 'center',
     color: colors.grayscale.white,
     width: '100%',
-    height: 'calc(100vh - 4rem)',
+    height: 'calc(100vh - 4.5rem)',
     minHeight: 420,
     overflow: 'hidden',
-    backgroundColor: colors.primary.light
+    backgroundColor: colors.primary.light,
+    [writeMediaQuery(breakpoints.small)]: {
+      height: 'calc(100vh - 4rem)'
+    }
   },
   photo: {
     position: 'absolute',
@@ -54,6 +76,21 @@ const styles = {
     objectPosition: 'center',
     left: 0,
     top: 0
+  },
+  options: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    width: '100%',
+    padding: '1rem',
+    boxSizing: 'border-box',
+    [writeMediaQuery(breakpoints.small)]: {
+      padding: '0.5rem'
+    }
+  },
+  photoButton: {
+    backgroundColor: 'transparent'
   },
   title: {
     margin: 'auto 1rem 1rem',
@@ -131,9 +168,11 @@ const styles = {
 }
 
 ChallengeCover.propTypes = {
+  user: PropTypes.object,
   challenge: PropTypes.object.isRequired,
   selectedPhoto: PropTypes.object,
-  onPhotoSearch: PropTypes.func.isRequired
+  onPhotoSearch: PropTypes.func.isRequired,
+  onChallengeUpdate: PropTypes.func.isRequired
 }
 
 export default Radium(ChallengeCover)

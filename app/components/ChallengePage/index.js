@@ -1,38 +1,52 @@
 import React, { PropTypes } from 'react'
 import Helmet from 'react-helmet'
+import { baseUrl } from '../../config'
 
-import ChallengePhotoList from '../ChallengePhotoList'
 import ChallengeCover from '../ChallengeCover'
+import ChallengePhotoList from '../../containers/ChallengePhotoList'
+import Button from '../Button'
 
-const handlePhotoSave = ({ onChallengeUpdate, challenge, selectedPhoto }) =>
-  onChallengeUpdate.bind(null, { id: challenge.id, photo: selectedPhoto ? selectedPhoto.id : undefined })
+const isAuthor = ({ user, challenge }) => user && user.id === challenge.user.id
+const handleRemove = ({ onChallengeRemove, challenge }) => () => onChallengeRemove(challenge.id)
 
-const handlePhotoSearch = ({ onPhotoSearch, challenge }) =>
-  onPhotoSearch.bind(null, { q: challenge.bigIdea })
+const handlePhotoSave = ({ onChallengeUpdate, challenge, selectedPhoto }) => () =>
+  selectedPhoto && onChallengeUpdate({ id: challenge.id, photo: selectedPhoto.id })
 
-const ChallengePage = ({ ...props, selectedPhoto, photos = [], loadingPhotos, challenge }) => {
+const ChallengePage = ({ ...props, selectedPhoto, user, challenge }) => {
   if (!challenge) return null
   return (
     <div style={{ width: '100%' }}>
-      <Helmet title={`${challenge.title} | CBLHub`} />
-      <ChallengePhotoList {...props} onPhotoSave={handlePhotoSave(props)} />
+      <Helmet
+        title={`${challenge.title} | CBLHub`}
+        meta={[
+          challenge.description &&
+          { name: 'description', content: challenge.description.slice(0, 160) } || {},
+          { property: 'og:url', content: `${baseUrl}/challenges/${challenge.id}` },
+          { property: 'og:title', content: challenge.title },
+          { property: 'og:site_name', content: 'CBLHub' },
+          ... challenge.photo && [
+            { property: 'og:image', content: challenge.photo.large.src },
+            { property: 'og:image:type', content: 'image/jpeg' },
+            { property: 'og:image:width', content: challenge.photo.large.width },
+            { property: 'og:image:height', content: challenge.photo.large.height }
+          ] || {}
+        ]} />
+      <ChallengePhotoList onSave={handlePhotoSave(props)} />
       <ChallengeCover {...props} />
-      <button
-        disabled={loadingPhotos || photos.length}
-        onClick={handlePhotoSearch(props)}>
-        Change photo
-      </button>
+      {isAuthor(props) &&
+        <Button kind="error" onClick={handleRemove(props)}>Remove challenge</Button>
+      }
     </div>
   )
 }
 
 ChallengePage.propTypes = {
+  user: PropTypes.object,
   challenge: PropTypes.object,
-  photos: PropTypes.array,
   selectedPhoto: PropTypes.object,
   onChallengeUpdate: PropTypes.func.isRequired,
-  onPhotoSearch: PropTypes.func.isRequired,
-  loadingPhotos: PropTypes.bool
+  onChallengeRemove: PropTypes.func.isRequired,
+  onPhotoSearch: PropTypes.func.isRequired
 }
 
 export default ChallengePage

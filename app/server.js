@@ -55,9 +55,7 @@ app.use((req, res, next) => {
         fetch && promises.push(fetch({ params, location, store }))
       })
 
-      Promise.all(promises)
-        .then((result) => resolve(result))
-        .catch((err) => reject(err))
+      Promise.all(promises).then(resolve).catch(reject)
     })
 
     const render = (store) => {

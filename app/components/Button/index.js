@@ -54,6 +54,24 @@ const getStyle = ({ kind = 'primary', disabled }) => ({
       ':focus': { backgroundColor: colors.accent.dark, outline: 'none' },
       ':active': { backgroundColor: colors.accent.dark }
     }
+  },
+  ... kind === 'alert' && {
+    backgroundColor: colors.alert[disabled ? 'light' : 'medium'],
+    color: colors.grayscale.white,
+    ... disabled || {
+      ':hover': { backgroundColor: colors.alert.dark },
+      ':focus': { backgroundColor: colors.alert.dark, outline: 'none' },
+      ':active': { backgroundColor: colors.alert.dark }
+    }
+  },
+  ... kind === 'error' && {
+    backgroundColor: colors.error[disabled ? 'light' : 'medium'],
+    color: colors.grayscale.white,
+    ... disabled || {
+      ':hover': { backgroundColor: colors.error.dark },
+      ':focus': { backgroundColor: colors.error.dark, outline: 'none' },
+      ':active': { backgroundColor: colors.error.dark }
+    }
   }
 })
 

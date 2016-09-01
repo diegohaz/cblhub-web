@@ -22,7 +22,11 @@ const ChallengeCard = ({ challenge, style }) => {
         className={`link${challenge.id}`} />
       <div style={[styles.cover, challenge.photo && { backgroundColor: challenge.photo.color }]}>
         {challenge.photo &&
-          <Image src={challenge.photo.medium.src} style={styles.image} width="100%" />
+          <Image
+            src={challenge.photo.medium.src}
+            style={styles.image}
+            width="100%"
+            height="100%" />
         }
         <Link to={`/?q=${challenge.bigIdea}`} style={styles.bigIdea}>{challenge.bigIdea}</Link>
         <Link to={`/challenges/${challenge.id}`} style={styles.title}>{challenge.title}</Link>

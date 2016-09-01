@@ -9,11 +9,19 @@ import { useScroll } from 'react-router-scroll'
 import { StyleRoot } from 'radium'
 import configureStore from './store/configure'
 import routes from './routes'
+import { fromSession } from './store'
+import api from './services/api'
 
 const initialState = window.__INITIAL_STATE__
 const store = configureStore(initialState, browserHistory)
 const history = syncHistoryWithStore(browserHistory, store)
 const root = document.getElementById('app')
+
+const token = fromSession.getToken(store.getState())
+
+if (token) {
+  api.setToken(token)
+}
 
 const renderApp = (routes) => (
   <AppContainer>

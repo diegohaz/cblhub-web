@@ -9,6 +9,7 @@ export const plus = require('./icons/plus.svg')
 export const user = require('./icons/user.svg')
 export const time = require('./icons/time.svg')
 export const facebook = require('./icons/facebook.svg')
+export const photo = require('./icons/photo.svg')
 
 const Icon = ({ style, icon, size = 20 }) => {
   return (

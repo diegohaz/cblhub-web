@@ -3,13 +3,11 @@ import { connect } from 'react-redux'
 import {
   fromChallenge,
   fromPhoto,
-  fromStatus,
+  fromUser,
   updateChallenge,
+  removeChallenge,
   fetchChallenge,
-  searchPhotos,
-  selectPhoto,
-  resetPhotos,
-  SEARCH_PHOTOS
+  searchPhotos
 } from '../store'
 
 import ChallengePage from '../components/ChallengePage'
@@ -36,17 +34,15 @@ class ChallengePageContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  user: fromUser.getCurrentUser(state),
   challenge: fromChallenge.getActiveChallenge(state),
-  photos: fromPhoto.getPhotoList(state),
-  selectedPhoto: fromPhoto.getSelectedPhoto(state),
-  loadingPhotos: fromStatus.getIsLoading(state, SEARCH_PHOTOS)
+  selectedPhoto: fromPhoto.getSelectedPhoto(state)
 })
 
 const mapDispatchToProps = {
   fetchChallenge,
+  onChallengeRemove: removeChallenge,
   onPhotoSearch: searchPhotos,
-  onPhotoSelect: selectPhoto,
-  onPhotoCancel: resetPhotos,
   onChallengeUpdate: updateChallenge
 }
 

@@ -53,6 +53,7 @@ const styles = {
   links: {
     marginLeft: 'auto',
     lineHeight: 1.5,
+    fontSize: '0.95rem',
     [writeMediaQuery(breakpoints.small)]: {
       fontSize: '0.9rem',
       marginTop: '1rem',
